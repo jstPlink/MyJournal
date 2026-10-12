@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.78.5',
+    date: '2026-10-12 09:38',
+    changes: [
+      "Impostazioni: la riga con la versione dell'app, in fondo, è alta il doppio e con scritta più grande e regular, più leggibile.",
+    ],
+  },
+  {
     version: '0.78.4',
     date: '2026-10-09 15:26',
     changes: [

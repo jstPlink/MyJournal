@@ -4,6 +4,8 @@ import { toast } from '../lib/toast'
 
 // Riga con la versione dell'app, in fondo alle Impostazioni. Toccata 5 volte di
 // seguito (entro 3 secondi) apre il Mood Lab, il banco di prova della formula del mood.
+// Alta il doppio di prima (40px invece di 20), carattere più grande e regular
+// (peso 400), un po' più scuro: si legge e si tocca meglio.
 export default function VersionTap({ className = '' }) {
   const navigate = useNavigate()
   const taps = useRef({ n: 0, t: 0 })
@@ -23,7 +25,10 @@ export default function VersionTap({ className = '' }) {
   return (
     <p
       onClick={onTap}
-      className={'select-none text-center text-sm text-ink-soft ' + className}
+      className={
+        'flex min-h-10 select-none items-center justify-center text-center text-base font-normal text-ink/75 ' +
+        className
+      }
     >
       Annales · versione {__APP_VERSION__}
     </p>
