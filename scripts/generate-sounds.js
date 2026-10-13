@@ -46,5 +46,5 @@ for (let i = 0; i < total; i++) {
   pcm.writeInt16LE(Math.round(Math.max(-1, Math.min(1, data[i])) * 32000), 44 + i * 2)
 }
 await mkdir(outDir, { recursive: true })
-await writeFile(resolve(outDir, 'annales_reminder.wav'), pcm)
-console.log('scritto annales_reminder.wav', pcm.length, 'byte')
+await writeFile(resolve(outDir, 'myjournal_reminder.wav'), pcm)
+console.log('scritto myjournal_reminder.wav', pcm.length, 'byte')

@@ -1,4 +1,4 @@
-package it.fplinio.annales;
+package it.fplinio.myjournal;
 
 import android.content.Context;
 
@@ -8,21 +8,21 @@ import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
 /**
- * Ponte fra l'app e il widget 3x1 (AnnalesSummaryWidget): il frontend manda un riepilogo
+ * Ponte fra l'app e il widget 3x1 (MyJournalSummaryWidget): il frontend manda un riepilogo
  * (mood giornaliero degli ultimi giorni, ultima nota, gradiente del mood) e il widget lo mostra.
  * Vedi src/lib/widgetSync.js.
  */
-@CapacitorPlugin(name = "AnnalesWidget")
-public class AnnalesWidgetPlugin extends Plugin {
+@CapacitorPlugin(name = "MyJournalWidget")
+public class MyJournalWidgetPlugin extends Plugin {
 
     @PluginMethod
     public void update(PluginCall call) {
         Context c = getContext();
-        c.getSharedPreferences(AnnalesSummaryWidget.PREFS, Context.MODE_PRIVATE)
+        c.getSharedPreferences(MyJournalSummaryWidget.PREFS, Context.MODE_PRIVATE)
             .edit()
-            .putString(AnnalesSummaryWidget.KEY_DATA, call.getData().toString())
+            .putString(MyJournalSummaryWidget.KEY_DATA, call.getData().toString())
             .apply();
-        AnnalesSummaryWidget.updateAll(c);
+        MyJournalSummaryWidget.updateAll(c);
         call.resolve();
     }
 }

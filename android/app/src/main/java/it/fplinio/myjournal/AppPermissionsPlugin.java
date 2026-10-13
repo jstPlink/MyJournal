@@ -1,4 +1,4 @@
-package it.fplinio.annales;
+package it.fplinio.myjournal;
 
 import android.Manifest;
 import android.app.AlarmManager;
@@ -100,7 +100,7 @@ public class AppPermissionsPlugin extends Plugin {
         call.resolve();
     }
 
-    /** Elenco delle app con risparmio batteria: lì si sceglie "Nessuna restrizione" per Annales. */
+    /** Elenco delle app con risparmio batteria: lì si sceglie "Nessuna restrizione" per MyJournal. */
     @PluginMethod
     public void openBatterySettings(PluginCall call) {
         open(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));

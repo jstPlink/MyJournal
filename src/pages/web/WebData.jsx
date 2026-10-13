@@ -156,7 +156,7 @@ export default function WebData() {
               gridRows={8}
               monthFontSize={13}
               axisFontSize={13}
-              fontFamily="'Annales Hand', 'Kalam', sans-serif"
+              fontFamily="'MyJournal Hand', 'Kalam', sans-serif"
               fontWeight={700}
               alternateMonths={false}
               showAxisValues

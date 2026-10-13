@@ -1,4 +1,4 @@
-package it.fplinio.annales;
+package it.fplinio.myjournal;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

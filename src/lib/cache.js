@@ -13,7 +13,7 @@
 import { pb, isLocal } from './pocketbase'
 import { isNetworkError } from './offlineQueue'
 
-const DB_NAME = 'annales-cache'
+const DB_NAME = 'myjournal-cache'
 const STORE = 'kv'
 const SOFT_MS = 2500
 const SOFT = Symbol('soft-timeout')
@@ -187,8 +187,8 @@ export async function cachedRead(key, fetcher, { fallback, softMs = SOFT_MS } = 
 }
 
 // ---- statistiche e pulizia (Impostazioni → Uso offline) ----
-export const THUMBS_CACHE = 'annales-thumbs-v2'
-const LEGACY_THUMBS_CACHES = ['annales-thumbs']
+export const THUMBS_CACHE = 'myjournal-thumbs-v2'
+const LEGACY_THUMBS_CACHES = ['myjournal-thumbs']
 
 // Spazio usato dall'app su questo dispositivo (stima del browser: include
 // anche coda offline e file dell'app) + cosa c'è nella cache dei dati.

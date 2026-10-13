@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# Backend PocketBase per un'istanza Annales self-hosted: scarica il binario
+# Backend PocketBase per un'istanza MyJournal self-hosted: scarica il binario
 # ufficiale e applica lo schema in pb_migrations/ al primo avvio (note,
 # people, tags + i campi custom su users), più gli hook JS in pb_hooks/ (cron
 # dei recap automatici giorno/mese/anno — vedi pb_hooks/main.pb.js). Versione

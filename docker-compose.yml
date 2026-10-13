@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: pocketbase.Dockerfile
-    container_name: annales-pocketbase
+    container_name: myjournal-pocketbase
     volumes:
       - pb_data:/pb/pb_data
     # Nessuna porta pubblicata: il database è interno, lo raggiunge solo il
@@ -29,8 +29,8 @@ services:
         # Vuoto = stessa origin del frontend (default). Valorizzalo solo per
         # puntare a un PocketBase esterno.
         VITE_PB_URL: ${VITE_PB_URL:-}
-    image: annales-diario:latest
-    container_name: annales-diario
+    image: myjournal-diario:latest
+    container_name: myjournal-diario
     depends_on:
       - pocketbase
     ports:

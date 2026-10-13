@@ -1,11 +1,11 @@
-# Annales – Guida all'uso
+# MyJournal – Guida all'uso
 
 Guida per chi usa l'app. Per com'è fatta dentro e per rispondere a domande tecniche vedi [ARCHITETTURA.md](../ARCHITETTURA.md);
 la cronologia delle versioni è in `src/lib/changelog.js` (visibile in app: Impostazioni → Novità).
 
 ## 1. Cos'è
 
-Annales è un **diario personale** (PWA: funziona dal browser e si installa su telefono). Ogni giorno può avere più **note**, ognuna con
+MyJournal è un **diario personale** (PWA: funziona dal browser e si installa su telefono). Ogni giorno può avere più **note**, ognuna con
 titolo, testo, **umore** (mood), orario di inizio e fine, immagini, persone, tag, luogo e canzoni. L'app mostra le note per mese, per
 giorno, in statistiche e in una ricerca. Non c'è nessuna parte social: i dati sono **tuoi**: alla prima apertura scegli se tenerli
 **su questo dispositivo** (nessun server, nessun account) o **sul tuo server** (scrivi tu l'indirizzo, per esempio quello di casa tua sul NAS).
@@ -67,7 +67,7 @@ passaggio è automatico in base alla larghezza della finestra.
   o un luogo collegato a delle note chiede se sostituirlo o toglierlo ovunque.
 - **Integrazioni:** Immich, **MyMap**, Spotify, Gemini (vedi §6–§8).
 - **Archivio e account:** dice dove sono i tuoi dati (su questo dispositivo o sul tuo server) e permette di cambiare; «Esci» c'è solo con un server.
-- **Mood Lab (nascosto):** in fondo alle Impostazioni, toccando 5 volte di seguito la riga «Annales · versione», si apre il Mood Lab: un banco di prova per la formula del mood con dati di esempio (non tocca le tue note). Con **Applica all'app** la formula che hai impostato (curva delle note, peso di durata e persone, curva dei giorni nel mese) diventa quella di tutto il tuo account; **Formula originale** la ripristina.
+- **Mood Lab (nascosto):** in fondo alle Impostazioni, toccando 5 volte di seguito la riga «MyJournal · versione», si apre il Mood Lab: un banco di prova per la formula del mood con dati di esempio (non tocca le tue note). Con **Applica all'app** la formula che hai impostato (curva delle note, peso di durata e persone, curva dei giorni nel mese) diventa quella di tutto il tuo account; **Formula originale** la ripristina.
 - **Uso offline**, **Novità** (changelog), **Esporta** (JSON o Markdown di tutto il diario) e **Account** (cambio nome, email e password;
   esci; elimina account con doppia conferma, che cancella anche note, persone e tag).
 
@@ -75,7 +75,7 @@ passaggio è automatico in base alla larghezza della finestra.
 
 Il luogo di una nota è un nome con coordinate. Dal pulsante "Luogo" si apre il selettore:
 
-- **Annales:** cerchi un posto per nome (OpenStreetMap), tocchi un punto sulla mappa (anche senza indirizzo, il nome lo scrivi tu) o
+- **MyJournal:** cerchi un posto per nome (OpenStreetMap), tocchi un punto sulla mappa (anche senza indirizzo, il nome lo scrivi tu) o
   riusi un **luogo salvato**. Il luogo scelto finisce anche nell'elenco in Impostazioni → Luoghi.
 - **MyMap:** (compare solo se l'integrazione è configurata) propone i **posti visitati nel giorno della nota**, cioè le soste di almeno
   20 minuti registrate da MyMap, con orario e durata. Le frecce cambiano giorno. Tocchi un posto: compare sulla mappa col nome
@@ -89,7 +89,7 @@ sezione stessa.
 
 - **Testa connessione** verifica l'accesso e mostra quanti **punti** ci sono sul server e quanti **nomi dati a mano** (i nomi dei posti
   che hai assegnato in MyMap). Funziona anche prima di salvare.
-- **Salva** scrive i dati sul tuo profilo Annales. Se il server non ha ancora i campi MyMap (versione dell'app non ancora pubblicata),
+- **Salva** scrive i dati sul tuo profilo MyJournal. Se il server non ha ancora i campi MyMap (versione dell'app non ancora pubblicata),
   lo segnala e non svuota gli input.
 
 **Problemi comuni**
@@ -97,7 +97,7 @@ sezione stessa.
 | Sintomo | Causa e rimedio |
 |---|---|
 | "Impossibile raggiungere il server MyMap" | URL sbagliato o non raggiungibile (deve esistere nel DNS ed essere HTTPS). Usa l'indirizzo che hai in MyMap. |
-| "Email o password di MyMap non valide" | Sono quelle dell'account **MyMap**, che può avere una password diversa da quella di Annales. |
+| "Email o password di MyMap non valide" | Sono quelle dell'account **MyMap**, che può avere una password diversa da quella di MyJournal. |
 | Salvando i campi si svuotano / errore sui campi | Il database di produzione non ha ancora la migration dei campi MyMap: pubblica la nuova versione (push su `main`, poi `docker compose pull && docker compose up -d` sul NAS). |
 | Nel selettore vedo i nomi di OpenStreetMap e non i miei | I tuoi nomi non sono arrivati sul server: in MyMap devi essere collegato al server e le impostazioni risultare "Salvate nel profilo" (dare di nuovo un nome forza il salvataggio). "Testa connessione" dice quanti nomi trova. Il nome si abbina al posto entro 150 m. |
 | "Nessun posto registrato" in un giorno | Servono soste di almeno 20 minuti con il tracking attivo; prova a cambiare giorno con le frecce. |
@@ -141,11 +141,11 @@ Oltre alla PWA esiste un'app Android (file **APK**) con lo stesso account e gli 
   l'app installa il nuovo APK sopra il vecchio. Se Android rifiuta l'aggiornamento (firma diversa) disinstalla prima l'app.
 - **Permessi:**
   - **Microfono:** serve per "Detta un vocale" nelle note con Gemini. Android lo chiede alla prima registrazione; se l'hai negato:
-    Impostazioni del telefono → App → Annales → Autorizzazioni → Microfono. Un APK vecchio, senza il permesso nel manifest, non lo
+    Impostazioni del telefono → App → MyJournal → Autorizzazioni → Microfono. Un APK vecchio, senza il permesso nel manifest, non lo
     chiede mai: va reinstallata la versione nuova.
   - **Notifiche:** servono per i promemoria (Android 13+ le chiede alla prima attivazione).
-- **Widget "Nuova nota":** aggiungilo dalla schermata home (due formati). Un tocco apre l'app sulla scelta Gemini / a mano. Tutti e tre i widget (2×1, 1×1 e il 3×1 "Annales") hanno la loro anteprima nel selettore dei widget.
-- **Widget 3×1 "Annales":** tre blocchi. **A sinistra** il mood dell'ultima settimana (in centesimi, da 0 a 100, con un quadratino di carta del colore del tuo gradiente e quanti giorni e note ha considerato; toccandolo si apre Andamento); **al centro** l'ultima nota: il giorno ("oggi", "ieri" o la data) e l'ora in cui è finita (toccandola si apre quel giorno); **a destra** il pulsante giallo in rilievo, un po' storto, per scrivere una nota nuova: è appeso a un chiodo e ondeggia piano, senza scatti, con 4 secondi di pausa fra un'oscillazione e l'altra. Nel selettore dei widget l'anteprima mostra il widget con dati d'esempio. Si aggiorna quando apri l'app, la riporti in primo piano o salvi/elimini una nota: una nota scritta da un altro dispositivo compare alla prossima apertura.
+- **Widget "Nuova nota":** aggiungilo dalla schermata home (due formati). Un tocco apre l'app sulla scelta Gemini / a mano. Tutti e tre i widget (2×1, 1×1 e il 3×1 "MyJournal") hanno la loro anteprima nel selettore dei widget.
+- **Widget 3×1 "MyJournal":** tre blocchi. **A sinistra** il mood dell'ultima settimana (in centesimi, da 0 a 100, con un quadratino di carta del colore del tuo gradiente e quanti giorni e note ha considerato; toccandolo si apre Andamento); **al centro** l'ultima nota: il giorno ("oggi", "ieri" o la data) e l'ora in cui è finita (toccandola si apre quel giorno); **a destra** il pulsante giallo in rilievo, un po' storto, per scrivere una nota nuova: è appeso a un chiodo e ondeggia piano, senza scatti, con 4 secondi di pausa fra un'oscillazione e l'altra. Nel selettore dei widget l'anteprima mostra il widget con dati d'esempio. Si aggiorna quando apri l'app, la riporti in primo piano o salvi/elimini una nota: una nota scritta da un altro dispositivo compare alla prossima apertura.
 - **Statistiche più ariose:** i numeri grandi delle schede in cima non sono più attraversati dalla linea tratteggiata.
 - **Foto che dondolano:** nelle viste Calendario e Giorno le polaroid oscillano a destra e a sinistra quando inclini il telefono (sono appese al nastro). Si spegne da Impostazioni → Permessi → Giroscopio, o disattivando le animazioni.
 - **Permessi:** Impostazioni → **Permessi** mostra cosa hai concesso all'app (microfono, notifiche, allarmi precisi, risparmio batteria) e se il giroscopio c'è (Android non chiede nessun permesso per quello), a cosa serve, e ha il pulsante per concederlo o per aprire la schermata di Android dove si cambia. Si aggiorna da solo quando torni nell'app.
@@ -173,7 +173,7 @@ Oltre alla PWA esiste un'app Android (file **APK**) con lo stesso account e gli 
 - **Nuova nota con Gemini:** se chiudi il pannello con la ✕ il testo e i vocali restano come **bozza** (te lo dice un avviso). La linguetta a destra elenca le note Gemini in sospeso con il giorno a cui appartengono (il giorno aperto quando hai premuto «nuova nota», altrimenti oggi): tocca per riprenderle.
 - **Vocali:** finita la registrazione il vocale resta salvato con un titolo (modificabile) e lo trascrivi quando vuoi con «Trascrivi».
 - **Titoli:** le note hanno sempre il titolo in maiuscolo.
-- **Mood Lab (nascosto):** in fondo alle Impostazioni, toccando 5 volte di seguito la riga «Annales · versione», si apre un banco di prova per la formula del mood con dati di esempio (non tocca le tue note). Con **Applica all'app** la formula che hai impostato (curva delle note, peso di durata e persone, curva dei giorni nel mese) diventa quella di tutto il tuo account; **Formula originale** la ripristina.
+- **Mood Lab (nascosto):** in fondo alle Impostazioni, toccando 5 volte di seguito la riga «MyJournal · versione», si apre un banco di prova per la formula del mood con dati di esempio (non tocca le tue note). Con **Applica all'app** la formula che hai impostato (curva delle note, peso di durata e persone, curva dei giorni nel mese) diventa quella di tutto il tuo account; **Formula originale** la ripristina.
 
 ## Novità della serie 0.78 in breve
 

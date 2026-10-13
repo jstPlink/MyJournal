@@ -6,10 +6,10 @@
 // chiara, con il font "tondeggiante" e il cursore di sistema (Windows). Il CSS
 // del tema scuro e degli altri font resta in index.css ma non viene attivato.
 
-const ANIM_KEY = 'annales.anim'
-const PAPER_KEY = 'annales.paper'
-const PAPER_IMAGE_KEY = 'annales.paperImage'
-const TILT_KEY = 'annales.tilt'
+const ANIM_KEY = 'myjournal.anim'
+const PAPER_KEY = 'myjournal.paper'
+const PAPER_IMAGE_KEY = 'myjournal.paperImage'
+const TILT_KEY = 'myjournal.tilt'
 
 export const ANIMS = ['system', 'on', 'off']
 export const ANIM_LABELS = { system: 'Sistema', on: 'Sì', off: 'No' }
@@ -98,7 +98,7 @@ export function applyPrefs() {
 
   const meta = document.querySelector('meta[name="theme-color"]')
   if (meta) meta.setAttribute('content', '#dbd1bd')
-  window.dispatchEvent(new Event('annales:prefs'))
+  window.dispatchEvent(new Event('myjournal:prefs'))
 }
 
 function setKey(key, value) {

@@ -12,7 +12,7 @@ function normalizeBaseUrl(url) {
   return String(url || '').trim().replace(/\/+$/, '')
 }
 
-// Configurazione completa dall'utente Annales, oppure null se manca qualcosa.
+// Configurazione completa dall'utente MyJournal, oppure null se manca qualcosa.
 export function mymapConfigFromUser(user) {
   const url = normalizeBaseUrl(user?.mymapUrl)
   const email = user?.mymapEmail?.trim()
@@ -23,7 +23,7 @@ export function mymapConfigFromUser(user) {
 
 // Un client per ogni server MyMap, con auth store IN MEMORIA: quello di
 // default scriverebbe in localStorage sulla stessa chiave del PocketBase di
-// Annales, sloggando l'utente.
+// MyJournal, sloggando l'utente.
 const sessions = new Map()
 
 async function login({ url, email, password }) {
@@ -35,7 +35,7 @@ async function login({ url, email, password }) {
     sessions.set(key, client)
   }
   // Il record utente porta i nomi dati a mano: si rilegge a ogni uso (authRefresh)
-  // così un nome appena dato in MyMap compare senza ricaricare Annales.
+  // così un nome appena dato in MyMap compare senza ricaricare MyJournal.
   if (client.authStore.isValid) {
     try {
       await client.collection('users').authRefresh()

@@ -1,4 +1,4 @@
-# Annales — Diario personale (PWA)
+# MyJournal — Diario personale (PWA)
 
 Diario personale come Progressive Web App: funziona da browser desktop e si
 installa su smartphone (manifest + service worker). Tre schermate principali —
@@ -29,7 +29,7 @@ L'app parte su `http://localhost:5173`. La prima schermata è il **login**
 Il dev server non ha un database proprio: inoltra `/api/` a `VITE_DEV_API`
 oppure, se non impostata, a uno stack Docker locale su `http://localhost:8973`.
 Per lavorare contro il server online crea `.env.local` con
-`VITE_DEV_API=https://annales.tuodominio.it` (attenzione: sono i dati veri).
+`VITE_DEV_API=https://myjournal.tuodominio.it` (attenzione: sono i dati veri).
 
 Documentazione: [docs/GUIDA.md](docs/GUIDA.md) (uso) e
 [ARCHITETTURA.md](ARCHITETTURA.md) (com'è fatta, deploy, domande frequenti).
@@ -55,7 +55,7 @@ Si cambia da Impostazioni → Archivio e account. Dettagli in [ARCHITETTURA.md](
 
 ## Fai girare la TUA istanza (il tuo diario, il tuo database)
 
-Ogni installazione di Annales è **autosufficiente**: `docker compose up` avvia
+Ogni installazione di MyJournal è **autosufficiente**: `docker compose up` avvia
 sia il backend PocketBase (con lo schema — collection `note`/`people`/`tags` e
 i campi delle integrazioni su `users` — creato automaticamente al primo avvio
 dalle migration in [`pb_migrations/`](pb_migrations)) sia il frontend. Non
@@ -72,7 +72,7 @@ istanza (un'istanza = un database SQLite tutto suo, nel volume Docker
 `pb_data`).
 
 Il database è **interno all'app**: il container PocketBase non pubblica nessuna
-porta, lo raggiunge solo il container del frontend (`annales-diario`, nginx)
+porta, lo raggiunge solo il container del frontend (`myjournal-diario`, nginx)
 sulla rete Docker. L'app chiama `/api/...` sulla **propria origin** e nginx
 inoltra a PocketBase solo gli endpoint che servono all'app (record, login e
 registrazione, file, realtime); l'admin UI (`/_/`), il login da superuser,
@@ -108,11 +108,11 @@ Se ti serve l'**admin UI** (`/_/`), pubblica TEMPORANEAMENTE la porta aggiungend
 ### Oppure con docker puro
 
 ```bash
-docker build -t annales-diario:latest .
-docker build -f pocketbase.Dockerfile -t annales-pocketbase:latest .
-docker network create annales 2>/dev/null || true
-docker run -d --name annales-pocketbase --network annales -v pb_data:/pb/pb_data --restart unless-stopped annales-pocketbase:latest
-docker run -d --name annales-diario --network annales -e PB_UPSTREAM=annales-pocketbase:8090 -p 8973:80 --restart unless-stopped annales-diario:latest
+docker build -t myjournal-diario:latest .
+docker build -f pocketbase.Dockerfile -t myjournal-pocketbase:latest .
+docker network create myjournal 2>/dev/null || true
+docker run -d --name myjournal-pocketbase --network myjournal -v pb_data:/pb/pb_data --restart unless-stopped myjournal-pocketbase:latest
+docker run -d --name myjournal-diario --network myjournal -e PB_UPSTREAM=myjournal-pocketbase:8090 -p 8973:80 --restart unless-stopped myjournal-diario:latest
 ```
 
 ### Deploy sul NAS (immagini pre-buildate)

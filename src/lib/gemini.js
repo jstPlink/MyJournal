@@ -53,7 +53,7 @@ const MODEL = 'gemini-3.6-flash'
 // Se la chiamata a Gemini fallisce per qualunque motivo (rete, chiave,
 // limite di richieste...) il testo scritto non va perso — riaprendo il
 // dialog lo si ritrova già lì, senza doverlo riscrivere.
-const PROMPT_DRAFT_KEY = 'annales.geminiPromptDraft'
+const PROMPT_DRAFT_KEY = 'myjournal.geminiPromptDraft'
 
 export function loadGeminiPromptDraft() {
   try {

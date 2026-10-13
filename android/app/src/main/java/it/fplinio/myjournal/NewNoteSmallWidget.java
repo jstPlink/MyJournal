@@ -1,4 +1,4 @@
-package it.fplinio.annales;
+package it.fplinio.myjournal;
 
 // Variante 1x1 del widget "Nuova nota": stesso comportamento, solo testo.
 public class NewNoteSmallWidget extends NewNoteWidget {

@@ -42,7 +42,7 @@ export default function MymapIntegration({ web = false }) {
         setStatus({
           ok: false,
           message:
-            'Il server non ha ancora i campi MyMap, quindi non si salva nulla: va pubblicata la nuova versione di Annales (migration 1758000017).',
+            'Il server non ha ancora i campi MyMap, quindi non si salva nulla: va pubblicata la nuova versione di MyJournal (migration 1758000017).',
         })
         return
       }

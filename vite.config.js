@@ -33,8 +33,8 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         includeAssets: ['favicon.svg', 'apple-touch-icon-180x180.png'],
         manifest: {
-          name: 'Annales — Diario personale',
-          short_name: 'Annales',
+          name: 'MyJournal — Diario personale',
+          short_name: 'MyJournal',
           description: 'Diario personale: mese, giorno e note con umore e immagini.',
           lang: 'it',
           start_url: '/',
@@ -71,7 +71,7 @@ export default defineConfig(({ mode }) => {
                 url.searchParams.get('thumb') === '300x300',
               handler: 'CacheFirst',
               options: {
-                cacheName: 'annales-thumbs-v2',
+                cacheName: 'myjournal-thumbs-v2',
                 // solo risposte "vere" (200): quelle opache (status 0) il browser
                 // le conteggia ~7 MB l'una, gonfiando lo spazio usato.
                 cacheableResponse: { statuses: [200] },

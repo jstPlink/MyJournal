@@ -77,7 +77,7 @@ export default function Login() {
           <div className="ml-sheet">
             <div className="wl-logo">
               <img src="/favicon.svg" alt="" />
-              <span className="wl-logo-name">Annales</span>
+              <span className="wl-logo-name">MyJournal</span>
             </div>
 
             <h1 className="wl-headline">
@@ -224,7 +224,7 @@ export default function Login() {
             Per registrarti bastano email e password. Il resto lo scrivi tu.
           </p>
 
-          <p className="ml-version">Annales · v{__APP_VERSION__}</p>
+          <p className="ml-version">MyJournal · v{__APP_VERSION__}</p>
           <BackendInfo compact className="ml-version" />
         </div>
       </main>

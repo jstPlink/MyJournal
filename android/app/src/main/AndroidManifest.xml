@@ -50,7 +50,7 @@
         </receiver>
 
         <receiver
-            android:name=".AnnalesSummaryWidget"
+            android:name=".MyJournalSummaryWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

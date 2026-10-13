@@ -9,7 +9,7 @@ import {
 
 // Prima schermata dell'app: dove vivono i dati del diario.
 //  - "Su questo dispositivo": tutto resta nel telefono (app) o nel browser;
-//  - "Il mio server": l'indirizzo della propria istanza di Annales.
+//  - "Il mio server": l'indirizzo della propria istanza di MyJournal.
 // Nessun indirizzo è scritto nel codice. La scelta si cambia da Impostazioni
 // (Archivio) o dalla schermata di accesso.
 export default function BackendChooser() {
@@ -28,7 +28,7 @@ export default function BackendChooser() {
     e.preventDefault()
     const clean = normalizeServerUrl(url)
     if (!clean) {
-      setError('Scrivi un indirizzo valido, per esempio https://annales.tuodominio.it')
+      setError('Scrivi un indirizzo valido, per esempio https://myjournal.tuodominio.it')
       return
     }
     setBusy(true)
@@ -54,7 +54,7 @@ export default function BackendChooser() {
 
         <div className="wl-logo">
           <img src="/favicon.svg" alt="" />
-          <span className="wl-logo-name">Annales</span>
+          <span className="wl-logo-name">MyJournal</span>
         </div>
 
         <div className="wl-title-wrap">
@@ -76,7 +76,7 @@ export default function BackendChooser() {
             <button type="button" onClick={() => setChoice('server')} className="bc-option">
               <strong>Sul mio server</strong>
               <small>
-                Accedi con un account su un'istanza di Annales (per esempio quella sul tuo NAS):
+                Accedi con un account su un'istanza di MyJournal (per esempio quella sul tuo NAS):
                 i dati sono accessibili da più dispositivi.
               </small>
             </button>
@@ -97,7 +97,7 @@ export default function BackendChooser() {
                 autoFocus
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://annales.tuodominio.it"
+                placeholder="https://myjournal.tuodominio.it"
                 className="wl-input"
               />
             </div>
@@ -128,7 +128,7 @@ export default function BackendChooser() {
         )}
 
         <p className="ml-version" style={{ marginTop: 16 }}>
-          Annales · v{__APP_VERSION__}
+          MyJournal · v{__APP_VERSION__}
         </p>
       </div>
     </div>

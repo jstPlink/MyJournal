@@ -5,7 +5,7 @@ import { dayMood, getMoodGradientHex, getMoodStopPositions } from './mood'
 
 // Riepilogo per il widget 3x1 della home (solo app Android): mood degli ultimi
 // giorni e ultima nota. Lo calcola l'app e lo passa al widget nativo
-// (AnnalesWidgetPlugin → AnnalesSummaryWidget), che lo conserva e lo mostra
+// (MyJournalWidgetPlugin → MyJournalSummaryWidget), che lo conserva e lo mostra
 // anche ad app chiusa. Quindi il widget è aggiornato all'ultima volta che l'app
 // è stata aperta, è tornata in primo piano o ha salvato/eliminato una nota:
 // una nota scritta da un altro dispositivo compare alla prossima apertura.
@@ -14,7 +14,7 @@ import { dayMood, getMoodGradientHex, getMoodStopPositions } from './mood'
 // widget al momento di disegnarsi, così resta giusta anche se l'app non viene
 // aperta per qualche giorno.
 
-const AnnalesWidget = registerPlugin('AnnalesWidget')
+const MyJournalWidget = registerPlugin('MyJournalWidget')
 
 export const widgetSupported = () => Capacitor.isNativePlatform()
 
@@ -48,7 +48,7 @@ export async function refreshWidget() {
 
     const lastNote = latest.items[0]
     const positions = getMoodStopPositions()
-    await AnnalesWidget.update({
+    await MyJournalWidget.update({
       days,
       last: lastNote
         ? { date: dayKey(lastNote.date), end: timeInputValue(lastNote.timeEnd) }

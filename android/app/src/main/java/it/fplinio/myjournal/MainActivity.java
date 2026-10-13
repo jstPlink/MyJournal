@@ -1,4 +1,4 @@
-package it.fplinio.annales;
+package it.fplinio.myjournal;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         // i plugin locali vanno registrati PRIMA di super.onCreate (Capacitor li carica lì)
         registerPlugin(AppPermissionsPlugin.class);
-        registerPlugin(AnnalesWidgetPlugin.class);
+        registerPlugin(MyJournalWidgetPlugin.class);
         super.onCreate(savedInstanceState);
         widgetTick(getIntent());
     }

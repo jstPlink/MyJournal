@@ -15,7 +15,7 @@ const MAX_DRAFTS = 30
 const listeners = new Set()
 let cache = { raw: null, list: [] }
 
-const storageKey = () => `annales.noteDrafts:${pb.authStore.record?.id || 'anon'}`
+const storageKey = () => `myjournal.noteDrafts:${pb.authStore.record?.id || 'anon'}`
 
 function read() {
   let raw = null

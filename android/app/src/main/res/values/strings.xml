@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Annales</string>
-    <string name="title_activity_main">Annales</string>
-    <string name="package_name">it.fplinio.annales</string>
-    <string name="custom_url_scheme">it.fplinio.annales</string>
+    <string name="app_name">MyJournal</string>
+    <string name="title_activity_main">MyJournal</string>
+    <string name="package_name">it.fplinio.myjournal</string>
+    <string name="custom_url_scheme">it.fplinio.myjournal</string>
     <string name="widget_new_note">Nuova nota</string>
-    <string name="widget_new_note_description">Apre Annales su una nuova nota</string>
+    <string name="widget_new_note_description">Apre MyJournal su una nuova nota</string>
     <string name="widget_new_note_small_description">Nuova nota, in formato piccolo</string>
     <string name="widget_summary_description">Nuova nota, mood della settimana e ultima nota</string>
     <string name="widget_mood_caption">MOOD · 7 GIORNI</string>

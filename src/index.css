@@ -256,7 +256,7 @@ input:disabled,
   position: absolute;
   bottom: 3px;
   transform: translateX(-50%);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   line-height: 1;
@@ -764,44 +764,44 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 /* Font a mano self-hosted (/public/fonts), usati dalla skin "pagine"
    (vista giorno e vista mese, l'unica rimasta — vedi src/lib/prefs.js). */
 @font-face {
-  font-family: 'Annales Marker';
+  font-family: 'MyJournal Marker';
   src: url('/fonts/caveat-700.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Annales Hand';
+  font-family: 'MyJournal Hand';
   src: url('/fonts/kalam-300.woff2') format('woff2');
   font-weight: 300;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Annales Hand';
+  font-family: 'MyJournal Hand';
   src: url('/fonts/kalam-400.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Annales Hand';
+  font-family: 'MyJournal Hand';
   src: url('/fonts/kalam-700.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
 }
 /* Font usati dalla skin "pagine" della vista mese (self-hosted per l'offline). */
 @font-face {
-  font-family: 'Annales Pen';
+  font-family: 'MyJournal Pen';
   src: url('/fonts/permanent-marker-400.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Annales Hand Gochi';
+  font-family: 'MyJournal Hand Gochi';
   src: url('/fonts/gochi-hand-400.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: 'Annales Hand Shadows';
+  font-family: 'MyJournal Hand Shadows';
   src: url('/fonts/shadows-into-light-400.woff2') format('woff2');
   font-weight: 400;
   font-display: swap;
@@ -809,7 +809,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 /* Font digitale stile display LCD/calcolatrice per l'orologio della vista
    nota web (DSEG14 Classic, licenza SIL OFL — github.com/keshikan/DSEG). */
 @font-face {
-  font-family: 'Annales Digital';
+  font-family: 'MyJournal Digital';
   src: url('/fonts/dseg14-classic-bold.woff2') format('woff2');
   font-weight: 700;
   font-display: swap;
@@ -821,7 +821,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
    linguetta-umore a sinistra, titoli scritti in "mani" diverse e polaroid
    attaccate col nastro. Colori legati ai token del tema (chiaro/scuro); la
    texture sotto la pila è quella scelta in Aspetto (data-paper). Linguetta,
-   evidenziatore e nastro usano il filtro #annales-wob (SketchDefs.jsx). */
+   evidenziatore e nastro usano il filtro #myjournal-wob (SketchDefs.jsx). */
 :root[data-skin-month='pages'] {
   --mp-ink-b: #4d4234;
   --mp-ink-c: #34506d;
@@ -953,7 +953,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     linear-gradient(180deg, #cb463a, #ae392e);
   box-shadow: 0 2px 7px rgba(20, 12, 4, 0.3);
   opacity: 0.93;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .mp-today-tape::after {
   content: '\00b7 oggi \00b7';
@@ -961,7 +961,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   inset: 0;
   display: grid;
   place-items: center;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -1136,7 +1136,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
      su un'etichetta così piccola comunque. */
 }
 .mp-tab b {
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-weight: 700;
   font-size: 1.5rem;
   /* le varianti a punta (--coral, --yellow) intaccano il bordo destro con
@@ -1204,7 +1204,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   position: relative;
   display: inline-block;
   margin: 0;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-weight: 400;
   font-size: var(--mp-wd-fs, 1.562rem);
   line-height: 1.1;
@@ -1218,7 +1218,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   bottom: 0.05em;
   height: 0.58em;
   background: var(--mp-wd-hl);
-  /* niente filter: url(#annales-wob) qui — striscia dietro il numero del
+  /* niente filter: url(#myjournal-wob) qui — striscia dietro il numero del
      giorno, presente su TUTTE le celle del mese (fino a 31 insieme),
      causa nota di glitch grafico in WebView Android su telefono. */
   transform: skewX(-11deg) rotate(-1.2deg);
@@ -1234,7 +1234,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 
 /* I titoli su un CARTONCINO STRAPPATO del colore del mood, a sinistra sotto
    il giorno. Opaco; il bordo strappato irregolare è reso da un clip-path
-   fitto + filtro #annales-paper su ::before (livello senza figli). */
+   fitto + filtro #myjournal-paper su ::before (livello senza figli). */
 .mp-notes {
   position: relative;
   z-index: 1;
@@ -1292,7 +1292,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   /* saturate(): il colore del mood risalta di più, le fasce si distinguono
      meglio (era troppo simile a se stesso da fascia a fascia). 1.32 = altro
      +15% sopra il precedente 1.15 (1.15 * 1.15). Niente più
-     url(#annales-paper): questo si ripete una volta per ogni giorno CON
+     url(#myjournal-paper): questo si ripete una volta per ogni giorno CON
      note (fino a ~25 alla volta) — insieme a .mp-page::before è la causa
      più probabile del glitch grafico in WebView Android. Il clip-path
      sopra (52 punti, già molto irregolare) basta a dare il bordo strappato
@@ -1362,21 +1362,21 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   opacity: 0.5;
 }
 .mp-n[data-hand='a'] {
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-weight: 700;
   font-size: calc(var(--mp-wd-fs, 1.562rem) * 0.69 * 0.92 * var(--title-k, 1));
 }
 .mp-n[data-hand='b'] {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: calc(var(--mp-wd-fs, 1.562rem) * 0.69 * var(--title-k, 1));
   margin-left: 0.4rem;
 }
 .mp-n[data-hand='c'] {
-  font-family: 'Annales Hand Gochi', 'Gochi Hand', cursive;
+  font-family: 'MyJournal Hand Gochi', 'Gochi Hand', cursive;
   font-size: calc(var(--mp-wd-fs, 1.562rem) * 0.69 * var(--title-k, 1));
 }
 .mp-n[data-hand='d'] {
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   font-size: calc(var(--mp-wd-fs, 1.562rem) * 0.69 * 1.06 * var(--title-k, 1));
   margin-left: 0.25rem;
 }
@@ -1385,7 +1385,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   position: relative;
   z-index: 1;
   margin: 0.45rem 0 0;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.86rem;
   font-style: italic;
   color: var(--color-ink-soft);
@@ -1448,12 +1448,12 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   max-width: 100%;
   padding: 5px 16px 5px 8px;
   /* nome in font più leggibile e in grassetto */
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.94rem;
   line-height: 1;
   box-shadow: 0 2px 4px rgba(20, 12, 4, 0.2);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .mp-tape > span:first-child {
   flex: none;
@@ -1496,7 +1496,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   /* cornice quasi bianca + ombra tight + ombra ampia SOTTO */
   background: #fffdf5;
   transform: rotate(-2.5deg);
-  filter: url(#annales-wob) drop-shadow(0 2px 3px rgba(20, 12, 4, 0.45))
+  filter: url(#myjournal-wob) drop-shadow(0 2px 3px rgba(20, 12, 4, 0.45))
     drop-shadow(0 13px 16px rgba(20, 12, 4, 0.42));
   clip-path: polygon(
     0% 5%, 8.33% 0%, 16.67% 5%, 25% 0%, 33.33% 5%, 41.67% 0%, 50% 5%,
@@ -1577,7 +1577,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .mp-place-name {
   display: block;
   padding-top: 4px;
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   font-size: 0.82rem;
   color: #453f30;
   text-align: center;
@@ -1634,7 +1634,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   box-shadow: 0 3px 8px rgba(20, 12, 4, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   transform: rotate(-7deg);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .mp-disc::before {
   content: '';
@@ -1666,7 +1666,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .mp-song span {
   max-width: 124px;
   padding: 1px 8px;
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   line-height: 1.15;
   color: #4a4234;
   text-align: center;
@@ -1676,7 +1676,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .mp-song .t {
   font-size: 0.875rem;
@@ -1704,7 +1704,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   opacity: var(--so, 0.11);
   font-size: 0.92rem; /* −20% */
   /* più "pennellate", non del tutto leggibili */
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   letter-spacing: 0.01em;
   filter: blur(0.4px);
   transform: rotate(var(--sr, -4deg));
@@ -1780,7 +1780,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   background: rgba(236, 226, 194, 0.86);
   border: 1px solid rgba(176, 158, 112, 0.4);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .mp-pola.tc::after {
   content: '';
@@ -1793,7 +1793,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   background: rgba(236, 226, 194, 0.84);
   border: 1px solid rgba(176, 158, 112, 0.38);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .mp-ph {
   display: block;
@@ -1807,7 +1807,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .mp-cap {
   display: block;
   padding-top: 5px;
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   font-size: 0.9rem;
   color: #4a4234;
   text-align: center;
@@ -1970,7 +1970,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     gap: 5px;
     transform: translateZ(0);
     padding: 5px 10px 5px 8px;
-    font-family: 'Annales Hand', 'Kalam', sans-serif;
+    font-family: 'MyJournal Hand', 'Kalam', sans-serif;
     font-size: 0.88rem;
     line-height: 1;
     color: #4d4234;
@@ -2024,7 +2024,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     background: rgba(236, 226, 194, 0.86);
     border: 1px solid rgba(176, 158, 112, 0.4);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
-    /* niente filter: url(#annales-wob) qui — un'istanza per ogni nota con
+    /* niente filter: url(#myjournal-wob) qui — un'istanza per ogni nota con
        foto nel mese, stesso motivo del .mp-mini qui sopra. */
   }
   .mp-pola-mobile .mp-ph {
@@ -2086,7 +2086,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
    un cartoncino strappato del colore del mood con titolo "a penna doppia"
    evidenziato in nero; a destra le stesse informazioni della skin "Pagine"
    nella vista mese (persone, luogo, canzone, foto). Stessi filtri
-   #annales-wob/#annales-paper del mese (SketchDefs.jsx). NOTA: come nella
+   #myjournal-wob/#myjournal-paper del mese (SketchDefs.jsx). NOTA: come nella
    vista mese, non gestisce la sovrapposizione oraria fra due note (rara nel
    diario): se capita, i due cartoncini si sovrappongono. */
 :root[data-skin-day='pages'] {
@@ -2139,7 +2139,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .dp-empty {
   padding: 20px 4px 0;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-style: italic;
   color: var(--color-ink-soft);
 }
@@ -2185,7 +2185,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   background-repeat: repeat, repeat, repeat, no-repeat, repeat;
   background-blend-mode: multiply, soft-light, soft-light, normal, normal;
   box-shadow: inset 0 0 60px rgba(84, 62, 30, 0.05);
-  filter: url(#annales-paper);
+  filter: url(#myjournal-paper);
   pointer-events: none;
 }
 
@@ -2204,7 +2204,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .day-rail .hr {
   position: absolute;
   right: 6px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.94rem;
   color: var(--dp-ink-b);
@@ -2311,7 +2311,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   /* saturate(): il colore del mood risalta di più, le fasce si distinguono
      meglio (era troppo simile a se stesso da fascia a fascia). 1.32 = altro
      +15% sopra il precedente 1.15 (1.15 * 1.15).
-     Niente più filter: url(#annales-paper) — un'istanza per ogni nota del
+     Niente più filter: url(#myjournal-paper) — un'istanza per ogni nota del
      giorno, mai toccata nei giri precedenti (quelli avevano corretto solo
      la vista mese): stessa causa nota di glitch grafico in WebView Android
      su telefono. Il ritaglio clip-path qui sopra, già molto mosso, basta a
@@ -2324,7 +2324,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   position: relative;
   align-self: flex-start;
   flex: none;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: calc(1.06rem * var(--title-k, 1));
   line-height: 1.15;
   color: #2b2015;
@@ -2358,7 +2358,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   transform: skewX(-11deg) rotate(-1.4deg);
   mix-blend-mode: multiply;
   z-index: -1;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 
 /* contenuto: una delle "mani" casuali, sfumato verso il basso; "…" se non
@@ -2380,19 +2380,19 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   mask: linear-gradient(#000 70%, transparent 97%);
 }
 .dn-body[data-hand='a'] {
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-weight: 700;
   font-size: 1.2rem;
 }
 .dn-body[data-hand='b'] {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
 }
 .dn-body[data-hand='c'] {
-  font-family: 'Annales Hand Gochi', 'Gochi Hand', cursive;
+  font-family: 'MyJournal Hand Gochi', 'Gochi Hand', cursive;
   font-size: 1.06rem;
 }
 .dn-body[data-hand='d'] {
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   font-size: 1.1rem;
 }
 .dn-body.is-clamped::after {
@@ -2400,7 +2400,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   position: absolute;
   right: 2px;
   bottom: 0;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   color: rgba(45, 34, 20, 0.75);
 }
 
@@ -2439,13 +2439,13 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   align-items: center;
   gap: 6px;
   max-width: 100%;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.92rem;
   line-height: 1;
   padding: 5px 15px 5px 8px;
   box-shadow: 0 2px 4px rgba(20, 12, 4, 0.2);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .dn-tape > span:first-child {
   flex: none;
@@ -2484,7 +2484,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   padding: 5px 5px 12px;
   background: #fffdf5;
   transform: rotate(-2.5deg);
-  filter: url(#annales-wob) drop-shadow(0 2px 3px rgba(20, 12, 4, 0.45))
+  filter: url(#myjournal-wob) drop-shadow(0 2px 3px rgba(20, 12, 4, 0.45))
     drop-shadow(0 13px 16px rgba(20, 12, 4, 0.42));
   clip-path: polygon(
     0% 5%, 8.33% 0%, 16.67% 5%, 25% 0%, 33.33% 5%, 41.67% 0%, 50% 5%,
@@ -2541,7 +2541,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .dn-place-name {
   display: block;
   padding-top: 4px;
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   font-size: 0.82rem;
   color: #453f30;
   text-align: center;
@@ -2597,7 +2597,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   box-shadow: 0 3px 8px rgba(20, 12, 4, 0.4),
     inset 0 0 0 1px rgba(255, 255, 255, 0.25);
   transform: rotate(-7deg);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .dn-disc::before {
   content: '';
@@ -2629,7 +2629,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .dn-song span {
   max-width: 118px;
   padding: 1px 8px;
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   line-height: 1.15;
   color: #4a4234;
   text-align: center;
@@ -2639,7 +2639,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .dn-song .t {
   font-size: 0.84rem;
@@ -2689,7 +2689,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   background: rgba(236, 226, 194, 0.86);
   border: 1px solid rgba(176, 158, 112, 0.4);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .dn-ph {
   display: block;
@@ -2789,7 +2789,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     align-items: center;
     gap: 4px;
     padding: 4px 7px 4px 5px;
-    font-family: 'Annales Hand', 'Kalam', sans-serif;
+    font-family: 'MyJournal Hand', 'Kalam', sans-serif;
     font-weight: 700;
     font-size: 0.7rem;
     line-height: 1;
@@ -2798,7 +2798,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     border-left: 2px dashed rgba(150, 124, 84, 0.5);
     border-right: 2px dashed rgba(150, 124, 84, 0.5);
     box-shadow: 0 2px 4px rgba(20, 12, 4, 0.18);
-    /* niente filter: url(#annales-wob) qui — fino a 3 per nota (persone/
+    /* niente filter: url(#myjournal-wob) qui — fino a 3 per nota (persone/
        luogo/canzone), stessa causa nota di glitch grafico in WebView
        Android su telefono (vedi .mp-mini in vista mese). */
   }
@@ -2846,7 +2846,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     background: rgba(236, 226, 194, 0.86);
     border: 1px solid rgba(176, 158, 112, 0.4);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
-    /* niente filter: url(#annales-wob) qui — vedi .mp-pola-mobile::before
+    /* niente filter: url(#myjournal-wob) qui — vedi .mp-pola-mobile::before
        in vista mese, stesso motivo. */
   }
   .dn-pola-mobile .dn-ph {
@@ -2934,7 +2934,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     0 64%, 1.5% 60%, 0 56%, 1.6% 52%, 0 48%, 1.3% 44%, 0 40%, 1.4% 36%,
     0 32%, 1.7% 28%, 0 24%, 1.5% 20%, 0 16%, 1.6% 12%, 0 8%, 1.3% 4%
   );
-  filter: url(#annales-tear-2);
+  filter: url(#myjournal-tear-2);
 }
 .sb-sidebar {
   position: relative;
@@ -2975,7 +2975,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     100% 94%, 98.5% 95.5%, 100% 97%, 98.2% 98%, 96.5% 99%, 100% 100%,
     0 100%
   );
-  filter: url(#annales-tear);
+  filter: url(#myjournal-tear);
 }
 .sb-sidebar > * {
   position: relative;
@@ -2994,12 +2994,12 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   align-self: center;
 }
 .sb-logo-name {
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.5rem;
   color: rgba(30, 22, 8, 0.82);
 }
 .sb-logo-v {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.68rem;
   color: rgba(30, 22, 8, 0.5);
@@ -3028,7 +3028,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   background-size: 130px 130px;
   background-blend-mode: overlay;
   color: #efe7d4;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.94rem;
   border: none;
@@ -3036,7 +3036,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   box-shadow: 0 6px 14px -4px rgba(10, 6, 0, 0.5);
   transform: rotate(-0.7deg);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 /* un po' più marcata del semplice raddrizzarsi: si solleva e si ingrandisce
    appena, è IL pulsante principale della barra */
@@ -3062,7 +3062,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   cursor: var(--cursor-pointer);
   transform: rotate(1deg);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .sb-gemini:hover,
 .sb-gemini:focus-visible {
@@ -3126,7 +3126,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border: 2px dashed rgba(52, 44, 28, 0.42);
   border-radius: 7px 9px 8px 10px;
   color: #33291c;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.92rem;
   text-decoration: none;
@@ -3295,7 +3295,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .sb-lens span {
   position: relative;
   z-index: 1;
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-weight: 700;
   font-size: 1.5rem;
   color: #33291c;
@@ -3312,7 +3312,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   padding: 10px 16px;
   background: #f2b01e;
   color: #3d2c02;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.86rem;
   border: none;
@@ -3321,7 +3321,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   box-shadow: 0 5px 10px rgba(20, 12, 4, 0.24);
   transform: rotate(2deg);
   transition: transform 0.15s ease;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .sb-import:hover {
   transform: rotate(0deg);
@@ -3334,7 +3334,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   outline-offset: 3px;
 }
 .sb-import b {
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-weight: 400;
 }
 .sb-import .beta {
@@ -3342,7 +3342,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: rgba(61, 44, 2, 0.6);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
 }
 
@@ -3424,7 +3424,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   margin-bottom: 6px;
 }
 .sb-id-label {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.56rem;
   letter-spacing: 0.09em;
@@ -3432,7 +3432,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   color: #8a6d2e;
 }
 .sb-id-num {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.56rem;
   color: #a08a54;
   font-variant-numeric: tabular-nums;
@@ -3457,7 +3457,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border: 2px solid rgba(255, 255, 255, 0.7);
   background: linear-gradient(150deg, #8a9fae, #46626f);
   color: #f3ecd8;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.1rem;
   box-shadow: 0 0 0 1px rgba(51, 41, 28, 0.25), inset 0 0 0 1px rgba(0, 0, 0, 0.15);
 }
@@ -3471,7 +3471,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .sb-id-name {
   display: block;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   /* +50% poi -15% (era 0.98rem, poi 1.47rem) */
   font-size: 1.25rem;
   line-height: 1.15;
@@ -3482,7 +3482,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .sb-id-email {
   display: block;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   /* +50% poi -10% (era 0.62rem, poi 0.93rem) */
   font-size: 0.84rem;
   color: #6b5f47;
@@ -3573,7 +3573,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   gap: 1px;
 }
 .ws-title {
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.2rem;
   line-height: 1.2;
   color: var(--color-ink);
@@ -3645,7 +3645,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .ws-sub-title {
   flex: 1;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 1rem;
 }
@@ -3733,7 +3733,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   letter-spacing: 0;
   opacity: 0.85;
   margin-left: 6px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.86rem;
 }
 .pf-body {
@@ -3758,7 +3758,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border: 3px solid rgba(255, 255, 255, 0.75);
   background: linear-gradient(150deg, #8a9fae, #46626f);
   color: #f3ecd8;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.5rem;
   box-shadow: 0 0 0 1px rgba(51, 41, 28, 0.25), 0 6px 14px rgba(20, 12, 4, 0.3);
   cursor: var(--cursor-pointer);
@@ -3867,7 +3867,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border-radius: 8px;
   border: 1.5px dashed rgba(120, 100, 60, 0.45);
   background: rgba(255, 255, 255, 0.55);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.88rem;
   color: #33291c;
   outline: none;
@@ -3888,7 +3888,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border-radius: 999px;
   border: 1.5px dashed rgba(52, 44, 28, 0.5);
   background: rgba(255, 255, 255, 0.4);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.88rem;
   color: #33291c;
@@ -4071,7 +4071,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   position: relative;
   display: inline-block;
   margin: 0;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-weight: 400;
   font-size: 2.3rem;
   color: var(--color-ink);
@@ -4086,7 +4086,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   bottom: 0.08em;
   height: 0.5em;
   background: rgba(26, 20, 10, 0.16);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   transform: skewX(-10deg) rotate(-1deg);
   mix-blend-mode: multiply;
   z-index: -1;
@@ -4123,7 +4123,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border: 1px solid #c6b995;
   box-shadow: 0 7px 15px -6px rgba(20, 12, 4, 0.3);
   transform: rotate(-1.3deg);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .wd-card-wrap.alt .wd-header {
   transform: rotate(1deg);
@@ -4135,7 +4135,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .wd-header h2 {
   margin: 0;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.15rem;
   color: #4d4234;
   white-space: nowrap;
@@ -4158,14 +4158,14 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .wd-intro p {
   margin: 0;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.85rem;
   color: var(--color-ink-soft);
   max-width: 44ch;
 }
 .wd-intro-solo {
   margin: 0 0 10px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.85rem;
   color: var(--color-ink-soft);
 }
@@ -4182,7 +4182,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   border-radius: 999px;
   border: 1.5px dashed var(--color-line);
   background: var(--color-tag);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   color: var(--color-ink);
@@ -4254,7 +4254,7 @@ li:last-child > .wd-month-row {
   place-items: center;
   background: var(--color-tag);
   border: 1.5px dashed var(--color-line);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
   color: var(--color-ink);
@@ -4299,7 +4299,7 @@ li:last-child > .wd-month-row {
   text-align: center;
   padding: 5px 8px;
   border-radius: 999px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.86rem;
   font-variant-numeric: tabular-nums;
@@ -4368,7 +4368,7 @@ li:last-child > .wd-month-row {
    in orizzontale. Due fogli sovrapposti: quello davanti quasi dritto,
    quello dietro spunta poco con un bordo seghettato irregolare (denti di
    larghezza/profondità diverse), niente clip-path a strappo organico.
-   Niente `filter: url(#annales-tear...)` qui (a differenza della barra
+   Niente `filter: url(#myjournal-tear...)` qui (a differenza della barra
    laterale web): questi due elementi sono sempre a schermo, non scorrono
    via come le pagine del mese/giorno — troppi filtri SVG feDisplacementMap
    attivi insieme causavano artefatti grafici sulle note in WebView Android
@@ -4563,13 +4563,13 @@ li:last-child > .wd-month-row {
   padding: 7px 3px;
   background: none;
   border: none;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1rem;
   color: #3d2a06;
   white-space: nowrap;
 }
 .mplaque-year .mplaque-label {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
 }
@@ -4604,7 +4604,7 @@ li:last-child > .wd-month-row {
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.28), inset 0 -1px 0 rgba(255, 255, 255, 0.35);
 }
 .mclock-digits {
-  font-family: 'Annales Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
+  font-family: 'MyJournal Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
   font-weight: 700;
   font-size: 0.86rem;
   letter-spacing: 0.02em;
@@ -4700,7 +4700,7 @@ li:last-child > .wd-month-row {
   background: none;
   border: none;
   color: #4a3f2c;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   transition: color 0.2s ease;
@@ -4843,7 +4843,7 @@ li:last-child > .wd-month-row {
   border: 1.5px solid rgba(52, 44, 28, 0.5);
   display: grid;
   place-items: center;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 800;
   font-size: 9px;
   color: #33291c;
@@ -4854,7 +4854,7 @@ li:last-child > .wd-month-row {
   padding: 3px;
   overflow: hidden;
   color: #f3ecd8;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
 }
 .mid-btn img,
 .mid-photo {
@@ -5013,7 +5013,7 @@ li:last-child > .wd-month-row {
   margin-bottom: 16px;
 }
 .ncs-title {
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-weight: 700;
   font-size: 1.5rem;
   color: var(--color-ink);
@@ -5073,7 +5073,7 @@ li:last-child > .wd-month-row {
   min-width: 0;
 }
 .ncs-opt-text b {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 1.02rem;
   color: var(--color-ink);
@@ -5151,7 +5151,7 @@ li:last-child > .wd-month-row {
   background-size: 100px 100px;
   background-blend-mode: multiply;
   border: 1.5px dashed rgba(52, 44, 28, 0.4);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.88rem;
   color: var(--color-ink);
   outline: none;
@@ -5165,7 +5165,7 @@ li:last-child > .wd-month-row {
   background-size: 100px 100px;
   background-blend-mode: multiply;
   border: 1.5px dashed rgba(52, 44, 28, 0.4);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.88rem;
   color: var(--color-ink);
 }
@@ -5176,7 +5176,7 @@ li:last-child > .wd-month-row {
   background: var(--color-save);
   border: 2px solid var(--color-save-dark);
   color: #2d3a1a;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 800;
   font-size: 0.95rem;
   box-shadow: 0 3px 8px rgba(20, 12, 4, 0.22);
@@ -5211,7 +5211,7 @@ li:last-child > .wd-month-row {
   background: var(--color-cream);
   border: 1.5px dashed var(--color-line);
   color: var(--color-ink-soft);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.76rem;
   font-weight: 700;
   transition: transform 0.12s ease;
@@ -5443,7 +5443,7 @@ li:last-child > .wd-month-row {
   background: none;
   border: none;
   text-align: left;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   color: var(--color-ink);
@@ -5469,7 +5469,7 @@ li:last-child > .wd-month-row {
   border-radius: 10px;
   border: 1.5px dashed var(--color-line);
   background: var(--color-tag);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.86rem;
   color: var(--color-ink);
   width: 100%;
@@ -5510,7 +5510,7 @@ li:last-child > .wd-month-row {
   border-radius: 999px;
   border: 1.5px dashed var(--color-line);
   background: var(--color-tag);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.78rem;
   color: var(--color-ink);
@@ -5537,7 +5537,7 @@ li:last-child > .wd-month-row {
 }
 .wf-more {
   margin-top: 8px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.76rem;
   color: var(--color-ink-soft);
@@ -5573,7 +5573,7 @@ li:last-child > .wd-month-row {
   background-size: 140px 140px;
   background-blend-mode: overlay;
   color: #efe7d4;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.96rem;
   box-shadow: 0 6px 14px -3px rgba(10, 6, 0, 0.5);
@@ -5583,7 +5583,7 @@ li:last-child > .wd-month-row {
   cursor: var(--cursor-wait);
 }
 .wf-results-head {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -5639,7 +5639,7 @@ li:last-child > .wf-result {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.88rem;
   box-shadow: 0 2px 5px rgba(20, 12, 4, 0.2), inset 0 0 0 2px rgba(255, 255, 255, 0.35);
@@ -5651,7 +5651,7 @@ li:last-child > .wf-result {
   color: var(--color-ink);
 }
 .wf-result-meta {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.78rem;
   color: var(--color-ink-soft);
   margin-top: 1px;
@@ -5799,7 +5799,7 @@ li:last-child > .wf-result {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.68rem;
   text-transform: uppercase;
@@ -5814,7 +5814,7 @@ li:last-child > .wf-result {
   flex: none;
 }
 .st-tile-value {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 500;
   font-size: 2.3rem;
   line-height: 1;
@@ -5822,7 +5822,7 @@ li:last-child > .wf-result {
 }
 .st-tile-sub {
   margin-top: 8px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.78rem;
   color: var(--color-ink-soft);
 }
@@ -5861,7 +5861,7 @@ li:last-child > .wf-result {
   display: flex;
   align-items: center;
   gap: 7px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.86rem;
   color: var(--color-ink);
@@ -5875,7 +5875,7 @@ li:last-child > .wf-result {
   border-radius: 999px;
   border: 1.5px dashed var(--color-line);
   background: var(--color-tag);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.76rem;
   color: var(--color-ink);
@@ -5885,7 +5885,7 @@ li:last-child > .wf-result {
   font-size: 0.9rem;
   line-height: 1.55;
   color: var(--color-ink);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   white-space: pre-wrap;
 }
 .prc-empty {
@@ -5911,7 +5911,7 @@ li:last-child > .wf-result {
   border: 1.5px dashed rgba(52, 44, 28, 0.55);
   border-radius: 999px;
   transform: rotate(-0.6deg);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.76rem;
   text-transform: uppercase;
@@ -5954,7 +5954,7 @@ li:last-child > .st-person-row {
   flex: none;
   width: 20px;
   text-align: center;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.78rem;
   color: var(--color-ink-soft);
@@ -5972,7 +5972,7 @@ li:last-child > .st-person-row {
 }
 .st-person-count {
   flex: none;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.76rem;
   color: var(--color-ink-soft);
 }
@@ -5991,7 +5991,7 @@ li:last-child > .st-person-row {
   border-right: none;
   border-bottom: none;
   background: none;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.78rem;
   color: var(--color-ink-soft);
@@ -6038,7 +6038,7 @@ li:last-child > .st-person-row {
   box-shadow: 0 7px 14px -6px rgba(20, 12, 4, 0.26);
 }
 .st-mt-label {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.66rem;
   text-transform: uppercase;
@@ -6054,7 +6054,7 @@ li:last-child > .st-person-row {
 }
 .st-mt-sub {
   margin-top: 3px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.74rem;
   color: var(--color-ink-soft);
 }
@@ -6204,7 +6204,7 @@ li:last-child > .st-row {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.86rem;
   box-shadow: 0 2px 5px rgba(20, 12, 4, 0.2), inset 0 0 0 2px rgba(255, 255, 255, 0.35);
@@ -6223,7 +6223,7 @@ li:last-child > .st-row {
 }
 .st-row-meta {
   display: block;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.78rem;
   color: var(--color-ink-soft);
   margin-top: 1px;
@@ -6382,7 +6382,7 @@ li:last-child > .st-row {
   border: 1px solid #c6b995;
   box-shadow: 0 7px 15px -6px rgba(20, 12, 4, 0.3);
   transform: rotate(-1deg);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   pointer-events: none;
 }
 .header-quadretti.bleed-month {
@@ -6421,7 +6421,7 @@ li:last-child > .st-row {
   gap: 8px;
   padding: 9px 16px;
   border-radius: 7px 9px 8px 10px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.88rem;
   cursor: var(--cursor-pointer);
@@ -6450,7 +6450,7 @@ li:last-child > .st-row {
   gap: 7px;
   padding: 10px 22px;
   border-radius: 999px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.88rem;
   cursor: var(--cursor-pointer);
@@ -6521,7 +6521,7 @@ li:last-child > .st-row {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -6585,7 +6585,7 @@ li:last-child > .st-row {
   text-align: center;
 }
 .ne-clock-digits {
-  font-family: 'Annales Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
+  font-family: 'MyJournal Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
   font-weight: 700;
   /* -15%: la colonna "personalizzazione" che ospita l'orologio Data si è
      ristretta (.ne-grid), il testo non ci stava più comodo. */
@@ -6645,7 +6645,7 @@ li:last-child > .st-row {
 .day-label-hand {
   position: relative;
   display: inline-block;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.7rem;
   color: var(--color-ink);
   white-space: nowrap;
@@ -6659,7 +6659,7 @@ li:last-child > .st-row {
   bottom: 0.08em;
   height: 0.5em;
   background: rgba(26, 20, 10, 0.16);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   transform: skewX(-10deg) rotate(-1deg);
   mix-blend-mode: multiply;
   z-index: -1;
@@ -6825,7 +6825,7 @@ li:last-child > .st-row {
   display: flex;
   flex: none;
   align-items: center;
-  font-family: 'Annales Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
+  font-family: 'MyJournal Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
   font-weight: 700;
   font-size: 1rem;
   color: rgba(32, 40, 34, 0.4);
@@ -6854,7 +6854,7 @@ li:last-child > .st-row {
   padding: 6px 0;
   scroll-snap-align: center;
   text-align: center;
-  font-family: 'Annales Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
+  font-family: 'MyJournal Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
   font-weight: 700;
   font-size: 0.95rem;
   color: rgba(32, 40, 34, 0.45);
@@ -6915,7 +6915,7 @@ li:last-child > .st-row {
   padding: 7px 0;
   scroll-snap-align: center;
   text-align: center;
-  font-family: 'Annales Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
+  font-family: 'MyJournal Digital', ui-monospace, 'SF Mono', 'Courier New', monospace;
   font-weight: 700;
   font-size: 1rem;
   text-transform: uppercase;
@@ -6936,7 +6936,7 @@ li:last-child > .st-row {
   border-radius: 999px;
   border: 1.5px dashed var(--color-line);
   background: rgba(255, 255, 255, 0.4);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.68rem;
   color: var(--color-ink);
@@ -6947,7 +6947,7 @@ li:last-child > .st-row {
   font-size: 0.82rem;
   font-style: italic;
   color: var(--color-ink-soft);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
 }
 
 /* riga di targhette rettangolari per aggiungere contenuto (immagini,
@@ -6997,7 +6997,7 @@ li:last-child > .st-row {
   border-radius: 9px;
   background: var(--color-cream);
   border: 1.5px dashed rgba(52, 44, 28, 0.4);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.78rem;
   color: var(--color-ink-soft);
@@ -7043,7 +7043,7 @@ li:last-child > .st-row {
 }
 .ne-addtag .count {
   margin-left: auto;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 0.95rem;
   line-height: 1;
 }
@@ -7129,7 +7129,7 @@ li:last-child > .st-row {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.45);
   border: 1px solid var(--color-line);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.76rem;
   color: var(--color-ink);
@@ -7312,7 +7312,7 @@ li:last-child > .st-row {
   background: none;
   border: none;
   outline: none;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 2rem;
   color: var(--color-ink);
   margin-bottom: 6px;
@@ -7322,7 +7322,7 @@ li:last-child > .st-row {
 }
 .ne-body {
   min-height: 380px;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 1.05rem;
   line-height: 27px;
   color: var(--color-ink);
@@ -7342,7 +7342,7 @@ li:last-child > .st-row {
   margin-bottom: 10px;
 }
 .mtop-year {
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.32rem;
   color: #33291c;
 }
@@ -7542,7 +7542,7 @@ li:last-child > .st-row {
    sempre "di carta" (stesso tono in chiaro e in scuro, come la barra
    laterale — vedi il commento su --sb-grain più sopra); a destra il
    modulo, sui token del tema (si adatta a chiaro/scuro). Fili e cornici
-   riusano i filtri #annales-wob/#annales-tear/#annales-tear-2, montati una
+   riusano i filtri #myjournal-wob/#myjournal-tear/#myjournal-tear-2, montati una
    sola volta in SketchDefs.jsx (src/components/SketchDefs.jsx, App.jsx).
    Renderizza solo da larghezza desktop (Screen sceglie Login.jsx sotto i
    1024px, vedi useIsWide), quindi nessun adattamento per schermi stretti. */
@@ -7585,7 +7585,7 @@ li:last-child > .st-row {
     0 64%, 1.5% 60%, 0 56%, 1.6% 52%, 0 48%, 1.3% 44%, 0 40%, 1.4% 36%,
     0 32%, 1.7% 28%, 0 24%, 1.5% 20%, 0 16%, 1.6% 12%, 0 8%, 1.3% 4%
   );
-  filter: url(#annales-tear-2);
+  filter: url(#myjournal-tear-2);
 }
 .wl-sheet {
   position: relative;
@@ -7625,7 +7625,7 @@ li:last-child > .st-row {
     100% 94%, 98.5% 95.5%, 100% 97%, 98.2% 98%, 96.5% 99%, 100% 100%,
     0 100%
   );
-  filter: url(#annales-tear);
+  filter: url(#myjournal-tear);
 }
 .wl-sheet > * {
   position: relative;
@@ -7643,14 +7643,14 @@ li:last-child > .st-row {
   height: 32px;
 }
 .wl-logo-name {
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.7rem;
   color: rgba(30, 22, 8, 0.84);
 }
 
 .wl-headline {
   margin: 0;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-weight: 400;
   font-size: clamp(1.8rem, 2.2vw, 2.15rem);
   line-height: 1.28;
@@ -7669,7 +7669,7 @@ li:last-child > .st-row {
   bottom: 0.05em;
   height: 0.56em;
   background: rgba(214, 182, 64, 0.55);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   transform: skewX(-10deg) rotate(-1deg);
   mix-blend-mode: multiply;
   z-index: -1;
@@ -7677,7 +7677,7 @@ li:last-child > .st-row {
 .wl-sub {
   margin: 16px 0 0;
   max-width: 32ch;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 1rem;
   line-height: 1.55;
   color: rgba(30, 22, 8, 0.62);
@@ -7746,7 +7746,7 @@ li:last-child > .st-row {
   border-radius: 999px;
   background: var(--mood, #8fc46a);
   color: #20170d;
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-weight: 700;
   font-size: 0.86rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -7756,7 +7756,7 @@ li:last-child > .st-row {
   display: inline-block;
 }
 .wl-note-title {
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.15;
@@ -7769,13 +7769,13 @@ li:last-child > .st-row {
   bottom: 0.04em;
   height: 0.5em;
   background: rgba(26, 20, 10, 0.18);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   transform: skewX(-11deg) rotate(-1.4deg);
   mix-blend-mode: multiply;
   z-index: -1;
 }
 .wl-note-body {
-  font-family: 'Annales Hand Gochi', 'Gochi Hand', cursive;
+  font-family: 'MyJournal Hand Gochi', 'Gochi Hand', cursive;
   font-size: 0.8rem;
   line-height: 1.3;
   color: rgba(58, 46, 28, 0.75);
@@ -7802,7 +7802,7 @@ li:last-child > .st-row {
   background: rgba(236, 226, 194, 0.86);
   border: 1px solid rgba(176, 158, 112, 0.4);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .wl-pola-ph {
   display: block;
@@ -7821,7 +7821,7 @@ li:last-child > .st-row {
   display: block;
   margin: 0;
   padding-top: 5px;
-  font-family: 'Annales Hand Shadows', 'Shadows Into Light', cursive;
+  font-family: 'MyJournal Hand Shadows', 'Shadows Into Light', cursive;
   font-size: 0.86rem;
   color: #4a4234;
   text-align: center;
@@ -7848,11 +7848,11 @@ li:last-child > .st-row {
   background: color-mix(in srgb, var(--tape-c, #8a7c58) 24%, rgba(228, 216, 180, 0.66));
   border-left: 2px dashed color-mix(in srgb, var(--tape-c, #8a7c58) 55%, #8a7452);
   border-right: 2px dashed color-mix(in srgb, var(--tape-c, #8a7c58) 55%, #8a7452);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   box-shadow: 0 2px 4px rgba(20, 12, 4, 0.2);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   transform: rotate(var(--pr, 1.6deg));
   transition: transform 0.16s ease, box-shadow 0.16s ease;
 }
@@ -7884,13 +7884,13 @@ li:last-child > .st-row {
   padding: 13px 15px 17px;
   background: #f2b01e;
   color: #3d2c02;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
   line-height: 1.4;
   box-shadow: 0 6px 12px rgba(20, 12, 4, 0.22);
   transform: rotate(3deg);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 
 .wl-foot {
@@ -7898,7 +7898,7 @@ li:last-child > .st-row {
   padding-top: 24px;
 }
 .wl-version {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   color: rgba(30, 22, 8, 0.5);
@@ -7954,7 +7954,7 @@ li:last-child > .st-row {
   position: absolute;
   z-index: 3;
   box-shadow: 0 2px 5px rgba(20, 12, 4, 0.25);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .wl-tape.h {
   width: 58px;
@@ -8000,7 +8000,7 @@ li:last-child > .st-row {
 }
 .wl-title {
   margin: 0;
-  font-family: 'Annales Pen', 'Permanent Marker', cursive;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-weight: 400;
   font-size: 1.7rem;
   color: var(--color-ink);
@@ -8016,7 +8016,7 @@ li:last-child > .st-row {
   bottom: 0.06em;
   height: 0.56em;
   background: rgba(228, 198, 86, 0.5);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
   transform: skewX(-10deg) rotate(-1deg);
   mix-blend-mode: multiply;
   z-index: -1;
@@ -8046,7 +8046,7 @@ li:last-child > .st-row {
   border-radius: 999px;
   border: 1.5px dashed var(--color-line);
   background: var(--color-cream);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.86rem;
   color: var(--color-ink);
@@ -8077,7 +8077,7 @@ li:last-child > .st-row {
   margin-bottom: 14px;
 }
 .wl-label {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.76rem;
   color: var(--color-ink-soft);
@@ -8090,7 +8090,7 @@ li:last-child > .st-row {
   border-radius: 10px;
   border: 1.5px dashed var(--color-line);
   background: var(--color-cream);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.92rem;
   color: var(--color-ink);
   outline: none;
@@ -8108,7 +8108,7 @@ li:last-child > .st-row {
   background: color-mix(in srgb, var(--color-delete) 16%, var(--color-tag));
   border: 1.5px dashed var(--color-delete-dark);
   color: var(--color-delete-dark);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
 }
@@ -8124,14 +8124,14 @@ li:last-child > .st-row {
   background-size: 130px 130px;
   background-blend-mode: overlay;
   color: #efe7d4;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.96rem;
   cursor: var(--cursor-pointer);
   box-shadow: 0 6px 14px -4px rgba(10, 6, 0, 0.45);
   transform: rotate(-0.5deg);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 .wl-submit:hover,
 .wl-submit:focus-visible {
@@ -8150,7 +8150,7 @@ li:last-child > .st-row {
   background: none;
   border: none;
   cursor: var(--cursor-pointer);
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.82rem;
   color: var(--color-ink-soft);
   text-decoration: underline;
@@ -8224,7 +8224,7 @@ li:last-child > .st-row {
     40% 98%, 36% 94%, 32% 97%, 28% 100%, 24% 95%, 20% 98%, 16% 94%,
     12% 97%, 8% 100%, 4% 95%, 0 98%
   );
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 
 .ml-form-area {
@@ -8237,20 +8237,20 @@ li:last-child > .st-row {
   padding: 12px 14px 16px;
   background: #f2b01e;
   color: #3d2c02;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.82rem;
   line-height: 1.4;
   text-align: left;
   box-shadow: 0 6px 12px rgba(20, 12, 4, 0.22);
   transform: rotate(-2.5deg);
-  filter: url(#annales-wob);
+  filter: url(#myjournal-wob);
 }
 
 .ml-version {
   margin: 22px 0 0;
   text-align: center;
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
   font-size: 0.72rem;
   color: var(--color-ink-soft);
@@ -8526,14 +8526,14 @@ li:last-child > .st-row {
   pointer-events: none;
 }
 .day-mood-cap {
-  font-family: 'Annales Hand', 'Kalam', sans-serif;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   opacity: 0.7;
 }
 .day-mood b {
-  font-family: 'Annales Marker', 'Caveat', cursive;
+  font-family: 'MyJournal Marker', 'Caveat', cursive;
   font-size: 1.9rem;
   line-height: 1;
 }

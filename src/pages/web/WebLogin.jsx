@@ -79,7 +79,7 @@ export default function WebLogin() {
         <aside className="wl-sheet">
           <div className="wl-logo">
             <img src="/favicon.svg" alt="" />
-            <span className="wl-logo-name">Annales</span>
+            <span className="wl-logo-name">MyJournal</span>
           </div>
 
           <h1 className="wl-headline">
@@ -236,7 +236,7 @@ export default function WebLogin() {
           </p>
 
           <div className="wl-foot">
-            <span className="wl-version">Annales · v{__APP_VERSION__}</span>
+            <span className="wl-version">MyJournal · v{__APP_VERSION__}</span>
             <BackendInfo compact className="wl-version" />
           </div>
         </aside>

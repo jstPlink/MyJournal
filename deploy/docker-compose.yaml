@@ -11,17 +11,17 @@
 services:
   pocketbase:
     image: ghcr.io/jstplink/annalesclaude-pocketbase:latest
-    container_name: annales-pocketbase
+    container_name: myjournal-pocketbase
     volumes:
       - pb_data:/pb/pb_data
     # Nessuna porta pubblicata: il database è interno all'app, lo raggiunge solo
-    # il container "annales" (nginx inoltra le chiamate /api/ dell'app).
+    # il container "myjournal" (nginx inoltra le chiamate /api/ dell'app).
     restart: unless-stopped
     pull_policy: always
 
-  annales:
+  myjournal:
     image: ghcr.io/jstplink/annalesclaude:latest
-    container_name: annales-diario
+    container_name: myjournal-diario
     depends_on:
       - pocketbase
     ports:

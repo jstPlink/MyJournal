@@ -81,7 +81,7 @@ function WebOnlyNotice() {
     <div className="flex min-h-dvh flex-col items-center justify-center gap-3 bg-sand p-8 text-center">
       <p className="text-lg font-bold text-ink">Disponibile solo da web</p>
       <p className="max-w-xs text-sm text-ink-soft">
-        L'importazione da immagine si usa dalla versione desktop/web di Annales.
+        L'importazione da immagine si usa dalla versione desktop/web di MyJournal.
       </p>
       <a
         href="/"

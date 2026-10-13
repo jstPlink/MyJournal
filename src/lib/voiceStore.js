@@ -4,7 +4,7 @@
 // VoiceRecordButton). Un vocale si cancella da qui appena la trascrizione va a
 // buon fine, o a mano dall'utente.
 
-const DB_NAME = 'annales-voice'
+const DB_NAME = 'myjournal-voice'
 const STORE = 'recordings'
 
 function open() {

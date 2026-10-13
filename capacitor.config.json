@@ -1,11 +1,11 @@
 {
-  "appId": "it.fplinio.annales",
-  "appName": "Annales",
+  "appId": "it.fplinio.myjournal",
+  "appName": "MyJournal",
   "webDir": "dist",
   "backgroundColor": "#dbd1bd",
   "plugins": {
     "CapacitorHttp": { "enabled": true },
-    "LocalNotifications": { "smallIcon": "ic_stat_annales", "iconColor": "#d9645a" }
+    "LocalNotifications": { "smallIcon": "ic_stat_myjournal", "iconColor": "#d9645a" }
   },
   "android": {
     "allowMixedContent": false

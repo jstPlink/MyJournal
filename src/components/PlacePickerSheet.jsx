@@ -9,13 +9,13 @@ import { listPlaces, upsertPlaceIfMissing } from '../lib/places'
 import { listMymapVisits, lookupPlaceName, describeMymapError, hhmm } from '../lib/mymap'
 import { addDaysKey, dayKey, dayMonthLabel, weekdayShort } from '../lib/dates'
 
-const SOURCE_KEY = 'annales.placeSource'
+const SOURCE_KEY = 'myjournal.placeSource'
 
 function readSource() {
   try {
-    return localStorage.getItem(SOURCE_KEY) === 'mymap' ? 'mymap' : 'annales'
+    return localStorage.getItem(SOURCE_KEY) === 'mymap' ? 'mymap' : 'myjournal'
   } catch {
-    return 'annales'
+    return 'myjournal'
   }
 }
 
@@ -55,7 +55,7 @@ function customMarkerIcon(L) {
 // viene ri-salvato tra quelli curati (lo aggiorna chi chiama).
 // `mymap` (opzionale): { url, email, password } dell'integrazione MyMap. Se
 // presente (e non si sta modificando) compare la scelta della sorgente
-// "Annales" / "MyMap"; con MyMap si propongono i posti visitati nel giorno
+// "MyJournal" / "MyMap"; con MyMap si propongono i posti visitati nel giorno
 // `dateKey` (quello della nota), cambiabile con le frecce.
 export default function PlacePickerSheet({
   open,
@@ -314,7 +314,7 @@ export default function PlacePickerSheet({
         {showSources && (
           <div className="flex gap-2 border-b border-line px-5 py-3" role="tablist">
             {[
-              ['annales', 'Annales', 'search'],
+              ['myjournal', 'MyJournal', 'search'],
               ['mymap', 'MyMap', 'map-pin'],
             ].map(([key, label, icon]) => (
               <button

@@ -22,7 +22,7 @@ async function fetchAll() {
 export async function exportJson() {
   const { notes, people, tags } = await fetchAll()
   const payload = {
-    app: 'Annales',
+    app: 'MyJournal',
     appVersion: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : null,
     exportedAt: new Date().toISOString(),
     counts: { notes: notes.length, people: people.length, tags: tags.length },
@@ -31,7 +31,7 @@ export async function exportJson() {
     notes,
   }
   downloadTextFile(
-    `annales-export-${stamp()}.json`,
+    `myjournal-export-${stamp()}.json`,
     JSON.stringify(payload, null, 2),
     'application/json;charset=utf-8',
   )
@@ -42,7 +42,7 @@ export async function exportMarkdown() {
   const pById = new Map(people.map((p) => [p.id, p.name]))
   const tById = new Map(tags.map((t) => [t.id, t.name]))
 
-  const out = [`# Annales — export ${stamp()}`, '', `${notes.length} note.`]
+  const out = [`# MyJournal — export ${stamp()}`, '', `${notes.length} note.`]
   let currentDay = ''
   for (const n of notes) {
     const dk = dayKey(n.date)
@@ -70,5 +70,5 @@ export async function exportMarkdown() {
     if (body) out.push('', body)
   }
   out.push('')
-  downloadTextFile(`annales-export-${stamp()}.md`, out.join('\n'))
+  downloadTextFile(`myjournal-export-${stamp()}.md`, out.join('\n'))
 }

@@ -3,7 +3,7 @@
 // (dati e file inclusi) viene messa in coda in IndexedDB e riprovata quando
 // si torna online. La riproduzione vera è in src/lib/notes.js (flushQueue).
 
-const DB_NAME = 'annales-offline'
+const DB_NAME = 'myjournal-offline'
 const STORE = 'ops'
 const listeners = new Set()
 

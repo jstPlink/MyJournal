@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.78.6',
+    date: '2026-10-13 18:45',
+    changes: [
+      "Il progetto si chiama MyJournal ovunque: nome dell'app, pacchetto Android, container Docker, font del foglio e documentazione. I dati già salvati sul dispositivo vengono copiati da soli al primo avvio.",
+    ],
+  },
+  {
     version: '0.78.5',
     date: '2026-10-12 09:38',
     changes: [
@@ -52,7 +59,7 @@ export const CHANGELOG = [
     version: '0.78.0',
     date: '2026-10-07 06:30',
     changes: [
-      "Mood Lab: il banco di prova della formula del mood (da note a giorno e da giorni a mese, con dati di esempio e curve del peso trascinabili) è dentro l'app. Si apre toccando 5 volte di seguito la riga «Annales · versione» in fondo alle Impostazioni.",
+      "Mood Lab: il banco di prova della formula del mood (da note a giorno e da giorni a mese, con dati di esempio e curve del peso trascinabili) è dentro l'app. Si apre toccando 5 volte di seguito la riga «MyJournal · versione» in fondo alle Impostazioni.",
       "Con «Applica all'app» la formula messa a punto nel Mood Lab (curva delle note, peso di durata e persone, curva dei giorni nel mese) viene salvata sul tuo account e usata in tutta l'app: mood dei giorni e dei mesi, andamento, statistiche, widget. «Formula originale» ripristina quella di prima. Ogni utente ha la sua.",
     ],
   },
@@ -351,7 +358,7 @@ export const CHANGELOG = [
     version: '0.64.0',
     date: '2026-10-02 18:46',
     changes: [
-      "Nuova app Android (APK scaricabile da Impostazioni → App Android, da web): è Annales impacchettata con Capacitor, con lo stesso account e gli stessi dati. Nell'app non c'è il service worker e le vibrazioni al tocco usano il motore nativo.",
+      "Nuova app Android (APK scaricabile da Impostazioni → App Android, da web): è MyJournal impacchettata con Capacitor, con lo stesso account e gli stessi dati. Nell'app non c'è il service worker e le vibrazioni al tocco usano il motore nativo.",
       'App Android: widget \"Nuova nota\" per la schermata home (due formati) che apre subito la scelta Gemini / a mano, e Impostazioni → Promemoria con una o più notifiche periodiche \"scrivi la nota del giorno\" (orario e giorni a scelta, anche ad app chiusa).',
       'Vista mese (telefono): tira verso il basso per aggiornare, leggendo le note direttamente dal server invece che dalla cache.',
       "Fix app Android: la dettatura vocale (\"Detta un vocale\", note con Gemini) non poteva registrare perché mancava il permesso Microfono; ora l'app lo chiede e, se negato, spiega dove concederlo. Per averlo bisogna installare il nuovo APK.",
@@ -361,7 +368,7 @@ export const CHANGELOG = [
     version: '0.63.1',
     date: '2026-10-02 11:44',
     changes: [
-      "MyMap: i nomi dati a mano ai posti ora compaiono nel selettore luogo anche quando il centro del posto di un singolo giorno si scosta un po' da quello calcolato in MyMap (tolleranza 150 m invece di 120), e si aggiornano subito senza ricaricare Annales.",
+      "MyMap: i nomi dati a mano ai posti ora compaiono nel selettore luogo anche quando il centro del posto di un singolo giorno si scosta un po' da quello calcolato in MyMap (tolleranza 150 m invece di 120), e si aggiornano subito senza ricaricare MyJournal.",
       'MyMap: \"Testa connessione\" indica sempre quanti nomi dati a mano trova sul server e, se sono zero, dove controllare la sincronizzazione.',
       'MyMap: se il server non ha ancora i campi dell\'integrazione, \"Salva\" lo segnala invece di svuotare i campi.',
     ],
@@ -371,7 +378,7 @@ export const CHANGELOG = [
     date: '2026-10-02 10:38',
     changes: [
       "Nuova integrazione MyMap (Impostazioni → Integrazioni): collega l'app che traccia i tuoi spostamenti con URL del server, email e password del suo account. Richiede la migration del database (nuovi campi sull'utente), che parte da sola al riavvio del container.",
-      'Selettore luogo delle note: se MyMap è collegato compare la scelta Annales / MyMap. Con MyMap si vedono i posti visitati nel giorno della nota (soste di almeno 20 minuti, con orario e durata, frecce per cambiare giorno); il nome è quello dato a mano in MyMap, altrimenti OpenStreetMap, e resta modificabile.',
+      'Selettore luogo delle note: se MyMap è collegato compare la scelta MyJournal / MyMap. Con MyMap si vedono i posti visitati nel giorno della nota (soste di almeno 20 minuti, con orario e durata, frecce per cambiare giorno); il nome è quello dato a mano in MyMap, altrimenti OpenStreetMap, e resta modificabile.',
       "Aggiunta la documentazione dell'app (docs/GUIDA.md e ARCHITETTURA.md) e il supporto allo sviluppo in locale contro il database online (VITE_DEV_API).",
     ],
   },
@@ -735,7 +742,7 @@ export const CHANGELOG = [
     date: '2026-09-11 12:29',
     changes: [
       'Barra laterale web: rifatta nello stile "Pagine" — tutta la barra è un cartoncino strappato con un secondo foglio che intravede da dietro; "Nuova nota"/Gemini sono cartoncino nero pieno, i 3 link principali ritagli di carta col contorno a matita tratteggiato, "Cerca" una lente d\'ingrandimento, "Importa" un post-it giallo.',
-      'Barra laterale web: i dati utente sono su una finta carta d\'identità in basso, con un numero di tessera e una firma disegnata generati da nome+email (sempre gli stessi per te); la versione dell\'app è accanto al nome "Annales" in alto.',
+      'Barra laterale web: i dati utente sono su una finta carta d\'identità in basso, con un numero di tessera e una firma disegnata generati da nome+email (sempre gli stessi per te); la versione dell\'app è accanto al nome "MyJournal" in alto.',
       'Impostazioni → Colori del mood: i 6 pallini colorati sopra il gradiente sono ora cliccabili (aprono il selettore colore) e si possono spostare le 4 soglie interne con un numero percento; rimossa la legenda separata sotto.',
       'Impostazioni → Dati utente: nuova sezione "Canzoni" con l\'elenco delle canzoni collegate alle note e quante note usa ciascuna.',
       'Skin "Pagine": il colore dei cartoncini del mood è ancora più saturo (altro +15%, ora +32% sul colore originale).',

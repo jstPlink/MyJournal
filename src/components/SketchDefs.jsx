@@ -1,7 +1,7 @@
 // Filtro SVG condiviso per l'effetto "disegnato a mano" delle skin: sposta
 // leggermente i pixel con del rumore, così bordi e righe risultano tremolanti
 // e irregolari. Montato una volta in App, invisibile e senza impatto sul
-// layout. Il CSS lo richiama con `filter: url(#annales-wob)`.
+// layout. Il CSS lo richiama con `filter: url(#myjournal-wob)`.
 export default function SketchDefs() {
   return (
     <svg
@@ -13,7 +13,7 @@ export default function SketchDefs() {
     >
       <defs>
         <filter
-          id="annales-wob"
+          id="myjournal-wob"
           x="-20%"
           y="-20%"
           width="140%"
@@ -37,9 +37,9 @@ export default function SketchDefs() {
         </filter>
         {/* Variante a onda più larga: deforma i bordi di un intero foglio
             (skin "pagine") per farlo sembrare tagliato a mano e un po'
-            vissuto. Richiamata con `filter: url(#annales-paper)`. */}
+            vissuto. Richiamata con `filter: url(#myjournal-paper)`. */}
         <filter
-          id="annales-paper"
+          id="myjournal-paper"
           x="-6%"
           y="-6%"
           width="112%"
@@ -65,10 +65,10 @@ export default function SketchDefs() {
             laterale (src/components/web/Sidebar.jsx): due filtri con semi
             diversi, uno per il foglio davanti e uno per quello che
             intravede da dietro, così non sembrano stampati dallo stesso
-            timbro. Richiamati con `filter: url(#annales-tear)` /
-            `url(#annales-tear-2)`. */}
+            timbro. Richiamati con `filter: url(#myjournal-tear)` /
+            `url(#myjournal-tear-2)`. */}
         <filter
-          id="annales-tear"
+          id="myjournal-tear"
           x="-25%"
           y="-25%"
           width="150%"
@@ -91,7 +91,7 @@ export default function SketchDefs() {
           />
         </filter>
         <filter
-          id="annales-tear-2"
+          id="myjournal-tear-2"
           x="-25%"
           y="-25%"
           width="150%"

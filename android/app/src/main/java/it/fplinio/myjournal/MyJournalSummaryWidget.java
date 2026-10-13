@@ -1,4 +1,4 @@
-package it.fplinio.annales;
+package it.fplinio.myjournal;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -17,19 +17,19 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Widget 3x1 "Annales": tre blocchi CONCETTUALI (non separati da linee o riquadri) —
+ * Widget 3x1 "MyJournal": tre blocchi CONCETTUALI (non separati da linee o riquadri) —
  *  1. a sinistra il mood dell'ultima settimana (media dei mood giornalieri degli ultimi 7 giorni);
  *  2. al centro l'ultima nota: giorno e ora in cui è finita (l'orario di fine, senza altro testo);
  *  3. a destra il pulsante per scrivere una nota nuova (un tocco apre l'editor).
  *
- * I dati NON li legge da sé: li manda l'app (src/lib/widgetSync.js → AnnalesWidgetPlugin) ogni volta che si
+ * I dati NON li legge da sé: li manda l'app (src/lib/widgetSync.js → MyJournalWidgetPlugin) ogni volta che si
  * apre, torna in primo piano o salva/elimina una nota, e restano in SharedPreferences. Qui si fanno solo i
  * calcoli che dipendono da "oggi" (finestra dei 7 giorni, "oggi"/"ieri"), così il widget resta giusto anche
  * a mezzanotte senza riaprire l'app: si ridisegna ogni ~30 minuti. Il colore del mood segue il gradiente
  * scelto dall'utente (mandato insieme ai dati).
  */
-public class AnnalesSummaryWidget extends AppWidgetProvider {
-    static final String PREFS = "annales_widget";
+public class MyJournalSummaryWidget extends AppWidgetProvider {
+    static final String PREFS = "myjournal_widget";
     static final String KEY_DATA = "data";
 
     private static final String[] MONTHS = { "gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic" };
@@ -42,7 +42,7 @@ public class AnnalesSummaryWidget extends AppWidgetProvider {
     /** Ridisegna tutte le istanze (dopo nuovi dati dall'app). */
     public static void updateAll(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
-        int[] ids = manager.getAppWidgetIds(new ComponentName(context, AnnalesSummaryWidget.class));
+        int[] ids = manager.getAppWidgetIds(new ComponentName(context, MyJournalSummaryWidget.class));
         if (ids.length > 0) render(context, manager, ids);
     }
 

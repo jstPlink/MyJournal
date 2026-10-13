@@ -221,7 +221,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, disabled, dra
       if (err?.name === 'NotAllowedError' || err?.name === 'SecurityError') {
         setError(
           Capacitor.isNativePlatform()
-            ? 'Microfono bloccato: consenti il permesso Microfono ad Annales dalle impostazioni del telefono (Impostazioni → App → Annales → Autorizzazioni) e riprova.'
+            ? 'Microfono bloccato: consenti il permesso Microfono ad MyJournal dalle impostazioni del telefono (Impostazioni → App → MyJournal → Autorizzazioni) e riprova.'
             : "Microfono bloccato: consenti il microfono per questo sito (icona del lucchetto accanto all'indirizzo, oppure Impostazioni del telefono → App → permessi) e riprova.",
         )
       } else if (err?.name === 'NotFoundError') {

@@ -5,8 +5,8 @@
 // richieste del server (recap delle 23:00) né quelle di altri dispositivi con
 // la stessa chiave: il conteggio è una stima per difetto.
 
-const LOG_KEY = 'annales.geminiLog'
-const EVENT = 'annales:gemini-usage'
+const LOG_KEY = 'myjournal.geminiLog'
+const EVENT = 'myjournal:gemini-usage'
 const DAY_MS = 24 * 60 * 60 * 1000
 const HOUR_MS = 60 * 60 * 1000
 const MINUTE_MS = 60 * 1000

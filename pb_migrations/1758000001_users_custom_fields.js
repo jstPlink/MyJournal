@@ -2,7 +2,7 @@
 
 // Scritta per PocketBase v0.28.x (la versione a cui è pinnato il pacchetto
 // `pocketbase` in package.json). Aggiunge alla collection di sistema `users`
-// i campi usati da Annales per le integrazioni opzionali (Immich, Spotify,
+// i campi usati da MyJournal per le integrazioni opzionali (Immich, Spotify,
 // Gemini), e apre l'auto-registrazione: il login dell'app ha una schermata
 // di iscrizione (crea il tuo diario personale) che deve poter creare un
 // nuovo utente senza essere già autenticati.

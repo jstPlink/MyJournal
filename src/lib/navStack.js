@@ -13,7 +13,7 @@
 // pagina sotto; dalla schermata principale esce dall'app. Così «indietro» non dipende
 // dalla cronologia del browser, che si riempie di passaggi intermedi.
 
-const KEY = 'annales.navStack'
+const KEY = 'myjournal.navStack'
 
 function level(path) {
   const p = path.split('?')[0]

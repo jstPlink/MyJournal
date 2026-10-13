@@ -14,7 +14,7 @@ async function prefetchThumbs(notes) {
   // In modalità locale le immagini sono già sul dispositivo (blob:).
   if (isLocal || typeof caches === 'undefined') return
   // vecchia cache (versione precedente, con miniature pesanti e risposte opache)
-  await caches.delete('annales-thumbs')
+  await caches.delete('myjournal-thumbs')
   const cache = await caches.open(THUMBS_CACHE)
   const urls = []
   for (const n of notes) {

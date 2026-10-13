@@ -13,7 +13,7 @@
 // scrittura è subito riportata in IndexedDB; i file allegati sono Blob in un
 // secondo store e diventano URL (blob:) solo quando servono.
 
-const DB_NAME = 'annales-local'
+const DB_NAME = 'myjournal-local'
 const RECORDS = 'records'
 const FILES = 'files'
 

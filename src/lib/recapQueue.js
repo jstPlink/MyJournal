@@ -5,7 +5,7 @@
 import { pb } from './pocketbase'
 import { MONTHS_IT, dayMonthLabel } from './dates'
 
-const POKE_EVENT = 'annales:recap-queue-poke'
+const POKE_EVENT = 'myjournal:recap-queue-poke'
 
 // Da chiamare dopo aver salvato una nota: fa ricontrollare subito la coda
 // (con un attimo di respiro, il tempo che l'hook del server la riempia).

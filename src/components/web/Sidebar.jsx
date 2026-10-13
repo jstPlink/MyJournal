@@ -59,7 +59,7 @@ export default function Sidebar() {
       <aside className="sb-sidebar flex w-[300px] shrink-0 flex-col">
         <div className="sb-logo">
           <img src="/favicon.svg" alt="" />
-          <span className="sb-logo-name">Annales</span>
+          <span className="sb-logo-name">MyJournal</span>
           <span className="sb-logo-v">v{__APP_VERSION__}</span>
         </div>
 

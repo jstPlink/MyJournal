@@ -1021,8 +1021,8 @@ export default function WebProfile() {
             consenti l'installazione da questa fonte. Si accede con lo stesso account.
           </p>
           <a
-            href="/download/annales.apk"
-            download="annales.apk"
+            href="/download/myjournal.apk"
+            download="myjournal.apk"
             className="inline-flex items-center gap-2 rounded-full border border-line bg-cream px-4 py-2 text-sm font-bold text-ink transition hover:brightness-105"
           >
             <Icon name="download" size={14} className="shrink-0" />

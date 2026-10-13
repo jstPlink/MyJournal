@@ -10,7 +10,7 @@ import { deleteVoice, listVoices } from './voiceStore'
 const listeners = new Set()
 let cache = { raw: null, list: [] }
 
-const storageKey = () => `annales.geminiDrafts:${pb.authStore.record?.id || 'anon'}`
+const storageKey = () => `myjournal.geminiDrafts:${pb.authStore.record?.id || 'anon'}`
 
 function read() {
   let raw = null

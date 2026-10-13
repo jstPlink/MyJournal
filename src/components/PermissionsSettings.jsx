@@ -167,7 +167,7 @@ export default function PermissionsSettings() {
       {native && (
         <Row
           title="Risparmio batteria"
-          why="Con le restrizioni Android può ritardare o saltare i promemoria ad app chiusa. In Batteria scegli “Nessuna restrizione” per Annales."
+          why="Con le restrizioni Android può ritardare o saltare i promemoria ad app chiusa. In Batteria scegli “Nessuna restrizione” per MyJournal."
           label={p.batteryUnrestricted ? 'Senza restrizioni' : 'Ottimizzata'}
           tone={p.batteryUnrestricted ? 'ok' : 'ask'}
           action={p.batteryUnrestricted ? null : () => run(openBatterySettings)}

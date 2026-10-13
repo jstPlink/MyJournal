@@ -37,7 +37,7 @@ function ImmichPersonThumb({ baseUrl, apiKey, person }) {
 }
 
 // Dialog per scegliere, tra le persone nominate su Immich, quelle da
-// aggiungere all'elenco locale di Annales (in Profilo).
+// aggiungere all'elenco locale di MyJournal (in Profilo).
 export default function ImmichPeoplePicker({ open, baseUrl, apiKey, existingIds, onClose, onPick }) {
   const [people, setPeople] = useState([])
   const [loading, setLoading] = useState(false)

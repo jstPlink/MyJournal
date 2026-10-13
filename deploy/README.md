@@ -34,12 +34,12 @@ del codice sorgente né di Node, solo di [`docker-compose.yaml`](docker-compose.
 ### Da riga di comando (SSH)
 
 ```bash
-mkdir -p /volume1/docker/annales && cd /volume1/docker/annales
+mkdir -p /volume1/docker/myjournal && cd /volume1/docker/myjournal
 # copiare qui docker-compose.yaml
 docker compose up -d
 ```
 
-Al **primo avvio** il container `annales-pocketbase` parte con un database
+Al **primo avvio** il container `myjournal-pocketbase` parte con un database
 vuoto (le collection vengono create da sole dalle migration): per accedere
 se serve un superuser (l'admin UI non è pubblicata, vedi sotto) lo si crea dall'interno:
 
@@ -62,13 +62,13 @@ Su Synology: *Container Manager → Progetto → Azione → Ricostruisci* (fa pu
 
 Il compose pubblica sulla LAN **una sola porta**: `8973:80` (frontend).
 PocketBase è interno: non ha porte pubblicate, lo raggiunge il container
-`annales` (nginx) che inoltra le chiamate `/api/` dell'app. Basta quindi **un
-solo hostname** (es. `annales.tuodominio.it`): niente secondo hostname per il
+`myjournal` (nginx) che inoltra le chiamate `/api/` dell'app. Basta quindi **un
+solo hostname** (es. `myjournal.tuodominio.it`): niente secondo hostname per il
 database, niente URL da configurare nell'app.
 
 **Opzione A — Cloudflare Tunnel**: nel tunnel un solo *public hostname*
-- `annales.tuodominio.it` → **Service = `http://localhost:8973`** (oppure
-  `http://annales-diario:80` se `cloudflared` gira sulla stessa rete Docker).
+- `myjournal.tuodominio.it` → **Service = `http://localhost:8973`** (oppure
+  `http://myjournal-diario:80` se `cloudflared` gira sulla stessa rete Docker).
 
 Eventuali vecchi hostname del database si possono togliere dal tunnel.
 
@@ -81,7 +81,7 @@ container.
 ## Amministrazione del database
 
 L'admin UI e il login da superuser non passano dal proxy (sono chiusi da
-nginx). Per interventi a mano: `docker exec annales-pocketbase ...` oppure,
+nginx). Per interventi a mano: `docker exec myjournal-pocketbase ...` oppure,
 temporaneamente, aggiungere `ports: ["28090:8090"]` al servizio `pocketbase`
 (e rimuoverlo a lavoro finito).
 

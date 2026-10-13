@@ -2,14 +2,14 @@
 // apertura (BackendChooser) e ricordata sul dispositivo:
 //   { mode: 'local' }              → tutto in questo dispositivo/browser
 //                                    (IndexedDB, vedi localPocketBase.js);
-//   { mode: 'server', url: '…' }   → un'istanza di Annales (PocketBase) a un
+//   { mode: 'server', url: '…' }   → un'istanza di MyJournal (PocketBase) a un
 //                                    indirizzo scelto dall'utente.
 // Nessun indirizzo è scritto nel codice. `VITE_PB_URL` (build) serve solo a
 // precompilare il campo per chi distribuisce la propria build.
 
 import { Capacitor } from '@capacitor/core'
 
-const KEY = 'annales.backend'
+const KEY = 'myjournal.backend'
 const LEGACY_AUTH_KEY = 'pocketbase_auth'
 
 export const DEFAULT_SERVER_URL = import.meta.env.VITE_PB_URL?.trim() || ''
@@ -57,7 +57,7 @@ export function resetBackend() {
   }
 }
 
-// "annales.mio.it" → "https://annales.mio.it"; toglie spazi, "/" finale e
+// "myjournal.mio.it" → "https://myjournal.mio.it"; toglie spazi, "/" finale e
 // qualsiasi percorso. Ritorna '' se non è un indirizzo valido.
 export function normalizeServerUrl(input) {
   let v = String(input || '').trim()

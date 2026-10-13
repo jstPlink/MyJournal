@@ -4,7 +4,7 @@
 
 const GEMINI = `# Chiave API Gemini (Google AI Studio)
 
-A cosa serve in Annales: ripulire e sintetizzare il testo delle note,
+A cosa serve in MyJournal: ripulire e sintetizzare il testo delle note,
 riconoscere le persone citate, generare bozze di note, ed estrarre note da
 uno screenshot nella schermata "Importa da immagine".
 
@@ -14,7 +14,7 @@ uno screenshot nella schermata "Importa da immagine".
 2. Premi "Create API key" (o "Crea chiave API").
 3. Scegli un progetto Google Cloud esistente oppure lascia che ne crei uno nuovo.
 4. Copia la chiave: è una stringa che inizia con "AIza...".
-5. In Annales: Impostazioni -> Integrazioni -> Gemini -> incolla la chiave e premi Salva.
+5. In MyJournal: Impostazioni -> Integrazioni -> Gemini -> incolla la chiave e premi Salva.
    Usa "Testa connessione" per verificare che funzioni.
 
 ## Note
@@ -28,7 +28,7 @@ uno screenshot nella schermata "Importa da immagine".
 
 const SPOTIFY = `# Credenziali Spotify (Client ID e Client Secret)
 
-A cosa servono in Annales: cercare i brani per titolo/artista e recuperarne
+A cosa servono in MyJournal: cercare i brani per titolo/artista e recuperarne
 copertina e link quando aggiungi una canzone a una nota. Vengono usate solo
 per la ricerca pubblica del catalogo: nessun accesso al tuo account, ai tuoi
 ascolti o alle tue playlist.
@@ -37,29 +37,29 @@ ascolti o alle tue playlist.
 
 1. Apri https://developer.spotify.com/dashboard e accedi con il tuo account Spotify.
 2. Premi "Create app".
-3. Compila nome e descrizione a piacere (es. "Annales diario").
+3. Compila nome e descrizione a piacere (es. "MyJournal diario").
 4. Come "Redirect URI" puoi mettere un valore qualsiasi, ad esempio
    http://localhost:5173 : con il flusso "Client Credentials" non viene usato.
 5. Accetta i termini e crea l'app.
 6. Nella pagina dell'app apri "Settings": lì trovi il "Client ID" e, cliccando
    "View client secret", il "Client Secret".
-7. In Annales: Impostazioni -> Integrazioni -> Spotify -> incolla entrambi i
+7. In MyJournal: Impostazioni -> Integrazioni -> Spotify -> incolla entrambi i
    valori e premi Salva. Usa "Testa connessione" per verificare.
 
 ## Note
 
 - Il Client Secret e' una password: tienilo privato.
-- Se lo rigeneri dalla dashboard, ricordati di aggiornarlo anche in Annales.
+- Se lo rigeneri dalla dashboard, ricordati di aggiornarlo anche in MyJournal.
 `
 
 const IMMICH = `# Collegamento a Immich (URL server + API key)
 
-A cosa serve in Annales: scegliere le foto direttamente dal tuo Immich quando
+A cosa serve in MyJournal: scegliere le foto direttamente dal tuo Immich quando
 aggiungi immagini a una nota, e usare i volti riconosciuti da Immich come
 elenco di persone.
 
 Prerequisito: devi gia' avere un'istanza Immich funzionante e raggiungibile
-dal dispositivo su cui usi Annales (stessa rete, VPN, o esposta su internet).
+dal dispositivo su cui usi MyJournal (stessa rete, VPN, o esposta su internet).
 
 ## URL server
 
@@ -74,9 +74,9 @@ https:// e, se presente, della porta. Esempi:
 2. Clicca sul tuo avatar in alto a destra -> "Account Settings"
    (Impostazioni account).
 3. Apri la sezione "API Keys".
-4. Premi "New API Key", dai un nome (es. "Annales") e conferma.
+4. Premi "New API Key", dai un nome (es. "MyJournal") e conferma.
 5. Copia subito la chiave mostrata: non sara' piu' visibile per intero dopo.
-6. In Annales: Impostazioni -> Integrazioni -> Immich -> incolla URL e API key
+6. In MyJournal: Impostazioni -> Integrazioni -> Immich -> incolla URL e API key
    e premi Salva. Usa "Testa connessione" per verificare.
 
 ## Note
@@ -84,13 +84,13 @@ https:// e, se presente, della porta. Esempi:
 - L'API key da' accesso in lettura alle tue foto tramite l'API di Immich:
   tienila privata.
 - Puoi revocarla in qualsiasi momento dalla stessa pagina "API Keys" di Immich.
-- Se Annales non raggiunge il server, il problema e' quasi sempre di rete
+- Se MyJournal non raggiunge il server, il problema e' quasi sempre di rete
   (URL sbagliato, server non esposto, HTTPS con certificato non valido).
 `
 
 const MYMAP = `# Collegamento a MyMap (URL server + email + password)
 
-A cosa serve in Annales: quando aggiungi un luogo a una nota, puoi scegliere
+A cosa serve in MyJournal: quando aggiungi un luogo a una nota, puoi scegliere
 tra i posti in cui sei stato nel giorno della nota (soste di almeno 20 minuti
 registrate da MyMap) invece di cercarli o scriverli a mano.
 
@@ -102,19 +102,19 @@ server"). Con il solo database locale del telefono non c'e' nulla da leggere.
 1. URL server MyMap: lo stesso indirizzo che inserisci nella schermata di
    accesso di MyMap (il suo PocketBase), con https:// e senza barra finale.
    Esempio: https://pocketbase.tuodominio.it
-   Deve essere HTTPS, altrimenti il browser blocca la richiesta da Annales.
+   Deve essere HTTPS, altrimenti il browser blocca la richiesta da MyJournal.
 2. Email dell'account MyMap: quella con cui accedi in MyMap.
-3. Password dell'account MyMap: serve ad Annales per leggere i tuoi punti
+3. Password dell'account MyMap: serve ad MyJournal per leggere i tuoi punti
    (la collection "points" e' leggibile solo dal proprietario).
 
 ## Come collegarlo
 
-1. In Annales: Impostazioni -> Integrazioni -> MyMap.
+1. In MyJournal: Impostazioni -> Integrazioni -> MyMap.
 2. Inserisci URL, email e password e premi "Testa connessione": se tutto va
    bene vedi quanti punti ci sono sul server.
 3. Premi Salva.
 4. Quando crei o modifichi una nota e tocchi il segnaposto "Luogo", in alto
-   compare la scelta tra "Annales" e "MyMap". Con MyMap vedi i posti del
+   compare la scelta tra "MyJournal" e "MyMap". Con MyMap vedi i posti del
    giorno della nota (con i tasti freccia puoi cambiare giorno): toccane uno
    per sceglierlo, il nome resta modificabile prima di aggiungerlo.
 
@@ -126,18 +126,18 @@ server"). Con il solo database locale del telefono non c'e' nulla da leggere.
 
 ## Note
 
-- La password e' salvata nel tuo profilo Annales, come la API key di Immich:
+- La password e' salvata nel tuo profilo MyJournal, come la API key di Immich:
   non riusarla altrove se ti preoccupa.
-- I posti sono calcolati da Annales con le stesse regole di MyMap (sosta di
+- I posti sono calcolati da MyJournal con le stesse regole di MyMap (sosta di
   almeno 20 minuti entro 150 m); un posto puo' apparire solo se in quel giorno
   il tracking ha registrato abbastanza punti.
 `
 
 export const INTEGRATION_DOCS = {
-  gemini: { filename: 'annales-gemini-token.md', body: GEMINI },
-  spotify: { filename: 'annales-spotify-credenziali.md', body: SPOTIFY },
-  immich: { filename: 'annales-immich-collegamento.md', body: IMMICH },
-  mymap: { filename: 'annales-mymap-collegamento.md', body: MYMAP },
+  gemini: { filename: 'myjournal-gemini-token.md', body: GEMINI },
+  spotify: { filename: 'myjournal-spotify-credenziali.md', body: SPOTIFY },
+  immich: { filename: 'myjournal-immich-collegamento.md', body: IMMICH },
+  mymap: { filename: 'myjournal-mymap-collegamento.md', body: MYMAP },
 }
 
 // Scarica una stringa come file di testo (client-side, nessun server).

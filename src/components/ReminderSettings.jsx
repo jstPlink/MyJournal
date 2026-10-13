@@ -39,7 +39,7 @@ export default function ReminderSettings() {
     setError('')
     try {
       const ok = await applyReminders(next)
-      if (!ok) setError('Consenti le notifiche per Annales dalle impostazioni del telefono.')
+      if (!ok) setError('Consenti le notifiche per MyJournal dalle impostazioni del telefono.')
     } catch {
       setError('Non riesco a programmare le notifiche su questo dispositivo.')
     }

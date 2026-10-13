@@ -7,8 +7,8 @@
 // primo tocco, così anche i suoni che partono dopo un'operazione asincrona
 // (es. il salvataggio di una nota) si sentono.
 
-const ON_KEY = 'annales.sounds'
-const VOLUME_KEY = 'annales.soundVolume'
+const ON_KEY = 'myjournal.sounds'
+const VOLUME_KEY = 'myjournal.soundVolume'
 const DEFAULT_VOLUME = 60
 
 export function getSoundsOn() {
