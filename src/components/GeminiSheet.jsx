@@ -82,8 +82,8 @@ export default function GeminiSheet({
     setRetry(null)
     setError('')
     try {
-      const result = await cleanupNoteText(apiKey, plain, (attempt, maxAttempts) =>
-        setRetry({ attempt, maxAttempts }),
+      const result = await cleanupNoteText(apiKey, plain, (attempt, maxAttempts, model) =>
+        setRetry({ attempt, maxAttempts, model }),
       )
       setPreview(result.text)
       setHistory(result.history)
@@ -105,7 +105,7 @@ export default function GeminiSheet({
         apiKey,
         instructions.trim(),
         customText,
-        (attempt, maxAttempts) => setRetry({ attempt, maxAttempts }),
+        (attempt, maxAttempts, model) => setRetry({ attempt, maxAttempts, model }),
       )
       setPreview(result.text)
       setHistory(result.history)
@@ -127,7 +127,7 @@ export default function GeminiSheet({
         apiKey,
         history,
         correction.trim(),
-        (attempt, maxAttempts) => setRetry({ attempt, maxAttempts }),
+        (attempt, maxAttempts, model) => setRetry({ attempt, maxAttempts, model }),
       )
       setPreview(result.text)
       setHistory(result.history)

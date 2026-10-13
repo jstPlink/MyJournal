@@ -163,7 +163,7 @@ export default function NewNoteWithGeminiSheet({
         peopleNames: allPeople.map((p) => p.name),
         tagNames: allTags.map((t) => t.name),
         customInstructions: instructions,
-        onRetry: (attempt, maxAttempts) => setRetry({ attempt, maxAttempts }),
+        onRetry: (attempt, maxAttempts, model) => setRetry({ attempt, maxAttempts, model }),
       })
       onGenerated({
         title: draft.title,

@@ -79,12 +79,15 @@ export function clearGeminiPromptDraft() {
 // Un tentativo, senza riprovi: il chiamante fornisce `contents` completo
 // (un turno per ogni scambio utente/modello — vedi callGeminiParts).
 async function callGeminiOnce(apiKey, contents, model = MODEL) {
+  // Senza risposta entro 60 s la richiesta si interrompe e conta come tentativo fallito
+  // (altrimenti una connessione appesa lascia l'attesa ferma senza ritentare).
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contents }),
+      signal: AbortSignal.timeout(60000),
     },
   )
   logGeminiRequest(res.status) // contatore richieste (vedi geminiUsage.js)
@@ -144,7 +147,7 @@ const OVERLOAD_MAX_ATTEMPTS = RETRY_DELAYS_MS.length + 1
 // sbagliata o limite GIORNALIERO esaurito: riprovare non cambierebbe nulla.
 function isRetryable(err) {
   const s = err?.status
-  if (s == null) return err?.name === 'TypeError' // fetch fallita: rete
+  if (s == null) return err?.name === 'TypeError' || err?.name === 'AbortError' // rete o nessuna risposta
   if (s === 429) return !/perday|per_day|daily/i.test(err.quotaId || '')
   return s >= 500
 }
@@ -177,7 +180,9 @@ async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
       // non è colpa dell'utente, si passa subito al tentativo dopo.
       if (model !== MODEL && !isRetryable(err) && !last) continue
       if (!isRetryable(err) || last) throw err
-      onRetry?.(attempt, OVERLOAD_MAX_ATTEMPTS)
+      // il 3° argomento è il nome dell'altro modello che si proverà, o null se resta il principale
+      const next = await modelForAttempt(apiKey, attempt + 1)
+      onRetry?.(attempt, OVERLOAD_MAX_ATTEMPTS, next !== MODEL ? next : null)
       await wait(RETRY_DELAYS_MS[attempt - 1])
     }
   }
@@ -756,6 +761,8 @@ export function describeGeminiError(err) {
   if (err.status >= 500)
     return 'Il server Gemini è sovraccarico. Effettuati 5 tentativi senza successo, riprova tra poco.'
   if (err.status) return `Errore Gemini (${err.status}): ${err.message}`
+  if (err.name === 'AbortError' || err.name === 'TimeoutError')
+    return 'Gemini non ha risposto in tempo. Riprova tra poco.'
   if (err.name === 'TypeError') return 'Impossibile raggiungere Gemini (rete).'
   return err.message || String(err)
 }

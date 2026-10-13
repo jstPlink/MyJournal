@@ -59,7 +59,7 @@ export default function PeriodRecapCard({
     setLoading(true)
     setRetry(null)
     setError('')
-    const onRetry = (attempt, maxAttempts) => setRetry({ attempt, maxAttempts })
+    const onRetry = (attempt, maxAttempts, model) => setRetry({ attempt, maxAttempts, model })
     try {
       let next
       if (period === 'day') next = await regenerateDayRecap(apiKey, periodKey, notes, onRetry)

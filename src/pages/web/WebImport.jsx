@@ -303,7 +303,7 @@ export default function WebImport() {
         month,
         peopleNames: allPeople.map((p) => p.name),
         tagNames: allTags.map((t) => t.name),
-        onRetry: (attempt, maxAttempts) => setExtractRetry({ attempt, maxAttempts }),
+        onRetry: (attempt, maxAttempts, model) => setExtractRetry({ attempt, maxAttempts, model }),
       })
       if (!result.length) {
         setError("Nessuna nota estratta dall'immagine.")

@@ -51,7 +51,7 @@ export default function GroqSettings() {
   }
 
   return (
-    <SettingsSection nested title="Groq (vocali)" icon="mic">
+    <SettingsSection nested title="Groq" icon="mic">
       <p className="text-xs text-ink-soft md:text-sm">
         Chiave API di Groq per trascrivere i vocali: è molto più veloce di Gemini e quasi mai
         intasata. Se Groq non risponde, i vocali passano da soli a Gemini.

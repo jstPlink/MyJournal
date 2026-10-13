@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.79.1',
+    date: '2026-10-14 00:10',
+    changes: [
+      "Attesa di Gemini più chiara: mostra «tentativo x di 5» fin dall'inizio, dice quando sta provando un altro modello Gemini e, se una richiesta non risponde per 60 secondi, la interrompe e ritenta invece di restare ferma.",
+      "Impostazioni: la sezione si chiama solo «Groq».",
+    ],
+  },
+  {
     version: '0.79.0',
     date: '2026-10-13 23:00',
     changes: [

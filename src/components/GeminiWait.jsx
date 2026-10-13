@@ -25,8 +25,10 @@ export default function GeminiWait({ label = 'Chiedo a Gemini…', retry = null 
       </div>
       <p className="text-sm text-ink-soft">
         {retry
-          ? `Il server è occupato, ritento (${retry.attempt}/${retry.maxAttempts})… ${seconds}s`
-          : `${label} ${seconds}s`}
+          ? `Server occupato, tentativo ${retry.attempt + 1} di ${retry.maxAttempts}${
+              retry.model ? ` con un altro modello Gemini (${retry.model})` : ''
+            }… ${seconds}s`
+          : `${label} (tentativo 1 di 5) ${seconds}s`}
       </p>
     </div>
   )
