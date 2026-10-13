@@ -830,6 +830,8 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   --mp-wd-hl: rgba(26, 20, 10, 0.16);
   --mp-hl: rgba(228, 198, 86, 0.5);
   --mp-hl-wknd: rgba(198, 70, 55, 0.32);
+  /* numero del weekend: più scuro dell'evidenziatore rosso, così stacca */
+  --mp-wknd-ink: #a8362b;
   --paper-fold: #e7ddc7;
   /* Grana fine della carta (fibre) e leggera screziatura, come immagini SVG
      ripetibili. Solo tema chiaro: nel tema scuro tornano a `none`. */
@@ -844,6 +846,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   --mp-ink-c: #9db6d0;
   --mp-hl: rgba(228, 198, 86, 0.28);
   --mp-hl-wknd: rgba(214, 108, 96, 0.3);
+  --mp-wknd-ink: #e27d73;
   --mp-wd: rgba(240, 235, 225, 0.8);
   --mp-wd-hl: rgba(240, 235, 225, 0.14);
   --paper-fold: #4a4334;
@@ -1226,7 +1229,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   z-index: -1;
 }
 .mp-page.wknd .mp-wd {
-  color: var(--color-weekend);
+  color: var(--mp-wknd-ink);
 }
 .mp-page.wknd .mp-wd .mp-hl {
   background: var(--mp-hl-wknd);
@@ -7934,7 +7937,7 @@ li:last-child > .st-row {
 .wl-card {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: 520px;
   margin: 20px 0 0;
   background-color: var(--color-tag);
   background-image: var(--sb-grain), var(--sb-fiber);
@@ -8156,6 +8159,40 @@ li:last-child > .st-row {
   text-decoration: underline;
   text-underline-offset: 3px;
   transition: transform 0.15s ease, color 0.15s ease;
+}
+.wl-switch.bc-here {
+  margin-bottom: 22px;
+}
+.wl-backend {
+  margin: -4px 0 14px;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--color-ink-soft);
+  overflow-wrap: anywhere;
+}
+.bc-scheme {
+  display: inline-flex;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding: 3px;
+  border: 1px dashed var(--color-line);
+  border-radius: 999px;
+}
+.bc-scheme-btn {
+  padding: 3px 12px;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  cursor: var(--cursor-pointer);
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--color-ink-soft);
+}
+.bc-scheme-btn[aria-pressed='true'] {
+  background: var(--color-ink);
+  color: var(--color-cream);
 }
 .wl-switch:hover,
 .wl-switch:focus-visible {

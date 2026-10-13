@@ -64,10 +64,23 @@ export function subscribeGeminiDrafts(fn) {
 
 export const newGeminiDraftId = () => `g${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
 
-// A nota creata davvero: via la bozza, il suo testo e TUTTI i vocali originali
-// (finché la nota non è confermata restano sul dispositivo, anche se già trascritti).
+// Crea la bozza se non c'è ancora (es. un vocale finito di registrare dopo che il
+// pannello è stato chiuso): senza voce nell'elenco il vocale resterebbe orfano.
+export function ensureGeminiDraft({ id, dateKey, text }) {
+  if (!read().some((d) => d.id === id)) saveGeminiDraft({ id, dateKey, text })
+}
+
+// A nota creata davvero: via la bozza e i vocali già trascritti (finché la nota non
+// è confermata restano sul dispositivo). I vocali ancora NON trascritti non si
+// toccano: la bozza resta (senza il testo, già finito nella nota) finché ce ne sono.
 export async function discardGeminiDraft(id) {
   if (!id) return
-  removeGeminiDraft(id)
-  for (const v of await listVoices()) if (v.draftId === id) await deleteVoice(v.id)
+  const own = (await listVoices()).filter((v) => v.draftId === id)
+  for (const v of own) if (v.transcribed) await deleteVoice(v.id)
+  if (own.some((v) => !v.transcribed)) {
+    const cur = read().find((d) => d.id === id)
+    saveGeminiDraft({ id, dateKey: cur?.dateKey, text: '' })
+  } else {
+    removeGeminiDraft(id)
+  }
 }

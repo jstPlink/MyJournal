@@ -917,7 +917,7 @@ export default function WebProfile() {
         </div>
         </SettingsSection>
 
-        <SettingsSection nested title="Gemini (IA)" icon="sparkles">
+        <SettingsSection nested title="Gemini" icon="sparkles">
         <p className="text-sm text-ink-soft">
           Chiave API di Google AI Studio per ripulire il testo delle note e
           scrivere contenuti con l'IA.

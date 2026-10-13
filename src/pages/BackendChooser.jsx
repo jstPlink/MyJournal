@@ -12,10 +12,20 @@ import {
 //  - "Il mio server": l'indirizzo della propria istanza di MyJournal.
 // Nessun indirizzo è scritto nel codice. La scelta si cambia da Impostazioni
 // (Archivio) o dalla schermata di accesso.
+// "https://miosito.it" → { scheme: 'https', rest: 'miosito.it' }: l'utente scrive
+// solo la seconda parte, http/https si sceglie con l'interruttore.
+function splitScheme(value) {
+  const m = String(value || '').trim().match(/^(https?):\/\/(.*)$/i)
+  if (m) return { scheme: m[1].toLowerCase(), rest: m[2] }
+  return { scheme: 'https', rest: String(value || '').trim() }
+}
+
 export default function BackendChooser() {
   const native = isNative()
   const [choice, setChoice] = useState(null) // null | 'server'
-  const [url, setUrl] = useState(DEFAULT_SERVER_URL)
+  const initial = splitScheme(DEFAULT_SERVER_URL)
+  const [scheme, setScheme] = useState(initial.scheme)
+  const [url, setUrl] = useState(initial.rest)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
@@ -26,9 +36,11 @@ export default function BackendChooser() {
 
   async function useServer(e) {
     e.preventDefault()
-    const clean = normalizeServerUrl(url)
+    const typed = splitScheme(url)
+    const chosen = /^https?:\/\//i.test(url.trim()) ? typed.scheme : scheme
+    const clean = normalizeServerUrl(typed.rest ? `${chosen}://${typed.rest}` : '')
     if (!clean) {
-      setError('Scrivi un indirizzo valido, per esempio https://myjournal.tuodominio.it')
+      setError('Scrivi un indirizzo valido, per esempio myjournal.tuodominio.it')
       return
     }
     setBusy(true)
@@ -87,6 +99,19 @@ export default function BackendChooser() {
               <label className="wl-label" htmlFor="bcUrl">
                 Indirizzo del server
               </label>
+              <div className="bc-scheme" role="group" aria-label="Protocollo">
+                {['https', 'http'].map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    aria-pressed={scheme === p}
+                    onClick={() => setScheme(p)}
+                    className="bc-scheme-btn"
+                  >
+                    {p}://
+                  </button>
+                ))}
+              </div>
               <input
                 id="bcUrl"
                 type="text"
@@ -96,16 +121,23 @@ export default function BackendChooser() {
                 spellCheck={false}
                 autoFocus
                 value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://myjournal.tuodominio.it"
+                onChange={(e) => {
+                  const t = splitScheme(e.target.value)
+                  if (/^https?:\/\//i.test(e.target.value.trim())) setScheme(t.scheme)
+                  setUrl(t.rest)
+                }}
+                placeholder="myjournal.tuodominio.it"
                 className="wl-input"
               />
             </div>
             {!native && (
               <button
                 type="button"
-                onClick={() => setUrl(window.location.origin)}
-                className="wl-switch"
+                onClick={() => {
+                  setScheme(window.location.protocol === 'http:' ? 'http' : 'https')
+                  setUrl(window.location.host)
+                }}
+                className="wl-switch bc-here"
               >
                 Usa questo sito ({window.location.host})
               </button>

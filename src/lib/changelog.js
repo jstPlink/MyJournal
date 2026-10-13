@@ -9,6 +9,16 @@
 
 export const CHANGELOG = [
   {
+    version: '0.78.7',
+    date: '2026-10-13 20:30',
+    changes: [
+      "Accesso: alla scelta del server si scrive solo l'indirizzo, con un interruttore https:// / http://; «Usa questo sito» è staccato dal pulsante Continua; il cartoncino del login (web) è più largo del 30% e non c'è più «Non hai un account? Registrati», perché esistono già le schede.",
+      "Accesso web: se i dati sono su un server, l'indirizzo con «Cambia» sta sotto le password nel cartoncino invece che nella colonna a sinistra.",
+      "Nota con Gemini: i vocali restano sul dispositivo finché non sono trascritti, anche se chiudi il pannello mentre registri o trascrivi. Salvando la nota la bozza si cancella solo quando non restano vocali da trascrivere.",
+      "Impostazioni: la sezione si chiama «Gemini» (senza «IA»). Vista mese: il numero dei giorni del weekend è un po' più scuro, per staccare dall'evidenziatore.",
+    ],
+  },
+  {
     version: '0.78.6',
     date: '2026-10-13 18:45',
     changes: [

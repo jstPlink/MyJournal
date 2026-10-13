@@ -213,11 +213,6 @@ export default function Login() {
               </button>
             </form>
 
-            <button type="button" onClick={switchMode} className="wl-switch">
-              {isSignup
-                ? 'Hai già un account? Accedi'
-                : 'Non hai un account? Registrati'}
-            </button>
           </div>
 
           <p className="ml-postit">

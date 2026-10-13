@@ -11,7 +11,12 @@ import {
   clearGeminiPromptDraft,
   saveGeminiCustomInstructions,
 } from '../lib/gemini'
-import { newGeminiDraftId, removeGeminiDraft, saveGeminiDraft } from '../lib/geminiDrafts'
+import {
+  ensureGeminiDraft,
+  newGeminiDraftId,
+  removeGeminiDraft,
+  saveGeminiDraft,
+} from '../lib/geminiDrafts'
 import { listVoices } from '../lib/voiceStore'
 import { toast } from '../lib/toast'
 import { describeError } from '../lib/notes'
@@ -66,6 +71,8 @@ export default function NewNoteWithGeminiSheet({
   draft: resumeDraft = null,
 }) {
   const [prompt, setPrompt] = useState('')
+  // testo corrente, leggibile anche da callback che arrivano a pannello chiuso
+  const promptRef = useRef('')
   const closeRef = useRef(null)
   useBackClose(open, () => closeRef.current?.())
   const [draftId, setDraftId] = useState('')
@@ -105,6 +112,8 @@ export default function NewNoteWithGeminiSheet({
     setInstructionsStatus(null)
     setInstructionsOpen(false)
   }, [open, customInstructions, resumeDraft])
+
+  promptRef.current = prompt
 
   if (!open) return null
 
@@ -224,12 +233,15 @@ export default function NewNoteWithGeminiSheet({
                 apiKey={apiKey}
                 draftId={draftId}
                 disabled={loading}
+                onSaved={() => ensureGeminiDraft({ id: draftId, dateKey, text: promptRef.current })}
                 onTranscribed={(text) => {
-                  setPrompt((p) => {
-                    const next = p.trim() ? `${p.trim()} ${text}` : text
-                    keepDraft(next)
-                    return next
-                  })
+                  // anche a pannello chiuso (trascrizione finita dopo la ✕): il testo
+                  // finisce comunque nella bozza
+                  const p = promptRef.current
+                  const next = p.trim() ? `${p.trim()} ${text}` : text
+                  promptRef.current = next
+                  setPrompt(next)
+                  keepDraft(next)
                 }}
               />
               <GeminiUsage />

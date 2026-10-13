@@ -65,7 +65,7 @@ function blobToBase64(blob) {
 // «Trascrivi». `draftId` lega i vocali a una nota Gemini in sospeso: l'elenco
 // mostra solo quelli di quella nota (più quelli vecchi senza nota); senza
 // `draftId` mostra solo i vocali non legati a nessuna nota.
-export default function VoiceRecordButton({ apiKey, onTranscribed, disabled, draftId }) {
+export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId }) {
   const [state, setState] = useState('idle') // idle | recording | transcribing
   const [seconds, setSeconds] = useState(0)
   const [error, setError] = useState('')
@@ -96,6 +96,9 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, disabled, dra
   useEffect(
     () => () => {
       clearInterval(timerRef.current)
+      // pannello chiuso durante la registrazione: si ferma e la registrazione si salva
+      // lo stesso (onstop)
+      if (mediaRef.current?.state === 'recording') mediaRef.current.stop()
       streamRef.current?.getTracks().forEach((t) => t.stop())
     },
     [],
@@ -198,6 +201,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, disabled, dra
         const d = new Date()
         const title = `Vocale ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
         await saveVoice({ blob, mimeType: type, seconds: elapsedRef.current, draftId: draftId || null, title })
+        onSaved?.()
         refreshSaved()
         setState('idle')
       }

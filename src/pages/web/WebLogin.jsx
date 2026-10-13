@@ -3,6 +3,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { describeError } from '../../lib/notes'
 import BackendInfo from '../../components/BackendInfo'
+import { isLocal } from '../../lib/pocketbase'
 import { moodColor } from '../../lib/mood'
 
 const MIN_PASSWORD = 8
@@ -237,7 +238,7 @@ export default function WebLogin() {
 
           <div className="wl-foot">
             <span className="wl-version">MyJournal · v{__APP_VERSION__}</span>
-            <BackendInfo compact className="wl-version" />
+            {isLocal && <BackendInfo compact className="wl-version" />}
           </div>
         </aside>
       </div>
@@ -349,6 +350,8 @@ export default function WebLogin() {
                 </div>
               )}
 
+              {!isLocal && <BackendInfo compact className="wl-backend" />}
+
               {error && <p className="wl-error">{error}</p>}
 
               <button type="submit" disabled={busy} className="wl-submit">
@@ -362,11 +365,6 @@ export default function WebLogin() {
               </button>
             </form>
 
-            <button type="button" onClick={switchMode} className="wl-switch">
-              {isSignup
-                ? 'Hai già un account? Accedi'
-                : 'Non hai un account? Registrati'}
-            </button>
           </div>
         </div>
       </div>
