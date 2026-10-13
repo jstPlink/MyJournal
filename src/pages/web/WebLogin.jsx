@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { describeError } from '../../lib/notes'
+import ForgotPasswordForm from '../../components/ForgotPasswordForm'
 import BackendInfo from '../../components/BackendInfo'
 import { isLocal } from '../../lib/pocketbase'
 import { moodColor } from '../../lib/mood'
 
-const MIN_PASSWORD = 8
+const MIN_PASSWORD = 5
 
 // Pagina di accesso web, skin "Pagine": a sinistra un pannello di
 // cartoncino strappato sempre di carta (come la barra laterale, stesso
@@ -27,6 +28,7 @@ export default function WebLogin() {
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [forgot, setForgot] = useState(false)
 
   const from = location.state?.from?.pathname || '/'
   const isSignup = mode === 'signup'
@@ -288,6 +290,9 @@ export default function WebLogin() {
               </button>
             </div>
 
+            {forgot ? (
+              <ForgotPasswordForm idPrefix="wl" onBack={() => setForgot(false)} />
+            ) : (
             <form onSubmit={onSubmit}>
               {isSignup && (
                 <div className="wl-field">
@@ -364,6 +369,13 @@ export default function WebLogin() {
                     : 'Entra'}
               </button>
             </form>
+            )}
+
+            {!forgot && !isSignup && !isLocal && (
+              <button type="button" onClick={() => setForgot(true)} className="wl-switch">
+                Ho dimenticato la password
+              </button>
+            )}
 
           </div>
         </div>

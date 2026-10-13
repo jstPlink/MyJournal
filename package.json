@@ -1,7 +1,7 @@
 {
   "name": "myjournal-diario",
   "private": true,
-  "version": "0.78.8",
+  "version": "0.78.9",
   "type": "module",
   "scripts": {
     "dev": "vite",

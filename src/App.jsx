@@ -18,6 +18,7 @@ import WidgetSync from './components/WidgetSync'
 import TiltPhotos from './components/TiltPhotos'
 import SketchDefs from './components/SketchDefs'
 import Login from './pages/Login'
+import ResetPassword from './pages/ResetPassword'
 import MonthView from './pages/MonthView'
 import DayView from './pages/DayView'
 import NoteView from './pages/NoteView'
@@ -103,6 +104,7 @@ export default function App() {
           <WidgetSync />
           <TiltPhotos />
           <Routes>
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route
               path="/login"
               element={

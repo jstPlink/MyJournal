@@ -4,9 +4,11 @@ import { useAuth } from '../context/AuthContext'
 import { describeError } from '../lib/notes'
 import { haptic } from '../lib/haptics'
 import PhoneShell from '../components/PhoneShell'
+import ForgotPasswordForm from '../components/ForgotPasswordForm'
+import { isLocal } from '../lib/pocketbase'
 import BackendInfo from '../components/BackendInfo'
 
-const MIN_PASSWORD = 8
+const MIN_PASSWORD = 5
 
 // Pagina di accesso mobile, skin "Pagine": stessa identità della versione
 // web (WebLogin.jsx) — il modulo (cartoncino, nastro, puntina, schede a
@@ -26,6 +28,7 @@ export default function Login() {
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [forgot, setForgot] = useState(false)
 
   const from = location.state?.from?.pathname || '/'
   const isSignup = mode === 'signup'
@@ -138,6 +141,9 @@ export default function Login() {
               </button>
             </div>
 
+            {forgot ? (
+              <ForgotPasswordForm idPrefix="ml" onBack={() => setForgot(false)} />
+            ) : (
             <form onSubmit={onSubmit}>
               {isSignup && (
                 <div className="wl-field">
@@ -212,6 +218,13 @@ export default function Login() {
                     : 'Entra'}
               </button>
             </form>
+            )}
+
+            {!forgot && !isSignup && !isLocal && (
+              <button type="button" onClick={() => setForgot(true)} className="wl-switch">
+                Ho dimenticato la password
+              </button>
+            )}
 
           </div>
 

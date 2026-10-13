@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.78.9',
+    date: '2026-10-14 10:00',
+    changes: [
+      "Password: bastano 5 caratteri (prima 8), sia alla registrazione sia sul server.",
+      "Accesso: nuovo pulsante «Ho dimenticato la password» (solo con i dati su un server): scrivi l'email e ti arriva il link per sceglierne una nuova. Serve un server di posta (SMTP) impostato in PocketBase.",
+    ],
+  },
+  {
     version: '0.78.8',
     date: '2026-10-14 09:00',
     changes: [
