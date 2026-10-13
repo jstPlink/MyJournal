@@ -121,8 +121,8 @@ Modo consigliato: GitHub Actions builda e pubblica **entrambe** le immagini su
 GHCR, il NAS le scarica ed esegue — nessun sorgente né build sul NAS.
 
 - Workflow: [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml)
-  (push su `main` → `ghcr.io/jstplink/annalesclaude:latest` +
-  `ghcr.io/jstplink/annalesclaude-pocketbase:latest`, multi-arch amd64/arm64).
+  (push su `main` → `ghcr.io/jstplink/myjournal:latest` +
+  `ghcr.io/jstplink/myjournal-pocketbase:latest`, multi-arch amd64/arm64).
 - Compose per il NAS: [`deploy/docker-compose.yaml`](deploy/docker-compose.yaml).
 - Istruzioni passo-passo: [`deploy/README.md`](deploy/README.md).
 

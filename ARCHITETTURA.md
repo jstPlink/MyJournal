@@ -10,8 +10,7 @@ cronologia, `src/lib/changelog.js`; per il deploy, [deploy/README.md](deploy/REA
 **solo** le parti visibili (titolo e `short_name` in `vite.config.js`, `<title>` e `apple-mobile-web-app-title` in `index.html`, `appName` in
 `capacitor.config.json`, `app_name`/`title_activity_main` in `strings.xml`, logo in `Sidebar`/`Login`/`WebLogin`/`BackendChooser`, riga versione in
 `VersionTap`, titolo delle notifiche in `reminders.js`, testi in `docs/GUIDA.md`). Il vecchio nome «Annales» resta soltanto in
-`src/lib/legacyMigration.js`, che al primo avvio copia i dati salvati sotto i nomi vecchi (localStorage e IndexedDB) e nei riferimenti al repository
-GitHub (`ghcr.io/jstplink/annalesclaude`), che seguono il nome del repo.
+`src/lib/legacyMigration.js`, che al primo avvio copia i dati salvati sotto i nomi vecchi (localStorage e IndexedDB) e nell'APK già compilato in `public/download/`.
 
 ## 1. Cos'è e dove gira
 
@@ -178,7 +177,7 @@ Altre variabili: `VITE_PB_URL` (build time) punta direttamente a un PocketBase e
    aggiungere la voce in testa a `src/lib/changelog.js` (`{ version, date: 'AAAA-MM-GG HH:MM', changes: [...] }`). Patch per fix, minor
    per funzioni, major per rotture. Durante lo sviluppo non si tocca.
 2. **Push su `main`** → GitHub Actions (`.github/workflows/docker-publish.yml`) builda e pubblica su GHCR le due immagini
-   (`ghcr.io/jstplink/annalesclaude` e `…-pocketbase`, multi-arch).
+   (`ghcr.io/jstplink/myjournal` e `…-pocketbase`, multi-arch).
 3. **Sul NAS:** `docker compose pull && docker compose up -d` (o "Ricostruisci" in Container Manager). Le **migration partono
    all'avvio** del container PocketBase.
 4. I dati stanno nel volume `pb_data`: sopravvivono ad aggiornamenti e riavvii (si perdono solo con `down -v`).

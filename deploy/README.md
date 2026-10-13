@@ -10,7 +10,7 @@ del codice sorgente né di Node, solo di [`docker-compose.yaml`](docker-compose.
    parte a ogni push su `main` (o su un tag `vX.Y.Z`, o manualmente da
    *Actions → Publish Docker image → Run workflow*) e pubblica **due** package.
 2. Dopo il primo run, su GitHub compaiono i package
-   **`ghcr.io/jstplink/annalesclaude`** e **`ghcr.io/jstplink/annalesclaude-pocketbase`**
+   **`ghcr.io/jstplink/myjournal`** e **`ghcr.io/jstplink/myjournal-pocketbase`**
    (sezione *Packages* del profilo/repo).
 3. Scegliere come farli scaricare dal NAS (stessa scelta per entrambi):
    - **Package pubblico** (più semplice): *Package settings → Change visibility → Public*.
@@ -88,7 +88,7 @@ temporaneamente, aggiungere `ports: ["28090:8090"]` al servizio `pocketbase`
 ## Note
 
 - **Backend PocketBase**: gira **bundled sul NAS**
-  (`ghcr.io/jstplink/annalesclaude-pocketbase`) ed è interno all'app: il
+  (`ghcr.io/jstplink/myjournal-pocketbase`) ed è interno all'app: il
   frontend lo raggiunge sulla propria origin (`/api/`, proxy nginx), non
   serve nessun URL del database nella build.
 - **Dati**: vivono nel volume Docker `pb_data` (definito in

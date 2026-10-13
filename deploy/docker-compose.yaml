@@ -10,7 +10,7 @@
 
 services:
   pocketbase:
-    image: ghcr.io/jstplink/annalesclaude-pocketbase:latest
+    image: ghcr.io/jstplink/myjournal-pocketbase:latest
     container_name: myjournal-pocketbase
     volumes:
       - pb_data:/pb/pb_data
@@ -20,7 +20,7 @@ services:
     pull_policy: always
 
   myjournal:
-    image: ghcr.io/jstplink/annalesclaude:latest
+    image: ghcr.io/jstplink/myjournal:latest
     container_name: myjournal-diario
     depends_on:
       - pocketbase
