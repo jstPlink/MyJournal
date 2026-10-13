@@ -6,8 +6,15 @@ import Icon from './Icon'
 import NewNoteWithGeminiSheet from './NewNoteWithGeminiSheet'
 import { useAuth } from '../context/AuthContext'
 import { listDrafts, removeDraft, subscribeDrafts } from '../lib/drafts'
-import { listGeminiDrafts, removeGeminiDraft, subscribeGeminiDrafts } from '../lib/geminiDrafts'
-import { deleteVoice, listVoices, subscribeVoices } from '../lib/voiceStore'
+import {
+  listGeminiDrafts,
+  newGeminiDraftId,
+  removeGeminiDraft,
+  saveGeminiDraft,
+  subscribeGeminiDrafts,
+} from '../lib/geminiDrafts'
+import { deleteVoice, listVoices, subscribeVoices, updateVoice } from '../lib/voiceStore'
+import { dayKey } from '../lib/dates'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
 import { dayMonthLabel } from '../lib/dates'
@@ -111,14 +118,29 @@ export default function DraftsTab() {
 
   // Mentre si sta scrivendo una nuova nota la sua bozza è quella aperta: non serve elencarla.
   const manualShown = pathname.startsWith('/note/new') ? [] : manual
+  // Vocali registrati ma non ancora trascritti che non appartengono a nessuna nota in
+  // sospeso (es. dettati nel pannello Gemini di una nota già aperta, poi chiuso):
+  // compaiono come una voce a parte, da riprendere con un tocco.
+  const geminiIds = new Set(gemini.map((d) => d.id))
+  const loose = voices.filter((v) => !v.transcribed && !geminiIds.has(v.draftId))
   const items = [
     ...manualShown.map((d) => ({ kind: 'manual', d })),
     ...gemini.map((d) => ({ kind: 'gemini', d })),
+    ...(loose.length
+      ? [{ kind: 'voices', d: { id: 'voices', savedAt: Math.max(...loose.map((v) => v.createdAt || 0)), list: loose } }]
+      : []),
   ].sort((a, b) => b.d.savedAt - a.d.savedAt)
 
   function open(it) {
     if (it.kind === 'manual') {
       navigate(`/note/new?date=${it.d.dateKey}`, { state: { aiDraft: it.d, draftId: it.d.id } })
+    } else if (it.kind === 'voices') {
+      // Si trasformano in una nota Gemini in sospeso (di oggi) e si apre il pannello.
+      const id = newGeminiDraftId()
+      const draft = { id, dateKey: dayKey(new Date()), text: '', savedAt: Date.now() }
+      saveGeminiDraft(draft)
+      it.d.list.forEach((v) => updateVoice(v.id, { draftId: id }))
+      setResume(draft)
     } else {
       setResume(it.d)
     }
@@ -129,6 +151,11 @@ export default function DraftsTab() {
       if (window.confirm('Scartare questa bozza?')) {
         playSound('delete')
         removeDraft(it.d.id)
+      }
+    } else if (it.kind === 'voices') {
+      if (window.confirm('Eliminare questi vocali non trascritti?')) {
+        playSound('delete')
+        it.d.list.forEach((v) => deleteVoice(v.id))
       }
     } else if (window.confirm('Scartare questa nota in sospeso, con i suoi vocali?')) {
       playSound('delete')
@@ -150,12 +177,13 @@ export default function DraftsTab() {
             <ul className="mx-2.5 mb-2.5 flex max-h-72 flex-col gap-1.5 overflow-y-auto">
               {items.map((it) => {
                 const { d } = it
-                const own = it.kind === 'gemini' ? voices.filter((v) => v.draftId === d.id) : []
+                const own =
+                  it.kind === 'gemini' ? voices.filter((v) => v.draftId === d.id) : it.kind === 'voices' ? d.list : []
                 return (
                   <li key={`${it.kind}-${d.id}`} className="rounded-xl border border-line bg-tag">
                     <div className="flex items-start gap-1.5 pl-2.5">
                       <Icon
-                        name={it.kind === 'gemini' ? 'sparkles' : 'edit'}
+                        name={it.kind === 'manual' ? 'edit' : it.kind === 'voices' ? 'mic' : 'sparkles'}
                         size={13}
                         className="mt-2 shrink-0"
                       />
@@ -166,6 +194,15 @@ export default function DraftsTab() {
                             <span className="block truncate text-[11px] text-ink-soft">
                               {dayMonthLabel(d.dateKey)} · {ago(d.savedAt)}
                               {d.imageCount ? ` · ${d.imageCount} immagini da riaggiungere` : ''}
+                            </span>
+                          </>
+                        ) : it.kind === 'voices' ? (
+                          <>
+                            <span className="line-clamp-3 text-xs font-bold">
+                              {d.list.length === 1 ? '1 vocale da trascrivere' : `${d.list.length} vocali da trascrivere`}
+                            </span>
+                            <span className="block truncate text-[11px] text-ink-soft">
+                              Tocca per trascriverli · {ago(d.savedAt)}
                             </span>
                           </>
                         ) : (

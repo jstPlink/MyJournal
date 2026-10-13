@@ -9,6 +9,15 @@
 
 export const CHANGELOG = [
   {
+    version: '0.79.0',
+    date: '2026-10-13 23:00',
+    changes: [
+      "Gemini intasato: se il modello principale risponde «sovraccarico», dal terzo tentativo l'app prova da sola un altro modello Gemini «flash» (l'elenco lo chiede a Google), poi torna al principale.",
+      "Nuova integrazione Groq (Impostazioni → Groq): con la chiave i vocali si trascrivono con Whisper su Groq, molto più veloce; se Groq non risponde si ripiega su Gemini. Nella schermata c'è la guida «Come ottenerlo».",
+      "Vocali non ancora trascritti che non appartengono a nessuna nota in sospeso: compaiono nella linguetta a destra (matitina) come «x vocali da trascrivere»; un tocco li trasforma in una nota Gemini in sospeso.",
+    ],
+  },
+  {
     version: '0.78.10',
     date: '2026-10-13 21:40',
     changes: [

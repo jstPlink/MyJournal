@@ -50,6 +50,7 @@ import ExportButtons from '../../components/ExportButtons'
 import OfflineStorage from '../../components/OfflineStorage'
 import RecapInstructions from '../../components/RecapInstructions'
 import GeminiUsage from '../../components/GeminiUsage'
+import GroqSettings from '../../components/GroqSettings'
 import { Capacitor } from '@capacitor/core'
 import Changelog from '../../components/Changelog'
 import DeleteAccount from '../../components/DeleteAccount'
@@ -1006,6 +1007,8 @@ export default function WebProfile() {
           <GeminiUsage />
         </SettingsSection>
         </SettingsSection>
+
+            <GroqSettings />
       </SettingsSection>
 
       {!isLocal && (

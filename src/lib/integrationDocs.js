@@ -26,6 +26,32 @@ uno screenshot nella schermata "Importa da immagine".
 - Per revocarla o crearne un'altra torna sulla stessa pagina di Google AI Studio.
 `
 
+const GROQ = `# Chiave API Groq (trascrizione dei vocali)
+
+A cosa serve in MyJournal: trascrivere i vocali con Whisper su Groq, che e'
+molto veloce e quasi mai intasato. Se Groq non risponde, l'app ripiega da sola
+su Gemini. Le note, i recap e il resto restano a Gemini.
+
+## Come ottenerla
+
+1. Apri https://console.groq.com e accedi (puoi usare l'account Google).
+2. Dal menu apri "API Keys" (https://console.groq.com/keys).
+3. Premi "Create API Key", dai un nome (es. "MyJournal") e conferma.
+4. Copia subito la chiave: inizia con "gsk_..." e dopo non si rivede piu'.
+5. In MyJournal: Impostazioni -> Integrazioni -> Groq -> incolla la chiave e premi Salva.
+   Usa "Testa connessione" per verificare che funzioni.
+
+## Note
+
+- Il piano gratuito basta e avanza per i vocali di un diario; ha limiti di
+  richieste al minuto e al giorno, e non serve alcuna carta di credito.
+- Il modello usato e' whisper-large-v3-turbo, con lingua impostata sull'italiano.
+- Con la chiave Groq l'audio del vocale viene inviato a Groq invece che a Gemini.
+- La chiave e' personale: non condividerla. Per revocarla o crearne un'altra
+  torna sulla stessa pagina di Groq.
+- Non e' "Grok" (l'IA di X/Twitter): sono due servizi diversi. Qui serve Groq, con la Q.
+`
+
 const SPOTIFY = `# Credenziali Spotify (Client ID e Client Secret)
 
 A cosa servono in MyJournal: cercare i brani per titolo/artista e recuperarne
@@ -135,6 +161,7 @@ server"). Con il solo database locale del telefono non c'e' nulla da leggere.
 
 export const INTEGRATION_DOCS = {
   gemini: { filename: 'myjournal-gemini-token.md', body: GEMINI },
+  groq: { filename: 'myjournal-groq-token.md', body: GROQ },
   spotify: { filename: 'myjournal-spotify-credenziali.md', body: SPOTIFY },
   immich: { filename: 'myjournal-immich-collegamento.md', body: IMMICH },
   mymap: { filename: 'myjournal-mymap-collegamento.md', body: MYMAP },

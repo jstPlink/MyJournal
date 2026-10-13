@@ -78,9 +78,9 @@ export function clearGeminiPromptDraft() {
 
 // Un tentativo, senza riprovi: il chiamante fornisce `contents` completo
 // (un turno per ogni scambio utente/modello — vedi callGeminiParts).
-async function callGeminiOnce(apiKey, contents) {
+async function callGeminiOnce(apiKey, contents, model = MODEL) {
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -167,16 +167,61 @@ async function callGeminiParts(apiKey, parts, { onRetry } = {}) {
 async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
   let lastErr
   for (let attempt = 1; attempt <= OVERLOAD_MAX_ATTEMPTS; attempt++) {
+    const model = await modelForAttempt(apiKey, attempt)
     try {
-      return await callGeminiOnce(apiKey, contents)
+      return await callGeminiOnce(apiKey, contents, model)
     } catch (err) {
       lastErr = err
-      if (!isRetryable(err) || attempt === OVERLOAD_MAX_ATTEMPTS) throw err
+      const last = attempt === OVERLOAD_MAX_ATTEMPTS
+      // Il modello di riserva non c'è o non risponde come previsto (404, 400...):
+      // non è colpa dell'utente, si passa subito al tentativo dopo.
+      if (model !== MODEL && !isRetryable(err) && !last) continue
+      if (!isRetryable(err) || last) throw err
       onRetry?.(attempt, OVERLOAD_MAX_ATTEMPTS)
       await wait(RETRY_DELAYS_MS[attempt - 1])
     }
   }
   throw lastErr
+}
+
+// Quando il modello principale è sovraccarico (503) spesso un altro modello
+// Gemini ha la coda libera. Dopo due tentativi falliti sul principale si
+// provano fino a due modelli «flash» diversi, poi si torna al principale.
+// L'elenco si chiede una volta sola a Google (models.list) invece di
+// scrivere a mano nomi che possono essere ritirati.
+const ATTEMPT_PLAN = [0, 0, 1, 2, 0] // 0 = principale, 1/2 = prima/seconda riserva
+let fallbackPromise = null
+
+function fallbackModels(apiKey) {
+  if (!fallbackPromise) {
+    fallbackPromise = fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=${encodeURIComponent(apiKey)}`,
+    )
+      .then((r) => (r.ok ? r.json() : { models: [] }))
+      .then((d) =>
+        (d.models || [])
+          .filter((m) => (m.supportedGenerationMethods || []).includes('generateContent'))
+          .map((m) => String(m.name || '').replace(/^models\//, ''))
+          .filter(
+            (n) =>
+              /flash/i.test(n) &&
+              n !== MODEL &&
+              !/image|tts|audio|live|embed|robot|computer|thinking|exp|learnlm|gemma|preview/i.test(n),
+          )
+          .sort()
+          .reverse()
+          .slice(0, 2),
+      )
+      .catch(() => [])
+  }
+  return fallbackPromise
+}
+
+async function modelForAttempt(apiKey, attempt) {
+  const slot = ATTEMPT_PLAN[attempt - 1] || 0
+  if (!slot) return MODEL
+  const list = await fallbackModels(apiKey)
+  return list[slot - 1] || MODEL
 }
 
 async function callGemini(apiKey, prompt, opts) {
@@ -608,8 +653,90 @@ export async function transcribeAudio(apiKey, { audioBase64, mimeType }, onRetry
   )
 }
 
+// Trascrizione con Groq (Whisper): veloce e quasi mai intasata. Si usa prima di
+// Gemini quando l'utente ha messo la chiave Groq in Impostazioni; se fallisce
+// si ripiega su Gemini (vedi VoiceRecordButton).
+const GROQ_URL = 'https://api.groq.com/openai/v1/audio/transcriptions'
+const GROQ_MODEL = 'whisper-large-v3-turbo'
+
+function groqExt(mimeType = '') {
+  if (/mp4|m4a|aac/i.test(mimeType)) return 'm4a'
+  if (/ogg/i.test(mimeType)) return 'ogg'
+  if (/wav/i.test(mimeType)) return 'wav'
+  if (/mpeg|mp3/i.test(mimeType)) return 'mp3'
+  return 'webm'
+}
+
+export async function transcribeWithGroq(groqKey, blob, mimeType) {
+  let lastErr
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const form = new FormData()
+      form.append('file', new File([blob], `voce.${groqExt(mimeType)}`, { type: mimeType || blob.type }))
+      form.append('model', GROQ_MODEL)
+      form.append('language', 'it')
+      form.append('response_format', 'text')
+      form.append('temperature', '0')
+      const res = await fetch(GROQ_URL, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${groqKey}` },
+        body: form,
+      })
+      const body = await res.text()
+      if (!res.ok) {
+        let detail = ''
+        try {
+          detail = JSON.parse(body)?.error?.message || ''
+        } catch {
+          detail = body.slice(0, 200)
+        }
+        const err = new Error(detail || 'Richiesta a Groq non riuscita.')
+        err.status = res.status
+        throw err
+      }
+      const text = body.trim()
+      if (!text) throw new Error('Groq non ha restituito testo.')
+      return text
+    } catch (err) {
+      err.provider = 'groq'
+      lastErr = err
+      const retry = err.status == null ? err.name === 'TypeError' : err.status === 429 || err.status >= 500
+      if (!retry || attempt === 2) throw err
+      await wait(2000)
+    }
+  }
+  throw lastErr
+}
+
+// Verifica della chiave Groq (elenco modelli: nessun consumo di audio).
+export async function testGroqKey(groqKey) {
+  try {
+    const res = await fetch('https://api.groq.com/openai/v1/models', {
+      headers: { Authorization: `Bearer ${groqKey}` },
+    })
+    if (!res.ok) {
+      const err = new Error('Richiesta a Groq non riuscita.')
+      err.status = res.status
+      throw err
+    }
+  } catch (err) {
+    err.provider = 'groq'
+    throw err
+  }
+}
+
+function describeGroqError(err) {
+  if (err.status === 401 || err.status === 403) return 'Chiave API Groq non valida.'
+  if (err.status === 429) return 'Limite di richieste Groq raggiunto, riprova tra poco.'
+  if (err.status >= 500) return 'Il server Groq non risponde, riprova tra poco.'
+  if (err.status) return `Errore Groq (${err.status}): ${err.message}`
+  if (err.name === 'TypeError') return 'Impossibile raggiungere Groq (rete).'
+  return err.message || String(err)
+}
+
 export function describeGeminiError(err) {
   if (!err) return 'Errore sconosciuto.'
+  if (err.provider === 'groq') return describeGroqError(err)
   if (err.status === 400 || err.status === 403) return 'Chiave API Gemini non valida.'
   if (err.status === 429) {
     // limite GIORNALIERO: inutile riprovare tra poco

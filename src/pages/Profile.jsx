@@ -21,6 +21,7 @@ import ExportButtons from '../components/ExportButtons'
 import OfflineStorage from '../components/OfflineStorage'
 import RecapInstructions from '../components/RecapInstructions'
 import GeminiUsage from '../components/GeminiUsage'
+import GroqSettings from '../components/GroqSettings'
 import ReminderSettings from '../components/ReminderSettings'
 import PermissionsSettings from '../components/PermissionsSettings'
 import { remindersSupported } from '../lib/reminders'
@@ -1037,6 +1038,8 @@ export default function Profile() {
                 <GeminiUsage />
               </SettingsSection>
             </SettingsSection>
+
+            <GroqSettings />
         </SettingsSection>
 
         {remindersSupported() && (

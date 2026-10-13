@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Capacitor } from '@capacitor/core'
 import Icon from './Icon'
-import { transcribeAudio, describeGeminiError } from '../lib/gemini'
+import { transcribeAudio, transcribeWithGroq, describeGeminiError } from '../lib/gemini'
+import { useAuth } from '../context/AuthContext'
 import { blobToWav } from '../lib/audio'
 import { hapticAlert } from '../lib/haptics'
 import { playSound } from '../lib/sounds'
@@ -66,6 +67,8 @@ function blobToBase64(blob) {
 // mostra solo quelli di quella nota (più quelli vecchi senza nota); senza
 // `draftId` mostra solo i vocali non legati a nessuna nota.
 export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId }) {
+  const { user } = useAuth()
+  const groqKey = user?.groqApiKey?.trim()
   const [state, setState] = useState('idle') // idle | recording | transcribing
   const [seconds, setSeconds] = useState(0)
   const [error, setError] = useState('')
@@ -119,7 +122,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
     }
   }, [refreshSaved])
 
-  if (!apiKey) return null
+  if (!apiKey && !groqKey) return null
   if (!supported) {
     return (
       <p className="gms-voice-error">
@@ -144,7 +147,18 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
     setProgress('Trascrivo… tentativo 1 di 5')
     try {
       let text
-      try {
+      // Con la chiave Groq si prova prima Whisper (veloce, quasi mai intasato);
+      // se fallisce e c'è anche Gemini si ripiega su Gemini.
+      if (groqKey) {
+        try {
+          setProgress('Trascrivo con Groq…')
+          text = await transcribeWithGroq(groqKey, blob, mimeType)
+        } catch (err) {
+          if (!apiKey) throw err
+          setProgress('Groq non risponde, provo con Gemini…')
+        }
+      }
+      if (text == null) try {
         text = await transcribeAudio(apiKey, { audioBase64: await blobToBase64(blob), mimeType }, onRetry)
       } catch (err) {
         // Il telefono registra in WebM/MP4, formati che Gemini non dichiara
