@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.78.10',
+    date: '2026-10-13 21:40',
+    changes: [
+      "Impostazioni: in fondo resta solo il numero di versione (v0.x.x), senza il nome dell'app.",
+    ],
+  },
+  {
     version: '0.78.9',
     date: '2026-10-14 10:00',
     changes: [

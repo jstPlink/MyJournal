@@ -30,7 +30,7 @@ export default function VersionTap({ className = '' }) {
         className
       }
     >
-      MyJournal · versione {__APP_VERSION__}
+      v{__APP_VERSION__}
     </p>
   )
 }
