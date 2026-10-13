@@ -16,8 +16,9 @@ passaggio è automatico in base alla larghezza della finestra.
 
 ## 2. Accesso
 
-- Pagina di **Accedi / Registrati** con email e password. Ogni account vede solo i propri dati.
-- Non c'è nessun campo "server": il database è lo stesso indirizzo dell'app.
+- Pagina di **Accedi / Registrati** (le due schede in alto) con email e password. La password deve avere almeno **5 caratteri**. Ogni account vede solo i propri dati.
+- **Ho dimenticato la password** (sotto «Entra», solo con i dati su un server): scrivi l'email e ricevi un link che apre la pagina «Nuova password». Funziona solo se chi gestisce il server ha configurato l'invio delle mail (SMTP in PocketBase).
+- Alla scelta del server scrivi solo l'indirizzo (per esempio `myjournal.tuodominio.it`) e scegli `https://` o `http://` con l'interruttore; «Usa questo sito» compila l'indirizzo della pagina in cui sei. Nella versione web, con i dati su un server, l'indirizzo e «Cambia» stanno sotto le password.
 - La sessione resta salvata; senza rete l'app si apre comunque con i dati in locale (vedi §9).
 
 ## 3. Le schermate
@@ -121,6 +122,7 @@ un prompt, "Nuova nota con Gemini", dettatura vocale, estrazione note da screens
 - Se una richiesta a Gemini fallisce per un intoppo momentaneo (server sovraccarico, rete, limite al minuto) l'app riprova da sola dopo 3, 5, 7 e 9 secondi: in tutto 5 tentativi prima di mostrare l'errore. Non riprova se la chiave non è valida o se il limite giornaliero è esaurito.
 - Una linguetta sul bordo destro («Aggiornamento recap alle 23.00») ricorda che i recap sono in attesa e, toccandola, li elenca: prima i giorni, poi i mesi, poi gli anni. Se non vuoi aspettare, il tasto "Genera/Rigenera" nelle viste
   lo fa subito.
+- **Vocali di «Nuova nota con Gemini».** I vocali restano sul dispositivo finché non li trascrivi, anche se chiudi il pannello (anche mentre registri o trascrivi). Salvando la nota la bozza sparisce solo quando non restano vocali da trascrivere; altrimenti resta nella linguetta a destra con i vocali rimasti.
 - **Contatore richieste.** L'app conta le richieste a Gemini partite da questo telefono/computer (ultimo minuto, ultima ora, ultime 24 ore) e le mostra sotto il pulsante del vocale, nei pannelli dove scrivi una nota con Gemini e in Impostazioni → Gemini → «Richieste a Gemini». Non include i recap delle 23:00 né altri dispositivi con la stessa chiave.
 - Le "Istruzioni per i riassunti" (Impostazioni → Gemini) valgono per tutti i recap di giorno, mese e anno, anche per quelli scritti dal server. Modificando una nota il recap si rifà solo se cambiano descrizione o mood.
 - Le "Istruzioni per le note" (tono, cosa evidenziare) valgono per tutte le richieste e si modificano anche al volo nei pannelli.
