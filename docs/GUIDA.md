@@ -9,7 +9,7 @@ MyJournal è un **diario personale** (PWA: funziona dal browser e si installa su
 titolo, testo, **umore** (mood), orario di inizio e fine, immagini, persone, tag, luogo e canzoni. L'app mostra le note per mese, per
 giorno, in statistiche e in una ricerca. Non c'è nessuna parte social: i dati sono **tuoi**: alla prima apertura scegli se tenerli
 **su questo dispositivo** (nessun server, nessun account) o **sul tuo server** (scrivi tu l'indirizzo, per esempio quello di casa tua sul NAS).
-Si cambia da Impostazioni → Archivio e account. Sul dispositivo, se cancelli i dati dell'app o del browser li perdi: usa ogni tanto Esporta.
+Si cambia da Impostazioni → Account. Sul dispositivo, se cancelli i dati dell'app o del browser li perdi: usa ogni tanto Esporta.
 
 Ogni schermata ha due versioni: **mobile** (schermo stretto) e **web/desktop** (con barra laterale). Il contenuto è lo stesso; il
 passaggio è automatico in base alla larghezza della finestra.
@@ -66,7 +66,7 @@ passaggio è automatico in base alla larghezza della finestra.
   modifica di nome e posizione, che si propaga alle note), **Canzoni** (sola lettura, con quante note le usano). Cancellare una persona
   o un luogo collegato a delle note chiede se sostituirlo o toglierlo ovunque.
 - **Integrazioni:** Immich, **MyMap**, Spotify, Gemini (vedi §6–§8).
-- **Archivio e account:** dice dove sono i tuoi dati (su questo dispositivo o sul tuo server) e permette di cambiare; «Esci» c'è solo con un server.
+- **Account:** dice dove sono i tuoi dati (su questo dispositivo o sul tuo server) e permette di cambiare; «Esci» c'è solo con un server.
 - **Mood Lab (nascosto):** in fondo alle Impostazioni, toccando 5 volte di seguito la riga «MyJournal · versione», si apre il Mood Lab: un banco di prova per la formula del mood con dati di esempio (non tocca le tue note). Con **Applica all'app** la formula che hai impostato (curva delle note, peso di durata e persone, curva dei giorni nel mese) diventa quella di tutto il tuo account; **Formula originale** la ripristina.
 - **Uso offline**, **Novità** (changelog), **Esporta** (JSON o Markdown di tutto il diario) e **Account** (cambio nome, email e password;
   esci; elimina account con doppia conferma, che cancella anche note, persone e tag).

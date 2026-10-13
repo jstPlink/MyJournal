@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.78.8',
+    date: '2026-10-14 09:00',
+    changes: [
+      "Impostazioni: la sezione «Archivio e account» si chiama «Account», e «Esci» è più staccato da «Cambia server».",
+    ],
+  },
+  {
     version: '0.78.7',
     date: '2026-10-13 20:30',
     changes: [

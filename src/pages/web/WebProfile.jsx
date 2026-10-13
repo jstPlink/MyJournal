@@ -1066,7 +1066,7 @@ export default function WebProfile() {
         <Changelog />
       </SettingsSection>
 
-      <SettingsSection title="Archivio e account" icon="user">
+      <SettingsSection title="Account" icon="user">
         <BackendInfo />
 
         {!isLocal && (
@@ -1076,7 +1076,7 @@ export default function WebProfile() {
               logout()
               navigate('/login', { replace: true })
             }}
-            className="flex w-full items-center justify-center gap-2 rounded-full border border-delete-dark bg-delete px-6 py-3 text-sm font-bold text-ink shadow-sm transition hover:brightness-105"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-delete-dark bg-delete px-6 py-3 text-sm font-bold text-ink shadow-sm transition hover:brightness-105"
           >
             <Icon name="logout" size={18} />
             Esci

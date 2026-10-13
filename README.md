@@ -51,7 +51,7 @@ Alla prima apertura l'app chiede dove salvare il diario:
   browser li perdi, quindi usa Esporta).
 - **Sul mio server** — l'indirizzo della tua istanza (vedi sotto), scritto da te: nessun indirizzo è incluso nell'app.
 
-Si cambia da Impostazioni → Archivio e account. Dettagli in [ARCHITETTURA.md](ARCHITETTURA.md) §12.
+Si cambia da Impostazioni → Account. Dettagli in [ARCHITETTURA.md](ARCHITETTURA.md) §12.
 
 ## Fai girare la TUA istanza (il tuo diario, il tuo database)
 

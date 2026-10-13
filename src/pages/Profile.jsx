@@ -1074,14 +1074,14 @@ export default function Profile() {
           <Changelog />
         </SettingsSection>
 
-        <SettingsSection title="Archivio e account" icon="user">
+        <SettingsSection title="Account" icon="user">
           <BackendInfo />
 
           {!isLocal && (
             <button
               type="button"
               onClick={onLogout}
-              className="flex w-full items-center justify-center gap-2 rounded-full border border-delete-dark bg-delete px-6 py-3 text-base font-bold text-ink shadow-sm transition active:scale-95"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full border border-delete-dark bg-delete px-6 py-3 text-base font-bold text-ink shadow-sm transition active:scale-95"
             >
               <Icon name="logout" size={18} />
               Esci
