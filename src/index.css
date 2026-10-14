@@ -1942,6 +1942,10 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     --mp-nature: none;
     --mp-doodle: none;
   }
+  /* disegni di sfondo più grandi (su pagine basse se ne vede solo una parte) */
+  .mp-page::before {
+    background-size: 170% auto, 110% auto, 160px 160px, 260px 260px, auto, auto;
+  }
   /* colonna desktop (targhette persone, francobollo, dischetto): sostituita
      dalle targhette compatte .mp-side-mobile qui sotto */
   .mp-side,
@@ -9415,6 +9419,11 @@ li:last-child > .st-row {
    più aria fra il nome del giorno e il cartoncino delle note. */
 .mp-head {
   position: static;
+}
+/* l'evidenziatore (.mp-hl, z-index -1) resta dietro al testo ma sopra la carta: .mp-head non è più
+   posizionato, quindi lo stacking context lo crea il giorno stesso */
+.mp-page .mp-wd {
+  z-index: 0;
 }
 .mp-page .mp-moon {
   position: absolute;

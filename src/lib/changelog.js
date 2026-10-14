@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.11',
+    date: '2026-10-14 14:00',
+    changes: [
+      "Calendario: l'evidenziatore sotto il giorno della settimana torna visibile (web e telefono).",
+      "Calendario su telefono: disegni di sfondo più grandi.",
+    ],
+  },
+  {
     version: '0.81.10',
     date: '2026-10-14 13:40',
     changes: [
