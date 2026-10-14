@@ -9,6 +9,15 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.9',
+    date: '2026-10-14 13:05',
+    changes: [
+      "Calendario su telefono: i decori di sfondo (alberi, animali, frammenti di testo) si vedono sui giorni segnati e non più sui giorni senza note.",
+      "Calendario web: nuvoletta del sogno più staccata dal bordo destro e meno spazio fra il giorno e il cartoncino.",
+      "Calendario web: macchie di caffè più trasparenti del 20% e gli altri decori di sfondo del 15%.",
+    ],
+  },
+  {
     version: '0.81.8',
     date: '2026-10-14 20:10',
     changes: [
