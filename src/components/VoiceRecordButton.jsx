@@ -142,20 +142,22 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
   async function transcribe(blob, mimeType, id) {
     setState('transcribing')
     setError('')
-    const onRetry = (attempt, max) =>
-      setProgress(`Gemini non risponde: nuovo tentativo ${attempt + 1} di ${max}…`)
-    setProgress('Trascrivo… tentativo 1 di 5')
+    const onRetry = (attempt, max, model) =>
+      setProgress(`Generando con Gemini${model ? ` (${model})` : ''}. Tentativo ${attempt + 1}/${max}`)
+    setProgress('Generando con Gemini. Tentativo 1/5')
     try {
       let text
       // Con la chiave Groq si prova prima Whisper (veloce, quasi mai intasato);
       // se fallisce e c'è anche Gemini si ripiega su Gemini.
       if (groqKey) {
         try {
-          setProgress('Trascrivo con Groq…')
-          text = await transcribeWithGroq(groqKey, blob, mimeType)
+          setProgress('Generando con Groq. Tentativo 1/2')
+          text = await transcribeWithGroq(groqKey, blob, mimeType, (attempt, max) =>
+            setProgress(`Generando con Groq. Tentativo ${attempt + 1}/${max}`),
+          )
         } catch (err) {
           if (!apiKey) throw err
-          setProgress('Groq non risponde, provo con Gemini…')
+          setProgress('Groq non risponde. Generando con Gemini. Tentativo 1/5')
         }
       }
       if (text == null) try {

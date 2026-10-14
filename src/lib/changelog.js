@@ -9,6 +9,20 @@
 
 export const CHANGELOG = [
   {
+    version: '0.80.0',
+    date: '2026-10-14 10:30',
+    changes: [
+      "Login: la scheda è più larga del 35%, «Archivio» si chiama «Indirizzo database» e l'indirizzo, sottolineato, è direttamente il tasto per cambiarlo (via la parola «Cambia»).",
+      "Attesa dell'IA: «Generando con Gemini (modello). Tentativo 1/5», anche per la dettatura; con Groq «Generando con Groq. Tentativo 1/2». L'ultimo tentativo di una nota o di un riassunto, se Gemini è intasato, passa a Groq (se c'è la chiave).",
+      "«Nuova nota con Gemini» diventa «Crea una nota con IA» ovunque.",
+      "Nuova sezione Impostazioni → «Istruzioni per IA»: le istruzioni per le note e per i riassunti escono dal blocco Gemini e valgono per Gemini e per Groq. Con il campo vuoto vale il testo iniziale (in inglese), che si può ripristinare.",
+      "Nuova sezione Impostazioni → «Lingua»: l'IA scrive le note (nuova nota con IA, pulizia, nota da un prompt) nella lingua scelta.",
+      "Riassunti: mezz'ora dopo l'ultima modifica il server prova a scriverli subito con tutti i modelli attivi (Gemini, le due riserve, Groq); se non riesce restano per le 23:00. I riassunti usano anche luoghi e persone delle note.",
+      "Editor: «-» e spazio crea il punto elenco anche dalla tastiera del telefono; Backspace a inizio punto lo toglie, e si può ricrearlo subito.",
+      "Widget Android: ora 4×1 su foglio a righe; mood degli ultimi 3 giorni in un cartoncino quadrato dai lati tagliuzzati, ultima nota in un cartoncino a quadretti più scuro con gli angoli stondati.",
+    ],
+  },
+  {
     version: '0.79.1',
     date: '2026-10-14 00:10',
     changes: [

@@ -52,6 +52,7 @@ import {
   MONTHS_IT,
 } from '../lib/dates'
 import TitleInput from '../components/TitleInput'
+import { noteInstructionsOf } from '../lib/aiInstructions'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -150,7 +151,7 @@ export default function NoteView() {
   const spotifyClientId = user?.spotifyClientId?.trim()
   const spotifyClientSecret = user?.spotifyClientSecret?.trim()
   const geminiApiKey = user?.geminiApiKey?.trim()
-  const geminiCustomInstructions = user?.geminiCustomInstructions?.trim()
+  const geminiCustomInstructions = noteInstructionsOf(user)
 
   const dateParam = search.get('date')
   const initialDate =

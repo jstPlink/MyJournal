@@ -899,7 +899,7 @@ export default function WebImport() {
             </button>
           </div>
 
-          {extracting && <GeminiWait label="Leggo lo screenshot…" retry={extractRetry} />}
+          {extracting && <GeminiWait retry={extractRetry} />}
           {error && <p className="text-sm text-delete-dark">{error}</p>}
         </div>
       )}

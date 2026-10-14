@@ -57,7 +57,7 @@ export default function ReminderSettings() {
     <div className="space-y-3 text-xs sm:text-sm">
       <p className="text-ink-soft">
         Ricevi una notifica per ricordarti di scrivere la nota del giorno, con il testo che preferisci
-        (lascia vuoto per quello predefinito). Toccandola puoi scegliere se scriverla a mano o con Gemini.
+        (lascia vuoto per quello predefinito). Toccandola puoi scegliere se scriverla a mano o con IA.
       </p>
 
       {list.map((r) => (

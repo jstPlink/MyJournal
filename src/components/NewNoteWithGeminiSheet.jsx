@@ -196,7 +196,7 @@ export default function NewNoteWithGeminiSheet({
 
         <div className="ncs-head">
           <div className="flex items-center gap-2">
-            <h3 className="ncs-title">Nuova nota con Gemini</h3>
+            <h3 className="ncs-title">Crea una nota con IA</h3>
           </div>
           <button type="button" onClick={closeSheet} className="gms-chev" title="Chiudi" aria-label="Chiudi">
             <Icon name="x" size={15} strokeWidth={2.8} />
@@ -210,7 +210,7 @@ export default function NewNoteWithGeminiSheet({
               funzione.
             </p>
           ) : loading ? (
-            <GeminiWait label="Preparo la nota…" retry={retry} />
+            <GeminiWait retry={retry} />
           ) : (
             <div className="gms-stack">
               <p className="gms-hint">

@@ -20,9 +20,14 @@ export default function BackendInfo({ compact = false, className = '' }) {
   if (compact) {
     return (
       <p className={className}>
-        Archivio: {where} ·{' '}
-        <button type="button" onClick={onChange} className="underline underline-offset-2">
-          Cambia
+        Indirizzo database:{' '}
+        <button
+          type="button"
+          onClick={onChange}
+          title="Tocca per cambiare indirizzo"
+          className="font-bold underline underline-offset-2"
+        >
+          {where}
         </button>
       </p>
     )

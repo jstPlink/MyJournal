@@ -19,6 +19,7 @@ import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
 import { dayMonthLabel } from '../lib/dates'
 import { playSound } from '../lib/sounds'
+import { noteInstructionsOf } from '../lib/aiInstructions'
 
 function ago(ms) {
   const m = Math.max(0, Math.round((Date.now() - ms) / 60_000))
@@ -254,7 +255,7 @@ export default function DraftsTab() {
           dateKey={resume?.dateKey}
           onClose={() => setResume(null)}
           apiKey={user?.geminiApiKey?.trim()}
-          customInstructions={user?.geminiCustomInstructions?.trim()}
+          customInstructions={noteInstructionsOf(user)}
           allPeople={people}
           allTags={tags}
           onGenerated={(draft) => navigate(`/note/new?date=${resume.dateKey}`, { state: { aiDraft: draft } })}

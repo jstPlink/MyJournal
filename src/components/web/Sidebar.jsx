@@ -8,6 +8,7 @@ import { listTags } from '../../lib/tags'
 import { fakeIdNumber, fakeSignature } from '../../lib/idCard'
 import Icon from '../Icon'
 import NewNoteWithGeminiSheet from '../NewNoteWithGeminiSheet'
+import { noteInstructionsOf } from '../../lib/aiInstructions'
 
 // Barra laterale web, skin "Pagine": l'intera barra è un cartoncino
 // strappato (con un secondo foglio, più scuro, che intravede da dietro),
@@ -78,7 +79,7 @@ export default function Sidebar() {
           <button
             type="button"
             onClick={() => setGeminiNoteOpen(true)}
-            title="Nuova nota con Gemini"
+            title="Crea una nota con IA"
             className="sb-gemini"
           >
             <Icon name="sparkles" size={18} />
@@ -90,7 +91,7 @@ export default function Sidebar() {
           dateKey={newNoteDate}
           onClose={() => setGeminiNoteOpen(false)}
           apiKey={user?.geminiApiKey?.trim()}
-          customInstructions={user?.geminiCustomInstructions?.trim()}
+          customInstructions={noteInstructionsOf(user)}
           allPeople={allPeople}
           allTags={allTags}
           onGenerated={(draft) =>

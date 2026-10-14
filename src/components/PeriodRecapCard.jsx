@@ -98,7 +98,7 @@ export default function PeriodRecapCard({
         )}
       </div>
       {loading ? (
-        <GeminiWait label="Preparo il recap…" retry={retry} />
+        <GeminiWait retry={retry} />
       ) : text ? (
         <p className="prc-text">{text}</p>
       ) : (

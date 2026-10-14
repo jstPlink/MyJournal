@@ -20,6 +20,7 @@ import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
 import { playSound } from '../lib/sounds'
 import { MONTHS_IT, addMonths, monthDayKeys, monthRange, todayKey } from '../lib/dates'
+import { noteInstructionsOf } from '../lib/aiInstructions'
 
 const SWIPE_THRESHOLD = 55
 
@@ -257,7 +258,7 @@ export default function MonthView() {
         dateKey={todayKey()}
         onClose={() => setGeminiNoteOpen(false)}
         apiKey={user?.geminiApiKey?.trim()}
-        customInstructions={user?.geminiCustomInstructions?.trim()}
+        customInstructions={noteInstructionsOf(user)}
         allPeople={allPeople}
         allTags={allTags}
         onGenerated={(draft) =>

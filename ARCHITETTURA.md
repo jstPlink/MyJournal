@@ -1,4 +1,4 @@
-# MyJournal – Architettura (v0.78.9)
+# MyJournal – Architettura (v0.80.0)
 
 Panoramica tecnica e guida per rispondere alle domande sul progetto. Per l'uso dell'app vedi [docs/GUIDA.md](docs/GUIDA.md); per la
 cronologia, `src/lib/changelog.js`; per il deploy, [deploy/README.md](deploy/README.md).
@@ -215,7 +215,7 @@ Poi commit e push: il Dockerfile includerà l'APK nell'immagine web e dopo `pull
 
 **Firma:** l'APK è di **debug**, firmato con `~/.android/debug.keystore` del PC (ogni PC ha la sua: passare da un PC all'altro richiede `adb uninstall it.fplinio.myjournal` e rifare l'accesso, i dati sono sul server).
 
-**Installare sul telefono (debug wireless):** `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`; con firma diversa `INSTALL_FAILED_UPDATE_INCOMPATIBLE` → disinstalla e reinstalla. Versione attuale: versionCode 52 / versionName 1.51 (frontend v0.79.1).
+**Installare sul telefono (debug wireless):** `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`; con firma diversa `INSTALL_FAILED_UPDATE_INCOMPATIBLE` → disinstalla e reinstalla. Versione attuale: versionCode 53 / versionName 1.52 (frontend v0.80.0).
 
 **Regola di aggiornamento dell'app Android (vale ogni volta che si chiede un aggiornamento dell'app):** dopo le modifiche si alza la versione (`package.json`, voce in `changelog.js`, `versionCode`/`versionName` in `android/app/build.gradle`), si compila l'APK (`npm run android:build` + `gradlew assembleDebug`) e, **se il telefono è collegato** (`adb devices` mostra `device`; con più voci usare `adb -s IP:porta`), lo si **invia subito** con `adb install -r app-debug.apk`, verificando `versionCode`/`versionName` con `dumpsys package it.fplinio.myjournal`. Se il telefono non è collegato lo si dice e l'APK resta in `android/app/build/outputs/apk/debug/`. Il debug wireless cade spesso: `adb mdns services` e `adb connect IP:porta` (vedi sotto per MyMap, stessa procedura). Un APK compilato altrove (es. dal workflow manuale
 `.github/workflows/android-apk.yml`, artifact `myjournal-debug-apk`) ha un'altra firma e Android non lo installa sopra quello vecchio: va
@@ -277,6 +277,14 @@ prima disinstallata l'app.
 - MyMap (progetto a parte) ha un suo widget Android già completato da un'altra sessione; non c'è lavoro in sospeso qui.
 
 **Ambiente di lavoro.** Servono JDK 21, Android SDK (piattaforma 36) e `android/local.properties` con `sdk.dir` (ignorato da git). Per provare in locale contro i dati veri: `.env.local` con `VITE_DEV_API=<indirizzo del tuo server>` (ignorato da git). Debug del WebView dell'app: `adb forward tcp:PORTA localabstract:webview_devtools_remote_<pid>` e DevTools Protocol. Le credenziali di accesso al NAS (SSH) e i dettagli dell'ambiente personale non vanno scritti nel repository.
+
+## 11bis. Novità 0.80.0 (2026-10-14)
+
+- **Scheda di login** `.wl-form-wrap > div` larga 372px (+35%); `BackendInfo compact` = «Indirizzo database: <indirizzo sottolineato>» (è il pulsante).
+- **IA generica:** `lib/aiInstructions.js` = testi iniziali `DEFAULT_NOTE_INSTRUCTIONS`/`DEFAULT_RECAP_INSTRUCTIONS` (inglese; il server ne ha una copia in `recap_lib.js`: tienile uguali), `noteInstructionsOf`/`recapInstructionsOf` (campo vuoto → testo iniziale), lingua per dispositivo (`myjournal.language`, `languageName()` nei prompt delle note). UI: `AiInstructionsSettings` e `LanguageSettings` (sezioni «Istruzioni per IA» e «Lingua» in Impostazioni, mobile e web). I campi del DB restano `geminiCustomInstructions` (note) e `recapCustomInstructions`.
+- **Groq come testo:** in `gemini.js` `ATTEMPT_PLAN = [0,0,1,2,3]`: l'ultimo tentativo usa Groq (`GROQ_TEXT_MODEL`, `callGroqText`) se c'è `users.groqApiKey` e la richiesta è solo testo. `GeminiWait` mostra «Generando con <IA> (<modello>). Tentativo n/5».
+- **Recap dopo 30 minuti** (`recapAfterQuiet`, cron ogni minuto → `runQuietRecaps` in `recap_lib.js`): se l'ultima modifica (max `queuedAt` dell'utente) ha ≥ 30 min, un solo tentativo per quella modifica (ricordato in `$app.store()`, `recapQuiet:<user>`) con il piano Gemini/riserve/Groq (`buildModelPlan`, `callTextPlan`); se fallisce i job restano per le 23:00. `noteLine` include luogo e persone. Prova a secco: scratchpad della sessione 0.80.0.
+- **Widget 4×1** (`summary_widget_info.xml` 4 celle, `widget_summary.xml` + anteprima generati insieme): foglio a righe (`widget_background` + `widget_lines.png` in `drawable-nodpi`), cartoncino del mood `widget_card_jagged` (vettoriale, tinto con `paperTint`: 50% mood + 50% carta), cartoncino dell'ultima nota `widget_card_checks` (`widget_checks.png`). Il mood è la media degli ultimi **3** giorni (`ymd(-2)`). `previewImage` (Android < 12) è ancora lo screenshot del vecchio 3×1.
 
 ## 12. Dove vivono i dati: locale o server (v0.74.0)
 

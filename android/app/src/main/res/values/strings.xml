@@ -7,7 +7,7 @@
     <string name="widget_new_note">Nuova nota</string>
     <string name="widget_new_note_description">Apre MyJournal su una nuova nota</string>
     <string name="widget_new_note_small_description">Nuova nota, in formato piccolo</string>
-    <string name="widget_summary_description">Nuova nota, mood della settimana e ultima nota</string>
-    <string name="widget_mood_caption">MOOD · 7 GIORNI</string>
+    <string name="widget_summary_description">Nuova nota, mood degli ultimi 3 giorni e ultima nota</string>
+    <string name="widget_mood_caption">MOOD · 3 GG</string>
     <string name="widget_last_caption">ULTIMA NOTA</string>
 </resources>

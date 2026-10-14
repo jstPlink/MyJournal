@@ -7934,6 +7934,10 @@ li:last-child > .st-row {
   background-repeat: repeat, repeat, no-repeat, no-repeat;
   background-blend-mode: multiply, soft-light, normal, normal;
 }
+.wl-form-wrap > div {
+  /* il cartoncino era largo quanto il suo contenuto (circa 276px): +35% */
+  width: min(100%, 372px);
+}
 .wl-card {
   position: relative;
   width: 100%;

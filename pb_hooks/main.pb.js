@@ -7,6 +7,8 @@
 //    giorno della nota, e il suo mese e anno solo se già finiti (mese e anno in
 //    corso si riassumono quando chiudono: il primo del mese/anno). Salvare non
 //    chiama mai Gemini.
+//  - Mezz'ora dopo l'ultima modifica un cron (recapAfterQuiet, ogni minuto) prova a
+//    scriverli subito con tutti i modelli attivi; se non riesce restano in coda.
 //  - Ogni sera alle 23:00 (ora di Roma, TZ del container) un cron li evade
 //    TUTTI in blocco: prima i giorni, poi i mesi, poi gli anni, una richiesta
 //    a Gemini alla volta. Due ritentativi (23:20 e 23:40) riprendono quello
@@ -62,6 +64,14 @@ onRecordAfterDeleteSuccess((e) => {
   require(`${__hooks}/recap_lib.js`).queueFromNote($app, e.record, null)
   e.next()
 }, 'note')
+
+// Mezz'ora dopo l'ULTIMA modifica a una nota un primo tentativo di scrivere i
+// recap segnati, con tutti i modelli attivi (Gemini, le riserve, Groq): il cron
+// gira ogni minuto ma, se non c'è nulla da fare, si ferma subito. Se non riesce
+// i recap restano in coda per il giro delle 23:00.
+cronAdd('recapAfterQuiet', '* * * * *', () => {
+  require(`${__hooks}/recap_lib.js`).runQuietRecaps($app)
+})
 
 // Tutti i recap segnati da aggiornare, in blocco, alle 23:00; poi due
 // ritentativi per ciò che fosse rimasto in coda (errori transitori di Gemini).

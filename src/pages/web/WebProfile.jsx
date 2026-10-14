@@ -36,7 +36,6 @@ import { getSpotifyToken, describeSpotifyError } from '../../lib/spotify'
 import {
   testGeminiKey,
   describeGeminiError,
-  saveGeminiCustomInstructions,
 } from '../../lib/gemini'
 import { downloadIntegrationDoc } from '../../lib/integrationDocs'
 import PersonAvatar from '../../components/PersonAvatar'
@@ -48,7 +47,8 @@ import MoodGradientControls from '../../components/MoodGradientControls'
 import SongsUsageList from '../../components/SongsUsageList'
 import ExportButtons from '../../components/ExportButtons'
 import OfflineStorage from '../../components/OfflineStorage'
-import RecapInstructions from '../../components/RecapInstructions'
+import AiInstructionsSettings from '../../components/AiInstructionsSettings'
+import LanguageSettings from '../../components/LanguageSettings'
 import GeminiUsage from '../../components/GeminiUsage'
 import GroqSettings from '../../components/GroqSettings'
 import { Capacitor } from '@capacitor/core'
@@ -131,14 +131,6 @@ export default function WebProfile() {
   const [savingGemini, setSavingGemini] = useState(false)
   const [testingGemini, setTestingGemini] = useState(false)
   const [geminiStatus, setGeminiStatus] = useState(null)
-  // Istruzioni fisse aggiunte a ogni richiesta di "Nuova nota con Gemini"
-  // (tono, cosa evidenziare/evitare...). Salvate sull'utente: valgono sugli
-  // stessi dispositivi.
-  const [geminiInstructions, setGeminiInstructions] = useState(
-    user?.geminiCustomInstructions || '',
-  )
-  const [savingGeminiInstructions, setSavingGeminiInstructions] = useState(false)
-  const [geminiInstructionsStatus, setGeminiInstructionsStatus] = useState(null)
 
   useEffect(() => {
     setImmichUrl(user?.immichUrl || '')
@@ -146,7 +138,6 @@ export default function WebProfile() {
     setSpotifyClientId(user?.spotifyClientId || '')
     setSpotifyClientSecret(user?.spotifyClientSecret || '')
     setGeminiApiKey(user?.geminiApiKey || '')
-    setGeminiInstructions(user?.geminiCustomInstructions || '')
   }, [user])
 
   async function saveGemini() {
@@ -164,18 +155,6 @@ export default function WebProfile() {
     }
   }
 
-  async function saveGeminiInstructions() {
-    setSavingGeminiInstructions(true)
-    setGeminiInstructionsStatus(null)
-    try {
-      await saveGeminiCustomInstructions(geminiInstructions)
-      setGeminiInstructionsStatus({ ok: true, message: 'Salvato.' })
-    } catch (err) {
-      setGeminiInstructionsStatus({ ok: false, message: describeError(err) })
-    } finally {
-      setSavingGeminiInstructions(false)
-    }
-  }
 
   async function testGemini() {
     setTestingGemini(true)
@@ -966,49 +945,20 @@ export default function WebProfile() {
           </button>
         </div>
 
-        <SettingsSection nested noCollapse title="Istruzioni per le note" icon="edit">
-          <p className="text-sm text-ink-soft">
-            Aggiunte a ogni richiesta di "Nuova nota con Gemini" (tono da
-            usare, cosa evidenziare o evitare...). Salvate sul tuo account:
-            valgono su tutti i dispositivi.
-          </p>
-          <textarea
-            rows={7}
-            placeholder='Es. "scrivi in tono ironico" oppure "non menzionare mai il lavoro a meno che non sia esplicito"'
-            value={geminiInstructions}
-            onChange={(e) => setGeminiInstructions(e.target.value)}
-            className="w-full resize-none rounded-xl border border-line bg-cream px-3 py-2.5 text-sm text-ink outline-none focus:border-ink-soft"
-          />
-          {geminiInstructionsStatus && (
-            <p
-              className={
-                'text-sm ' +
-                (geminiInstructionsStatus.ok ? 'text-save-dark' : 'text-delete-dark')
-              }
-            >
-              {geminiInstructionsStatus.message}
-            </p>
-          )}
-          <button
-            type="button"
-            onClick={saveGeminiInstructions}
-            disabled={savingGeminiInstructions}
-            className="w-full rounded-full border border-save-dark bg-save px-4 py-2.5 text-sm font-bold text-ink transition hover:brightness-105 disabled:opacity-50"
-          >
-            {savingGeminiInstructions ? 'Salvo…' : 'Salva'}
-          </button>
-        </SettingsSection>
-
-        <SettingsSection nested noCollapse title="Istruzioni per i riassunti" icon="sparkles">
-          <RecapInstructions />
-        </SettingsSection>
-
         <SettingsSection nested noCollapse title="Richieste a Gemini" icon="info">
           <GeminiUsage />
         </SettingsSection>
         </SettingsSection>
 
             <GroqSettings />
+      </SettingsSection>
+
+      <SettingsSection title="Istruzioni per IA" icon="edit">
+        <AiInstructionsSettings />
+      </SettingsSection>
+
+      <SettingsSection title="Lingua" icon="link">
+        <LanguageSettings />
       </SettingsSection>
 
       {!isLocal && (

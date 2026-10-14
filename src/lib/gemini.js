@@ -8,6 +8,7 @@ import { plainText } from './notes'
 import { timesInText } from './importSheet'
 import { pb } from './pocketbase'
 import { logGeminiRequest } from './geminiUsage'
+import { languageName } from './aiInstructions'
 
 // Salva le istruzioni personalizzate sull'account (campo `geminiCustomInstructions`
 // di `users`) — usata sia da Impostazioni sia dai pannelli dove si scrive il
@@ -170,9 +171,9 @@ async function callGeminiParts(apiKey, parts, { onRetry } = {}) {
 async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
   let lastErr
   for (let attempt = 1; attempt <= OVERLOAD_MAX_ATTEMPTS; attempt++) {
-    const model = await modelForAttempt(apiKey, attempt)
+    const model = await modelForAttempt(apiKey, attempt, contents)
     try {
-      return await callGeminiOnce(apiKey, contents, model)
+      return model === GROQ_TEXT_MODEL ? await callGroqText(contents) : await callGeminiOnce(apiKey, contents, model)
     } catch (err) {
       lastErr = err
       const last = attempt === OVERLOAD_MAX_ATTEMPTS
@@ -180,9 +181,9 @@ async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
       // non è colpa dell'utente, si passa subito al tentativo dopo.
       if (model !== MODEL && !isRetryable(err) && !last) continue
       if (!isRetryable(err) || last) throw err
-      // il 3° argomento è il nome dell'altro modello che si proverà, o null se resta il principale
-      const next = await modelForAttempt(apiKey, attempt + 1)
-      onRetry?.(attempt, OVERLOAD_MAX_ATTEMPTS, next !== MODEL ? next : null)
+      // il 3° argomento è il nome del modello con cui si farà il prossimo tentativo
+      const next = await modelForAttempt(apiKey, attempt + 1, contents)
+      onRetry?.(attempt, OVERLOAD_MAX_ATTEMPTS, next)
       await wait(RETRY_DELAYS_MS[attempt - 1])
     }
   }
@@ -194,7 +195,7 @@ async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
 // provano fino a due modelli «flash» diversi, poi si torna al principale.
 // L'elenco si chiede una volta sola a Google (models.list) invece di
 // scrivere a mano nomi che possono essere ritirati.
-const ATTEMPT_PLAN = [0, 0, 1, 2, 0] // 0 = principale, 1/2 = prima/seconda riserva
+const ATTEMPT_PLAN = [0, 0, 1, 2, 3] // 0 = principale, 1/2 = prima/seconda riserva, 3 = Groq (se c'è la chiave)
 let fallbackPromise = null
 
 function fallbackModels(apiKey) {
@@ -222,8 +223,44 @@ function fallbackModels(apiKey) {
   return fallbackPromise
 }
 
-async function modelForAttempt(apiKey, attempt) {
+// Modello di scrittura di Groq: ultimo tentativo quando Gemini è intasato. Solo per
+// richieste di solo testo (niente audio o immagini) e se l'utente ha la chiave Groq.
+export const GROQ_TEXT_MODEL = 'llama-3.3-70b-versatile'
+const groqKeyOfUser = () => (pb.authStore.record?.groqApiKey || '').trim()
+const isTextOnly = (contents) => contents.every((c) => (c.parts || []).every((p) => typeof p.text === 'string'))
+
+async function callGroqText(contents) {
+  const messages = contents.map((c) => ({
+    role: c.role === 'model' ? 'assistant' : 'user',
+    content: (c.parts || []).map((p) => p.text || '').join(''),
+  }))
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${groqKeyOfUser()}` },
+    body: JSON.stringify({ model: GROQ_TEXT_MODEL, messages }),
+    signal: AbortSignal.timeout(60000),
+  })
+  if (!res.ok) {
+    let detail = ''
+    try {
+      detail = (await res.json())?.error?.message || ''
+    } catch {
+      // risposta non JSON
+    }
+    const err = new Error(detail || 'Richiesta a Groq non riuscita.')
+    err.status = res.status
+    err.provider = 'groq'
+    throw err
+  }
+  const data = await res.json()
+  const text = String(data?.choices?.[0]?.message?.content || '').trim()
+  if (!text) throw new Error('Groq non ha restituito testo.')
+  return text
+}
+
+async function modelForAttempt(apiKey, attempt, contents = []) {
   const slot = ATTEMPT_PLAN[attempt - 1] || 0
+  if (slot === 3) return groqKeyOfUser() && isTextOnly(contents) ? GROQ_TEXT_MODEL : MODEL
   if (!slot) return MODEL
   const list = await fallbackModels(apiKey)
   return list[slot - 1] || MODEL
@@ -242,9 +279,13 @@ export async function testGeminiKey(apiKey) {
 // Ripulisce/sintetizza il testo esistente di una nota, mantenendone i fatti.
 // Restituisce anche `history`: la conversazione fin qui, da passare a
 // refineText per chiedere piccole correzioni sul risultato.
-export async function cleanupNoteText(apiKey, text, onRetry) {
+export async function cleanupNoteText(apiKey, text, onRetry, customInstructions = '') {
   const prompt =
-    "Ripulisci e sintetizza il seguente testo di una nota personale di diario, in italiano: correggi refusi e sgrammaticature, migliora la scorrevolezza, mantieni fatti, senso e tono originali. Non aggiungere informazioni non presenti nel testo. Rispondi SOLO con il testo finale della nota, senza titoli, virgolette o commenti.\n\nTesto:\n" +
+    `Ripulisci e sintetizza il seguente testo di una nota personale di diario, in lingua ${languageName()}: correggi refusi e sgrammaticature, migliora la scorrevolezza, mantieni fatti, senso e tono originali. Non aggiungere informazioni non presenti nel testo. Rispondi SOLO con il testo finale della nota, senza titoli, virgolette o commenti.\n\n` +
+    (customInstructions.trim()
+      ? `Istruzioni fisse dell'utente su come scrivere le note (rispettale sempre, a meno che non contraddicano il formato richiesto sopra): ${customInstructions.trim()}\n\n`
+      : '') +
+    'Testo:\n' +
     text
   const result = await callGemini(apiKey, prompt, { onRetry })
   return {
@@ -259,7 +300,7 @@ export async function cleanupNoteText(apiKey, text, onRetry) {
 // Scrive un nuovo contenuto di nota a partire da indicazioni dell'utente.
 export async function writeNoteText(apiKey, instructions, customInstructions = '', onRetry) {
   const prompt =
-    'Scrivi il contenuto di una nota personale di diario in italiano, in prima persona, seguendo queste indicazioni. Rispondi SOLO con il testo della nota, senza titoli, virgolette o commenti.\n\n' +
+    `Scrivi il contenuto di una nota personale di diario in lingua ${languageName()}, in prima persona, seguendo queste indicazioni. Rispondi SOLO con il testo della nota, senza titoli, virgolette o commenti.\n\n` +
     (customInstructions.trim()
       ? `Istruzioni fisse dell'utente su come scrivere le note (rispettale sempre, a meno che non contraddicano il formato richiesto sopra): ${customInstructions.trim()}\n\n`
       : '') +
@@ -309,7 +350,7 @@ export async function draftNoteFromPrompt(
   { peopleNames = [], tagNames = [], customInstructions = '', onRetry } = {},
 ) {
   const instruction =
-    'Da queste indicazioni scritte da un utente, prepara la bozza di una nota personale di diario in italiano, in prima persona. ' +
+    'Da queste indicazioni scritte da un utente, prepara la bozza di una nota personale di diario in lingua ' + languageName() + ', in prima persona. ' +
     'Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, con esattamente questa forma:\n' +
     '{"title": string (breve, poche parole), ' +
     '"content": string (il testo della nota, ripulito e scorrevole, più lungo e articolato delle indicazioni), ' +
@@ -672,7 +713,7 @@ function groqExt(mimeType = '') {
   return 'webm'
 }
 
-export async function transcribeWithGroq(groqKey, blob, mimeType) {
+export async function transcribeWithGroq(groqKey, blob, mimeType, onRetry) {
   let lastErr
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
@@ -707,6 +748,7 @@ export async function transcribeWithGroq(groqKey, blob, mimeType) {
       lastErr = err
       const retry = err.status == null ? err.name === 'TypeError' : err.status === 429 || err.status >= 500
       if (!retry || attempt === 2) throw err
+      onRetry?.(attempt, 2, GROQ_MODEL)
       await wait(2000)
     }
   }

@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react'
 // barra di caricamento in loop, per rendere chiaro che sta lavorando (le
 // risposte possono richiedere qualche secondo). Resta montato anche durante
 // i riprovi automatici sul server sovraccarico (vedi src/lib/gemini.js): il
-// chiamante passa `retry` = { attempt, maxAttempts } quando sta ritentando,
+// chiamante passa `retry` = { attempt, maxAttempts, model } quando sta ritentando,
 // così il timer non si azzera e l'attesa resta sempre visibile e spiegata.
-export default function GeminiWait({ label = 'Chiedo a Gemini…', retry = null }) {
+export default function GeminiWait({ ai = 'Gemini', retry = null }) {
   const [seconds, setSeconds] = useState(0)
 
   useEffect(() => {
@@ -14,6 +14,8 @@ export default function GeminiWait({ label = 'Chiedo a Gemini…', retry = null 
     const id = setInterval(() => setSeconds((s) => s + 1), 1000)
     return () => clearInterval(id)
   }, [])
+
+  const who = retry?.model && /llama|mixtral|whisper/i.test(retry.model) ? 'Groq' : ai
 
   return (
     <div className="flex flex-col items-center gap-3 py-10">
@@ -24,11 +26,9 @@ export default function GeminiWait({ label = 'Chiedo a Gemini…', retry = null 
         />
       </div>
       <p className="text-sm text-ink-soft">
-        {retry
-          ? `Server occupato, tentativo ${retry.attempt + 1} di ${retry.maxAttempts}${
-              retry.model ? ` con un altro modello Gemini (${retry.model})` : ''
-            }… ${seconds}s`
-          : `${label} (tentativo 1 di 5) ${seconds}s`}
+        {`Generando con ${who}${retry?.model ? ` (${retry.model})` : ''}. Tentativo ${
+          retry ? retry.attempt + 1 : 1
+        }/${retry ? retry.maxAttempts : 5} · ${seconds}s`}
       </p>
     </div>
   )

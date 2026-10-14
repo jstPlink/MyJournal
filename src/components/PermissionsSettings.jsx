@@ -131,7 +131,7 @@ export default function PermissionsSettings() {
 
       <Row
         title="Microfono"
-        why="Serve per dettare a voce (“Detta un vocale”) nelle note con Gemini."
+        why="Serve per dettare a voce (“Detta un vocale”) nelle note con IA."
         {...micRow}
       />
       <Row

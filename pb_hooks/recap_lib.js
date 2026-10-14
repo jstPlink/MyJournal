@@ -87,6 +87,133 @@ function callGeminiText(apiKey, promptText, maxAttempts, jsonMode) {
   }
 }
 
+// ---- tentativo "dopo 30 minuti dall'ultima modifica" ----
+//
+// Mezz'ora dopo l'ultima modifica a una nota (e solo se nel frattempo non ce
+// ne sono state altre) un cron prova a scrivere subito i recap segnati, usando
+// TUTTI i modelli attivi nell'app: Gemini principale (due volte), le due riserve
+// «flash» che Google elenca per la chiave dell'utente e, se l'utente ha messo la
+// chiave Groq, Groq come ultima spiaggia: gli stessi cinque tentativi, con le
+// stesse attese (3, 5, 7 e 9 s), dei pannelli dell'app (ATTEMPT_PLAN in
+// src/lib/gemini.js). Se nessuno risponde i recap restano in coda e li prende il
+// giro delle 23:00.
+
+const PLAN_DELAYS_MS = [3000, 5000, 7000, 9000]
+const GROQ_TEXT_MODEL = 'llama-3.3-70b-versatile'
+
+function groqApiKeyFor(app, userId) {
+  try {
+    const key = (app.findRecordById('users', userId).get('groqApiKey') || '').trim()
+    return key || null
+  } catch {
+    return null
+  }
+}
+
+// Riserve Gemini: i primi due modelli «flash» diversi dal principale, come nell'app.
+function fallbackGeminiModels(apiKey) {
+  try {
+    const res = $http.send({
+      method: 'GET',
+      url: 'https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=' + encodeURIComponent(apiKey),
+    })
+    if (res.statusCode !== 200) return []
+    const out = []
+    for (const m of (res.json && res.json.models) || []) {
+      if (!(m.supportedGenerationMethods || []).includes('generateContent')) continue
+      const name = String(m.name || '').replace(/^models\//, '')
+      if (!/flash/i.test(name) || name === GEMINI_MODEL) continue
+      if (/image|tts|audio|live|embed|robot|computer|thinking|exp|learnlm|gemma|preview/i.test(name)) continue
+      out.push(name)
+    }
+    return out.sort().reverse().slice(0, 2)
+  } catch {
+    return []
+  }
+}
+
+function buildModelPlan(app, userId, apiKey) {
+  const fb = fallbackGeminiModels(apiKey)
+  const plan = [
+    { provider: 'gemini', model: GEMINI_MODEL },
+    { provider: 'gemini', model: GEMINI_MODEL },
+    { provider: 'gemini', model: fb[0] || GEMINI_MODEL },
+    { provider: 'gemini', model: fb[1] || GEMINI_MODEL },
+    { provider: 'gemini', model: GEMINI_MODEL },
+  ]
+  if (groqApiKeyFor(app, userId)) plan[4] = { provider: 'groq', model: GROQ_TEXT_MODEL }
+  return plan
+}
+
+// Un tentativo con un passo del piano: ritorna {text} oppure {status}.
+function callPlanStep(step, keys, promptText, jsonMode) {
+  try {
+    let res
+    if (step.provider === 'groq') {
+      const body = { model: step.model, messages: [{ role: 'user', content: promptText }] }
+      if (jsonMode) body.response_format = { type: 'json_object' }
+      res = $http.send({
+        method: 'POST',
+        url: 'https://api.groq.com/openai/v1/chat/completions',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + keys.groq },
+        body: JSON.stringify(body),
+      })
+      if (res.statusCode === 200) {
+        const choice = (res.json && res.json.choices && res.json.choices[0]) || {}
+        const text = String((choice.message && choice.message.content) || '').trim()
+        return text ? { text: text } : { status: 0 }
+      }
+      return { status: res.statusCode }
+    }
+    res = $http.send({
+      method: 'POST',
+      url:
+        'https://generativelanguage.googleapis.com/v1beta/models/' +
+        step.model +
+        ':generateContent?key=' +
+        encodeURIComponent(keys.gemini),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        jsonMode
+          ? { contents: [{ parts: [{ text: promptText }] }], generationConfig: { responseMimeType: 'application/json' } }
+          : { contents: [{ parts: [{ text: promptText }] }] },
+      ),
+    })
+    if (res.statusCode === 200) {
+      const candidates = (res.json && res.json.candidates) || []
+      const parts = (candidates[0] && candidates[0].content && candidates[0].content.parts) || []
+      let text = ''
+      for (const p of parts) text += p.text || ''
+      text = text.trim()
+      return text ? { text: text } : { status: 0 }
+    }
+    return { status: res.statusCode }
+  } catch (err) {
+    console.log('[recap] ' + step.provider + ' ' + step.model + ' non raggiungibile: ' + err)
+    return { status: 0 }
+  }
+}
+
+// Prova i passi del piano uno dopo l'altro (attese di PLAN_DELAYS_MS). Chiave
+// Gemini non valida sul principale = errore definitivo; sugli altri modelli un
+// rifiuto (404, 400...) vuol dire solo "questo modello non c'è": si passa oltre.
+function callTextPlan(plan, keys, promptText, jsonMode) {
+  for (let i = 0; i < plan.length; i++) {
+    const step = plan[i]
+    const r = callPlanStep(step, keys, promptText, jsonMode)
+    if (r.text) {
+      console.log('[recap] riuscito con ' + step.provider + ' ' + step.model + ' (tentativo ' + (i + 1) + ')')
+      return r.text
+    }
+    if (step.provider === 'gemini' && step.model === GEMINI_MODEL && (r.status === 400 || r.status === 401 || r.status === 403)) {
+      throw new Error('Chiave API Gemini non valida (status ' + r.status + ')')
+    }
+    console.log('[recap] ' + step.provider + ' ' + step.model + ' tentativo ' + (i + 1) + ': status ' + r.status)
+    if (i < plan.length - 1) sleep(PLAN_DELAYS_MS[Math.min(i, PLAN_DELAYS_MS.length - 1)])
+  }
+  throw transientError()
+}
+
 // ---- date "a orologio da muro", come src/lib/dates.js: niente fuso, si
 // leggono/scrivono le cifre così come sono. ----
 
@@ -127,9 +254,18 @@ function geminiApiKeyFor(app, userId) {
 
 // Istruzioni fisse dell'utente per i riassunti (campo recapCustomInstructions,
 // Impostazioni → Gemini): prefisso del prompt, vuoto se assenti.
+const DEFAULT_RECAP_INSTRUCTIONS = [
+  'Write the summaries based on the title and the content, the mood, the places visited and the people met.',
+  'Write the text in the first person, as if you had lived the experience yourself.',
+  'When choosing what to include in the summary, give more weight to the notes with the most extreme moods, whether the lowest or the highest.',
+  "Don't add too many adjectives or words of your own; try to use the words already present, at most paraphrase or combine concepts.",
+  'Split the recaps into paragraphs so they are easier to read.',
+  'For daily summaries use 80 words.\nFor monthly summaries use 110 words.\nFor yearly summaries use 140 words.',
+].join('\n\n')
+
 function recapInstructionsFor(app, userId) {
   try {
-    const t = (app.findRecordById('users', userId).get('recapCustomInstructions') || '').trim()
+    const t = (app.findRecordById('users', userId).get('recapCustomInstructions') || '').trim() || DEFAULT_RECAP_INSTRUCTIONS
     return t
       ? "Istruzioni fisse dell'utente su come scrivere i riassunti (rispettale sempre, a meno che non contraddicano il formato richiesto sotto): " +
           t +
@@ -194,11 +330,35 @@ function plainExcerpt(html, max) {
     .slice(0, max)
 }
 
-function noteLine(rec) {
+function placeNameOf(rec) {
+  const raw = String(rec.get('place') || '').trim()
+  if (!raw) return ''
+  try {
+    const p = JSON.parse(raw)
+    return String((p && p.name) || '').trim()
+  } catch {
+    return raw
+  }
+}
+
+function peopleNamesOf(app, rec) {
+  try {
+    const ids = rec.get('people') || []
+    if (!ids.length) return []
+    return app.findRecordsByIds('people', ids).map((r) => String(r.get('name') || '').trim()).filter(Boolean)
+  } catch {
+    return []
+  }
+}
+
+function noteLine(rec, app) {
   const mood = Math.round(Number(rec.get('mood')) * 100)
   const title = (rec.get('title') || '').trim()
   const excerpt = plainExcerpt(rec.get('content'), 240)
-  return '[' + (isFinite(mood) ? mood : 50) + '] ' + title + (excerpt ? ' — ' + excerpt : '')
+  const place = placeNameOf(rec)
+  const people = app ? peopleNamesOf(app, rec) : []
+  const extra = (place ? ' (luogo: ' + place + ')' : '') + (people.length ? ' (persone: ' + people.join(', ') + ')' : '')
+  return '[' + (isFinite(mood) ? mood : 50) + '] ' + title + extra + (excerpt ? ' — ' + excerpt : '')
 }
 
 // ---- generazione in blocco: UNA richiesta a Gemini per utente ----
@@ -265,7 +425,7 @@ function monthRecapsForYear(app, userId, year) {
 function rawNoteRows(app, userId, range) {
   return notesForUserInRange(app, userId, range)
     .slice(0, MAX_RAW_LINES)
-    .map((r) => dayKeyOf(r.get('date')) + ' ' + noteLine(r))
+    .map((r) => dayKeyOf(r.get('date')) + ' ' + noteLine(r, app))
 }
 
 // Sezione del prompt per un mese; null se il mese non ha niente da riassumere.
@@ -282,7 +442,7 @@ function monthSection(app, userId, mKey, writtenDays) {
   if (!existing.length && !rewritten.length) {
     const rows = rawNoteRows(app, userId, monthRangeFilter(mKey))
     if (!rows.length) return null
-    body += 'Note del mese (formato: data [mood 0-100] titolo — estratto):\n' + rows.join('\n') + '\n'
+    body += 'Note del mese (formato: data [mood 0-100] titolo (luogo, persone) — estratto):\n' + rows.join('\n') + '\n'
   }
   return body
 }
@@ -311,7 +471,7 @@ function yearSection(app, userId, year, writtenMonths) {
 // "periodo|chiave" concluse (anche quelle senza note, il cui recap viene
 // eliminato). Lancia un errore transitorio se Gemini non risponde o risponde
 // in modo inutilizzabile; quelli non transitori (chiave non valida) passano.
-function generateBatch(app, userId, dayKeys, monthKeys, yearKeys, maxAttempts) {
+function generateBatch(app, userId, dayKeys, monthKeys, yearKeys, maxAttempts, plan) {
   const done = []
   const apiKey = geminiApiKeyFor(app, userId)
   if (!apiKey) throw new Error('Nessuna chiave Gemini')
@@ -324,7 +484,7 @@ function generateBatch(app, userId, dayKeys, monthKeys, yearKeys, maxAttempts) {
       deleteRecapIfExists(app, userId, 'day', dKey)
       done.push('day|' + dKey)
     } else {
-      daySections[dKey] = notes.map(noteLine).join('\n')
+      daySections[dKey] = notes.map((n) => noteLine(n, app)).join('\n')
     }
   }
   const writtenDays = {}
@@ -361,12 +521,12 @@ function generateBatch(app, userId, dayKeys, monthKeys, yearKeys, maxAttempts) {
 
   let prompt =
     recapInstructionsFor(app, userId) +
-    'Devi scrivere dei recap per un diario personale, in italiano, rivolti a chi ha scritto le note ("hai…", "ti…"). ' +
+    'Devi scrivere dei recap per un diario personale, in italiano (salvo che le note siano scritte in un\'altra lingua). ' +
     'Rispondi con UN SOLO oggetto JSON, senza altro testo, di questa forma: ' +
     '{"days":{"AAAA-MM-GG":"testo"},"months":{"AAAA-MM":"testo"},"years":{"AAAA":"testo"}} ' +
     'con ESATTAMENTE le chiavi richieste nelle sezioni qui sotto (un oggetto vuoto per i livelli non richiesti). ' +
     'Ogni testo è solo il recap, senza titolo né elenchi puntati. ' +
-    'Come scrivere: GIORNO = 2-4 frasi, cosa è successo, persone e luoghi citati, il tono della giornata, tono caldo e diretto. ' +
+    'Se le istruzioni fisse dell\'utente non dicono altro su persona e lunghezza, usa questo: GIORNO = 2-4 frasi, cosa è successo, persone e luoghi citati, il tono della giornata, tono caldo e diretto. ' +
     "MESE = 4-6 frasi, temi ricorrenti, persone e luoghi che tornano, andamento dell'umore nel tempo, due o tre momenti salienti, tono caldo e sintetico. " +
     "ANNO = 5-8 frasi, come si è evoluto l'anno, temi ricorrenti, persone e luoghi importanti, l'andamento dell'umore, i momenti più salienti, tono caldo come un ricordo personale. " +
     'I livelli dipendono l\'uno dall\'altro: scrivi prima i giorni, poi i mesi usando anche i recap dei giorni che hai appena scritto, poi gli anni usando quelli dei mesi.\n'
@@ -384,7 +544,10 @@ function generateBatch(app, userId, dayKeys, monthKeys, yearKeys, maxAttempts) {
     for (const k of Object.keys(yearSections).sort()) prompt += '\n[' + k + ']\n' + yearSections[k]
   }
 
-  const parsed = jsonFromText(callGeminiText(apiKey, prompt, maxAttempts, true))
+  const reply = plan
+    ? callTextPlan(plan, { gemini: apiKey, groq: groqApiKeyFor(app, userId) }, prompt, true)
+    : callGeminiText(apiKey, prompt, maxAttempts, true)
+  const parsed = jsonFromText(reply)
   if (!parsed || typeof parsed !== 'object') {
     console.log('[recap] risposta di Gemini non in formato JSON, riprovo al prossimo giro')
     throw transientError()
@@ -508,7 +671,7 @@ function queueFromNote(app, record, original) {
   }
 }
 
-function processUserJobs(app, userId, allJobs) {
+function processUserJobs(app, userId, allJobs, quiet) {
   // mese e anno in corso non si riassumono ancora (vecchi segnali: si scartano)
   const jobs = []
   for (const j of allJobs) {
@@ -530,8 +693,11 @@ function processUserJobs(app, userId, allJobs) {
   const months = keysOf('month')
   const years = keysOf('year')
   const done = {}
+  // il tentativo "dopo 30 minuti" usa tutti i modelli; il giro delle 23:00 resta quello di sempre
+  const apiKey = quiet ? geminiApiKeyFor(app, userId) : null
+  const plan = quiet && apiKey ? buildModelPlan(app, userId, apiKey) : null
   const run = (d, m, y) => {
-    const finished = generateBatch(app, userId, d, m, y, BATCH_ATTEMPTS)
+    const finished = generateBatch(app, userId, d, m, y, BATCH_ATTEMPTS, plan)
     for (const k of finished) done[k] = true
     sleep(BATCH_SPACING_MS)
   }
@@ -594,7 +760,55 @@ function runRecapBatch(app) {
   }
 }
 
+// Ogni minuto: per ogni utente con recap in coda, se l'ULTIMA modifica (il
+// queuedAt più recente fra i suoi segnali) risale ad almeno 30 minuti fa, prova
+// a scriverli subito. Un solo tentativo per "ultima modifica" (si ricorda in
+// memoria): se fallisce restano in coda per le 23:00; una nuova modifica fa
+// ripartire i 30 minuti.
+const QUIET_MS = 30 * 60 * 1000
+
+function runQuietRecaps(app) {
+  if (app.store().get('recapBatchBusy')) return
+  let jobs = []
+  try {
+    jobs = app.findRecordsByFilter('recap_jobs', 'queuedAt >= 0', 'queuedAt', 5000, 0, {})
+  } catch {
+    jobs = []
+  }
+  if (!jobs.length) return
+  const byUser = {}
+  for (const j of jobs) {
+    const u = j.get('user')
+    if (!byUser[u]) byUser[u] = []
+    byUser[u].push(j)
+  }
+  const now = Date.now()
+  const due = []
+  for (const userId of Object.keys(byUser)) {
+    let last = 0
+    for (const j of byUser[userId]) last = Math.max(last, Number(j.get('queuedAt')) || 0)
+    if (now - last < QUIET_MS) continue
+    if (app.store().get('recapQuiet:' + userId) === last) continue // già provato per questa modifica
+    app.store().set('recapQuiet:' + userId, last)
+    due.push(userId)
+  }
+  if (!due.length) return
+  app.store().set('recapBatchBusy', true)
+  try {
+    for (const userId of due) {
+      try {
+        processUserJobs(app, userId, byUser[userId], true)
+      } catch (err) {
+        console.log('[recap] (dopo 30 minuti) utente ' + userId + ': ' + err)
+      }
+    }
+  } finally {
+    app.store().set('recapBatchBusy', false)
+  }
+}
+
 module.exports = {
+  runQuietRecaps,
   queueFromNote,
   runRecapBatch,
 }

@@ -9,6 +9,7 @@
 import { pb } from './pocketbase'
 import { cachedRead, cacheSet } from './cache'
 import { dayRecap as geminiDayRecap, recapNotes } from './gemini'
+import { recapInstructionsOf } from './aiInstructions'
 
 const COLLECTION = 'recaps'
 
@@ -39,7 +40,7 @@ export const getYearRecap = (year) => getRecap('year', String(year))
 // Un solo record per (utente, periodo, chiave) — vedi l'indice unico in
 // pb_migrations/1758000016_recaps_collection.js.
 // Istruzioni dell'utente per i riassunti (Impostazioni → Gemini).
-const recapInstructions = () => pb.authStore.record?.recapCustomInstructions || ''
+const recapInstructions = () => recapInstructionsOf(pb.authStore.record)
 
 async function saveRecap(period, key, text) {
   const userId = pb.authStore.record?.id

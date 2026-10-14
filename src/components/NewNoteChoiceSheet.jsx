@@ -44,7 +44,7 @@ export default function NewNoteChoiceSheet({ open, onClose, onGemini, onManual }
               <Icon name="sparkles" size={18} />
             </span>
             <span className="ncs-opt-text">
-              <b>Con Gemini</b>
+              <b>Crea una nota con IA</b>
               <span>Descrivi la giornata o parti dalle foto: la bozza è pronta da rivedere.</span>
             </span>
           </button>

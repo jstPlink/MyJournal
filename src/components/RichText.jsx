@@ -42,15 +42,15 @@ function atLineStart(root, node) {
 // dopo aver tolto il «-», sceglieva da solo "la riga" da trasformare e spesso
 // prendeva quella PRECEDENTE (il testo saliva sopra). Qui si trasforma
 // esattamente la riga in cui si sta scrivendo e basta.
-function toBullet(root, node, range) {
+function toBullet(root, node, range, removeCount = 1) {
   // il contenitore più esterno della riga, sotto la radice dell'editor
   let top = node
   while (top.parentNode && top.parentNode !== root) top = top.parentNode
   // già dentro un elenco: si controlla PRIMA di toccare il testo, altrimenti il «-» sparirebbe senza punto
   if (top.nodeName === 'UL' || top.nodeName === 'OL') return false
 
-  // via il «-»
-  range.setStart(node, range.startOffset - 1)
+  // via il «-» (e lo spazio, se è già stato scritto)
+  range.setStart(node, range.startOffset - removeCount)
   range.deleteContents()
 
   const li = document.createElement('li')
@@ -174,11 +174,33 @@ const RichText = forwardRef(function RichText(
     return () => el.removeEventListener('beforeinput', onBeforeInput)
   }, [])
 
-  function handleInput() {
-    emit()
+  // Telefono: le tastiere non mandano il tasto in keydown (key = "Unidentified"),
+  // quindi «-» + spazio non si vede lì. Si guarda il risultato dopo che lo spazio è
+  // stato scritto: se la riga è «- » si toglie e si fa il punto elenco. Con un
+  // piccolo ritardo, perché la tastiera può essere ancora in composizione.
+  function bulletFromInput() {
+    const sel = window.getSelection()
+    if (!sel || !sel.isCollapsed || sel.rangeCount === 0) return
+    const range = sel.getRangeAt(0)
+    const node = range.startContainer
+    if (node.nodeType !== 3 || !elRef.current?.contains(node)) return
+    const before = node.textContent.slice(0, range.startOffset)
+    const lineStart = before.lastIndexOf('\n') + 1
+    if (!/^-[ \u00a0]$/.test(before.slice(lineStart))) return
+    if (!atLineStart(elRef.current, node)) return
+    if (node.parentElement?.closest('ul, ol')) return
+    if (toBullet(elRef.current, node, range, 2)) emit()
   }
 
-  // "-" + spazio a inizio riga -> punto elenco.
+  function handleInput(e) {
+    emit()
+    const t = e.nativeEvent?.inputType
+    if ((t === 'insertText' || t === 'insertCompositionText') && /^[ \u00a0]$/.test(e.nativeEvent.data || ' ')) {
+      setTimeout(bulletFromInput, 0)
+    }
+  }
+
+  // "-" + spazio a inizio riga -> punto elenco (tastiera fisica).
   function handleKeyDown(e) {
     if (e.key !== ' ' && e.key !== 'Spacebar') return
     const sel = window.getSelection()

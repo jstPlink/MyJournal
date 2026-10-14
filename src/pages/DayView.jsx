@@ -18,6 +18,7 @@ import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
 import { addDaysKey, dayMonthLabel, parseWall } from '../lib/dates'
 import { haptic } from '../lib/haptics'
+import { noteInstructionsOf } from '../lib/aiInstructions'
 
 const SWIPE_THRESHOLD = 55 // px, swipe orizzontale per cambiare giorno
 
@@ -206,7 +207,7 @@ export default function DayView() {
         dateKey={date}
         onClose={() => setGeminiNoteOpen(false)}
         apiKey={user?.geminiApiKey?.trim()}
-        customInstructions={user?.geminiCustomInstructions?.trim()}
+        customInstructions={noteInstructionsOf(user)}
         allPeople={people}
         allTags={tags}
         onGenerated={(draft) =>
