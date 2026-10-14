@@ -9407,3 +9407,43 @@ li:last-child > .st-row {
 .day-dream {
   height: 38px;
 }
+
+/* ---- Calendario: nuvoletta del sogno a destra del foglio ----
+   Sta in alto a destra, sopra le fotografie (che scendono per lasciarle posto);
+   più aria fra il nome del giorno e il cartoncino delle note. */
+.mp-head {
+  position: static;
+}
+.mp-page .mp-moon {
+  position: absolute;
+  top: 8px;
+  right: 56px;
+  z-index: 8;
+  margin: 0;
+}
+.mp-notes {
+  margin-top: 0.7rem;
+}
+.mp-page:has(.mp-moon) .mp-polas {
+  top: 56px;
+}
+.mp-page.has-photo:has(.mp-moon) {
+  min-height: 232px;
+}
+.mp-page.has-photo.two-photo:has(.mp-moon) {
+  min-height: 242px;
+}
+@media (max-width: 480px) {
+  .mp-page .mp-moon {
+    top: 6px;
+    right: 14px;
+    transform: scale(0.8);
+    transform-origin: top right;
+  }
+  .mp-notes {
+    margin-top: 0;
+  }
+  .mp-notes-row {
+    margin-top: 0.9rem;
+  }
+}

@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.8',
+    date: '2026-10-14 20:10',
+    changes: [
+      "Icona dell'app Android: lo sfondo non è più grigio scuro ma ha una leggera tinta cartoncino (grigio-kaki caldo).",
+      "Calendario: la nuvoletta del sogno sta in alto a destra del foglio, sopra le foto (su telefono più piccola); più aria fra il nome del giorno e il cartoncino delle note.",
+    ],
+  },
+  {
     version: '0.81.7',
     date: '2026-10-14 19:40',
     changes: [

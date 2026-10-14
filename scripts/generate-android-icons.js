@@ -1,4 +1,4 @@
-// Genera le icone dell'app Android (Capacitor) da scripts/icon-source.svg, la
+﻿// Genera le icone dell'app Android (Capacitor) da scripts/icon-source.svg, la
 // stessa sorgente della PWA. Uso: `npm run icons:android`, poi `npm run android:build`.
 import { readFile, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -8,7 +8,7 @@ import sharp from 'sharp'
 const here = dirname(fileURLToPath(import.meta.url))
 const res = resolve(here, '..', 'android', 'app', 'src', 'main', 'res')
 const svg = await readFile(resolve(here, 'icon-source.svg'))
-const BG = '#3d3f41' // fondo scuro: contrasta con la carta chiara dell'icona
+const BG = '#5a5547' // fondo scuro con una leggera tinta cartoncino: contrasta con la carta chiara dell'icona
 
 const dens = { mdpi: 1, hdpi: 1.5, xhdpi: 2, xxhdpi: 3, xxxhdpi: 4 }
 
@@ -52,3 +52,4 @@ await writeFile(
   resolve(res, 'values', 'ic_launcher_background.xml'),
   `<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <color name="ic_launcher_background">${BG}</color>\n</resources>\n`,
 )
+
