@@ -17,9 +17,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Widget 4x1 "MyJournal" su foglio a righe, tre blocchi:
- *  1. a sinistra il mood degli ultimi 3 giorni (media dei mood giornalieri) in un cartoncino quadrato dai lati tagliuzzati;
- *  2. al centro l'ultima nota: giorno e ora in cui è finita, in un cartoncino a quadretti dagli angoli stondati;
+ * Widget 4x1 "MyJournal": tre blocchi CONCETTUALI (non separati da linee o riquadri) —
+ *  1. a sinistra il mood degli ultimi 3 giorni (media dei mood giornalieri);
+ *  2. al centro l'ultima nota: giorno e ora in cui è finita (l'orario di fine, senza altro testo);
  *  3. a destra il pulsante per scrivere una nota nuova (un tocco apre l'editor).
  *
  * I dati NON li legge da sé: li manda l'app (src/lib/widgetSync.js → MyJournalWidgetPlugin) ogni volta che si
@@ -65,10 +65,10 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
         String today = ymd(0);
         String weekStart = ymd(-2); // ultimi 3 giorni: oggi, ieri, l'altro ieri
 
-        // ---- blocco di sinistra: mood degli ultimi 3 giorni ----
+        // ---- blocco centrale: mood degli ultimi 3 giorni ----
         String moodText = "—";
         String moodSub = data == null ? "apri l'app" : "nessuna nota";
-        int moodColor = Color.parseColor("#d8d2c4");
+        int moodColor = Color.parseColor("#b9b4a8");
         if (data != null) {
             JSONArray days = data.optJSONArray("days");
             double sum = 0;
@@ -86,8 +86,8 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
             if (nDays > 0) {
                 double avg = sum / nDays;
                 moodText = String.valueOf(Math.round(avg * 100)); // in centesimi (0–100)
-                moodSub = nDays + " gg · " + nNotes + (nNotes == 1 ? " nota" : " note");
-                moodColor = paperTint(gradientColor(data.optJSONArray("stops"), avg));
+                moodSub = nDays + (nDays == 1 ? " giorno · " : " giorni · ") + nNotes + (nNotes == 1 ? " nota" : " note");
+                moodColor = gradientColor(data.optJSONArray("stops"), avg);
             }
         }
 
@@ -107,7 +107,7 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
         for (int id : ids) {
             RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.widget_summary);
             v.setTextViewText(R.id.sum_mood_value, moodText);
-            v.setInt(R.id.sum_mood_card, "setColorFilter", moodColor);
+            v.setInt(R.id.sum_mood_dot, "setColorFilter", moodColor);
             v.setTextViewText(R.id.sum_mood_sub, moodSub);
             v.setTextViewText(R.id.sum_last_day, lastDay);
             v.setTextViewText(R.id.sum_last_sub, lastSub);
@@ -121,15 +121,6 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
             v.setOnClickPendingIntent(R.id.sum_block_last, open(context, lastPath, 13));
             manager.updateAppWidget(id, v);
         }
-    }
-
-    /** Il cartoncino è 50% colore del mood + 50% carta, come i cartoncini dei giorni nell'app. */
-    private static int paperTint(int mood) {
-        int paper = Color.parseColor("#f6efdc");
-        return Color.rgb(
-            (Color.red(mood) + Color.red(paper)) / 2,
-            (Color.green(mood) + Color.green(paper)) / 2,
-            (Color.blue(mood) + Color.blue(paper)) / 2);
     }
 
     /** "YYYY-MM-DD" di oggi + offset giorni. */

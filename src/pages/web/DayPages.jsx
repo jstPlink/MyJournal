@@ -5,6 +5,7 @@ import { dayMood, moodColor } from '../../lib/mood'
 import { durationMinutes, parseWall } from '../../lib/dates'
 import PersonAvatar from '../../components/PersonAvatar'
 import Icon from '../../components/Icon'
+import DreamBadge from '../../components/DreamBadge'
 import { haptic } from '../../lib/haptics'
 import { dreamMinutes, dreamTitle } from '../../lib/dreams'
 import {
@@ -282,13 +283,15 @@ export default function DayPages({
                   }}
                 >
                   <span className="dd-dot">
-                    <Icon name="moon" size={12} />
+                    <DreamBadge iconSize={14.4} />
                   </span>
                   <span className="dd-cloud">
-                    <i className="b1" />
-                    <i className="b2" />
-                    <i className="l1" />
-                    <i className="l2" />
+                    <span className="dd-shape" aria-hidden="true">
+                      <i className="b1" />
+                      <i className="b2" />
+                      <i className="l1" />
+                      <i className="l2" />
+                    </span>
                     <span className="dd-t">{dreamTitle(d)}</span>
                   </span>
                 </button>

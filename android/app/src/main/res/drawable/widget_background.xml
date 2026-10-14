@@ -1,26 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Sfondo del widget: foglio a righe (righe azzurrine + riga di margine rossa a sinistra) -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#f1e9d3" />
+            <solid android:color="#efe6cf" />
             <corners android:radius="16dp" />
             <stroke android:width="1dp" android:color="#cabfa8" />
         </shape>
     </item>
     <item
-        android:bottom="6dp"
-        android:left="8dp"
-        android:right="8dp"
-        android:top="6dp"
-        android:drawable="@drawable/widget_lines_tile" />
-    <item
-        android:width="1dp"
-        android:bottom="7dp"
-        android:left="22dp"
-        android:top="7dp">
-        <shape android:shape="rectangle">
-            <solid android:color="#66d45b4f" />
-        </shape>
-    </item>
+        android:bottom="9dp"
+        android:left="9dp"
+        android:right="9dp"
+        android:top="9dp"
+        android:drawable="@drawable/widget_grid_tile" />
 </layer-list>

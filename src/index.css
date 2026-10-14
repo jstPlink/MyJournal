@@ -8614,9 +8614,9 @@ li:last-child > .st-row {
 /* Vista giorno: pallino con la luna sull'asse delle ore + nuvoletta col titolo (niente orario scritto) */
 .day-dream {
   position: absolute;
-  left: -10px;
+  left: -12px;
   right: 0;
-  height: 28px;
+  height: 34px;
   z-index: 4;
   margin: 0;
   padding: 0;
@@ -8636,9 +8636,9 @@ li:last-child > .st-row {
 .dd-dot {
   position: absolute;
   left: 0;
-  top: 4px;
-  width: 20px;
-  height: 20px;
+  top: 5px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -8650,45 +8650,58 @@ li:last-child > .st-row {
 }
 .dd-cloud {
   position: absolute;
-  left: 38px;
+  left: 46px;
   top: 2px;
-  max-width: calc(100% - 52px);
-  padding: 4px 13px;
-  border-radius: 14px;
-  background: #bcd8ee;
+  max-width: calc(100% - 60px);
+  padding: 5px 16px;
   color: #1f3f63;
   font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
-  font-size: 0.86rem;
+  font-size: 1.03rem;
   line-height: 1.2;
   white-space: nowrap;
   overflow: visible;
-  box-shadow: 0 2px 5px rgba(30, 60, 100, 0.28);
+}
+/* la forma (corpo + gobbe + bolle) ha un unico outline celeste; il testo sta sopra, senza contorno */
+.dd-shape {
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  background: #bcd8ee;
+  filter: drop-shadow(1.5px 0 0 #6f9fc8) drop-shadow(-1.5px 0 0 #6f9fc8) drop-shadow(0 1.5px 0 #6f9fc8)
+    drop-shadow(0 -1.5px 0 #6f9fc8) drop-shadow(0 2px 4px rgba(30, 60, 100, 0.25));
 }
 .dd-cloud .dd-t {
+  position: relative;
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* gobbe della nuvoletta e bolle che la legano al pallino */
-.dd-cloud i {
+.dd-shape i {
   position: absolute;
   background: #bcd8ee;
   border-radius: 50%;
 }
-.dd-cloud i.l1 { width: 14px; height: 14px; left: 14px; top: -6px; }
-.dd-cloud i.l2 { width: 17px; height: 17px; left: 38px; top: -8px; }
-.dd-cloud i.b1 { width: 5px; height: 5px; left: -17px; top: 11px; }
-.dd-cloud i.b2 { width: 8px; height: 8px; left: -11px; top: 8px; }
+.dd-shape i.l1 { width: 16px; height: 16px; left: 16px; top: -7px; }
+.dd-shape i.l2 { width: 20px; height: 20px; left: 44px; top: -9px; }
+.dd-shape i.b1 { width: 6px; height: 6px; left: -20px; top: 14px; }
+.dd-shape i.b2 { width: 9px; height: 9px; left: -13px; top: 10px; }
 
-/* Calendario: lunetta sulla riga del giorno */
+/* Calendario: lunetta accanto al nome del giorno (non si sovrappone a foto, persone o altro) */
 .mp-moon {
-  position: absolute;
-  z-index: 3;
-  right: 10px;
-  top: 8px;
-  color: #3b6f9c;
-  filter: drop-shadow(0 1px 1px rgba(30, 60, 100, 0.25));
+  position: relative;
+  flex: none;
+  align-self: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #cfe6f7;
+  border: 1.5px solid #6f9fc8;
+  color: #2f5f8a;
+  box-shadow: 0 2px 4px rgba(30, 60, 100, 0.3);
   pointer-events: none;
 }
 
@@ -8882,7 +8895,7 @@ li:last-child > .st-row {
   line-height: 1.2;
   font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
   font-size: 1.55rem;
-  color: #1f3f63;
+  color: #4a86bd;
 }
 .dream-title::placeholder {
   color: rgba(75, 111, 147, 0.7);
@@ -8893,8 +8906,17 @@ li:last-child > .st-row {
   font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 1.05rem;
   line-height: 27px;
-  color: #1f3f63;
+  color: #4f7aa5;
   background-image: repeating-linear-gradient(transparent 0 26px, rgba(31, 63, 99, 0.07) 26px 27px);
+}
+/* il testo incollato da altrove porta con sé font, colore e sfondo propri: si ignorano, vale il carattere tondeggiante del foglio */
+.dream-body *,
+.dream-body *::before {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: inherit !important;
+  background: transparent !important;
 }
 .dream-hint {
   margin: 4px 2px 0;
@@ -9014,6 +9036,7 @@ li:last-child > .st-row {
   align-items: center;
   gap: 6px;
   font-weight: 700;
+  color: #4a86bd;
 }
 .dream-result .dr-t svg {
   color: #3b6f9c;
@@ -9235,6 +9258,152 @@ li:last-child > .st-row {
   margin-bottom: 4px;
   font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.05rem;
   color: #6a9bc7;
+}
+
+/* ---- Vista giorno: outline uguale per pallino, bolle e nuvoletta + animazione al passaggio ---- */
+.dd-dot {
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(1.5px 0 0 #6f9fc8) drop-shadow(-1.5px 0 0 #6f9fc8) drop-shadow(0 1.5px 0 #6f9fc8)
+    drop-shadow(0 -1.5px 0 #6f9fc8) drop-shadow(0 2px 4px rgba(30, 60, 100, 0.25));
+}
+.day-dream:hover,
+.day-dream:focus-visible {
+  cursor: pointer;
+}
+.day-dream .dd-cloud,
+.day-dream .dd-dot {
+  transition: filter 0.2s ease;
+}
+/* al passaggio: la nuvoletta ondeggia, il pallino pulsa e il contorno si scurisce: si capisce che è cliccabile */
+:root:not([data-anim='off']) .day-dream:hover .dd-cloud,
+:root:not([data-anim='off']) .day-dream:focus-visible .dd-cloud {
+  animation: ddFloat 1.3s ease-in-out infinite;
+}
+:root:not([data-anim='off']) .day-dream:hover .dd-dot,
+:root:not([data-anim='off']) .day-dream:focus-visible .dd-dot {
+  animation: ddPulse 1.3s ease-in-out infinite;
+}
+.day-dream:hover .dd-shape {
+  filter: drop-shadow(1.5px 0 0 #3b6f9c) drop-shadow(-1.5px 0 0 #3b6f9c) drop-shadow(0 1.5px 0 #3b6f9c)
+    drop-shadow(0 -1.5px 0 #3b6f9c) drop-shadow(0 4px 7px rgba(30, 60, 100, 0.35));
+}
+@keyframes ddFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  30% { transform: translateY(-3px) rotate(-1.2deg) scale(1.05); }
+  65% { transform: translateY(-1px) rotate(1.2deg) scale(1.03); }
+}
+@keyframes ddPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.14); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .day-dream:hover .dd-cloud,
+  .day-dream:hover .dd-dot {
+    animation: none;
+  }
+}
+
+/* ---- Sogni: segnalino a nuvoletta, un solo spessore di contorno per tutto ---- */
+:root {
+  --dream-outline: 2px;
+}
+.dream-badge {
+  --w: 34px;
+  --h: 26px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--w);
+  height: var(--h);
+  color: #2f5f8a;
+}
+.db-shape {
+  position: absolute;
+  inset: 0;
+  filter: drop-shadow(var(--dream-outline) 0 0 #6f9fc8) drop-shadow(calc(var(--dream-outline) * -1) 0 0 #6f9fc8)
+    drop-shadow(0 var(--dream-outline) 0 #6f9fc8) drop-shadow(0 calc(var(--dream-outline) * -1) 0 #6f9fc8)
+    drop-shadow(0 2px 3px rgba(30, 60, 100, 0.25));
+}
+.db-shape i {
+  position: absolute;
+  background: #cfe6f7;
+}
+.db-shape .base {
+  left: 0;
+  right: 0;
+  bottom: 6%;
+  height: 58%;
+  border-radius: 999px;
+}
+.db-shape .c1 {
+  left: 12%;
+  bottom: 32%;
+  width: 40%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.db-shape .c2 {
+  left: 34%;
+  bottom: 28%;
+  width: 52%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+.db-moon {
+  position: relative;
+  z-index: 1;
+  margin-top: 3px;
+}
+/* calendario: segnalino staccato dal nome del giorno */
+.mp-moon {
+  width: auto;
+  height: auto;
+  margin-left: 18px;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+.mp-moon .dream-badge {
+  --w: 34px;
+  --h: 26px;
+}
+/* giorno: segnalino più grande, nuvoletta col titolo più a destra, stesso contorno */
+.dd-dot {
+  left: 0;
+  top: 2px;
+  width: auto;
+  height: auto;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+}
+.dd-dot .dream-badge {
+  --w: 41px;
+  --h: 31px;
+}
+.dd-cloud {
+  left: 58px;
+  max-width: calc(100% - 72px);
+}
+.dd-shape {
+  filter: drop-shadow(var(--dream-outline) 0 0 #6f9fc8) drop-shadow(calc(var(--dream-outline) * -1) 0 0 #6f9fc8)
+    drop-shadow(0 var(--dream-outline) 0 #6f9fc8) drop-shadow(0 calc(var(--dream-outline) * -1) 0 #6f9fc8)
+    drop-shadow(0 2px 4px rgba(30, 60, 100, 0.25));
+}
+.day-dream:hover .dd-shape {
+  filter: drop-shadow(var(--dream-outline) 0 0 #3b6f9c) drop-shadow(calc(var(--dream-outline) * -1) 0 0 #3b6f9c)
+    drop-shadow(0 var(--dream-outline) 0 #3b6f9c) drop-shadow(0 calc(var(--dream-outline) * -1) 0 #3b6f9c)
+    drop-shadow(0 4px 7px rgba(30, 60, 100, 0.35));
+}
+.dd-shape i.b1 { left: -18px; top: 15px; }
+.dd-shape i.b2 { left: -11px; top: 11px; }
+.day-dream {
+  height: 38px;
 }

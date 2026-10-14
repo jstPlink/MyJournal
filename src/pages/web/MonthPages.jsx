@@ -5,6 +5,7 @@ import { plainText, parsePlace } from '../../lib/notes'
 import { parseWall, weekdayLong, todayKey } from '../../lib/dates'
 import PersonAvatar from '../../components/PersonAvatar'
 import Icon from '../../components/Icon'
+import DreamBadge from '../../components/DreamBadge'
 import { haptic } from '../../lib/haptics'
 import {
   hash,
@@ -320,12 +321,6 @@ export default function MonthPages({
                 <span className="mp-today-tape" aria-hidden="true" />
               )}
 
-              {pg.hasDream && (
-                <span className="mp-moon" title="Sogno" aria-label="Quel giorno hai segnato un sogno">
-                  <Icon name="moon" size={18} strokeWidth={2.4} />
-                </span>
-              )}
-
               {pg.has && (
                 <span
                   className={'mp-tab' + (pg.kind ? ` mp-tab--${pg.kind}` : '')}
@@ -341,6 +336,11 @@ export default function MonthPages({
                   <span className="mp-hl" aria-hidden="true" />
                   {pg.weekday}&nbsp;{pg.dayNum}
                 </span>
+                {pg.hasDream && (
+                  <span className="mp-moon" title="Sogno" aria-label="Quel giorno hai segnato un sogno">
+                    <DreamBadge iconSize={13} />
+                  </span>
+                )}
               </span>
 
               {/* Cartoncino + (su mobile) targhette e diapositiva foto: un

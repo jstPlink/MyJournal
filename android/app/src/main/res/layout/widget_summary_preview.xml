@@ -1,169 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Widget 4x1 su foglio a righe. Sinistra: mood degli ultimi 3 giorni in un cartoncino quadrato dai lati
-     tagliuzzati (tinto col colore del mood). Centro: ultima nota (giorno e ora di fine) in un cartoncino
-     a quadretti dagli angoli stondati, più scuro. Destra: pulsante "Nuova nota" appeso a un chiodo.
-     ANTEPRIMA del selettore dei widget (previewLayout): stesso aspetto con dati d'esempio,
-     pulsante fermo, niente ViewFlipper; va tenuta allineata a widget_summary.xml. -->
+<!-- Anteprima del widget nel selettore dei widget (android:previewLayout, Android 12+): stesso aspetto del
+     widget vero (widget_summary.xml) ma con dati d'esempio, il pulsante fermo e nessun ViewFlipper.
+     Senza questa anteprima il selettore mostrava il layout "vuoto": trattini al posto dei dati e il
+     quadratino del mood bianco. Va tenuta allineata a widget_summary.xml. -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:clipChildren="false"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/widget_background"
+    android:clipChildren="false"
     android:padding="4dp">
 
     <LinearLayout
-        android:clipChildren="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipChildren="false"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp">
 
-        <!-- 1. Mood degli ultimi 3 giorni: cartoncino quadrato con i lati tagliuzzati -->
-        <FrameLayout
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_gravity="center_vertical">
+        <!-- 1. Mood dell'ultima settimana -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="66dp"
-                android:layout_height="66dp"
-                android:layout_marginStart="1.5dp"
-                android:layout_marginTop="2dp"
-                android:contentDescription="@null"
-                android:rotation="3"
-                android:src="@drawable/widget_card_jagged"
-                android:tint="#8a5c4a2a" />
-
-            <ImageView
-                android:layout_width="66dp"
-                android:layout_height="66dp"
-                android:contentDescription="@null"
-                android:rotation="-1.5"
-                android:src="@drawable/widget_card_jagged"
-                android:tint="#d8d2c4" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp">
-
-                <TextView
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:layout_height="13dp"
                 android:fontFamily="casual"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:text="@string/widget_mood_caption"
-                android:textColor="#5a4e38"
-                android:textSize="8sp"
+                android:textColor="#7a6f5b"
+                android:textSize="10sp"
                 android:textStyle="bold" />
 
-                <TextView
-                android:id="@+id/sum_mood_value"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="72"
-                android:textColor="#3a3226"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:shadowColor="#3a3226"
-                android:shadowDx="1.2"
-                android:shadowDy="0.9"
-                android:shadowRadius="0.8" />
+                android:layout_height="28dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="16dp"
+                    android:layout_height="16dp">
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:rotation="5"
+                        android:src="@drawable/widget_paper_shadow" />
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginEnd="1dp"
+                        android:contentDescription="@null"
+                        android:rotation="-4"
+                        android:src="@drawable/widget_paper_square"
+                        android:tint="#6bb0cf" />
+                </FrameLayout>
 
                 <TextView
-                android:id="@+id/sum_mood_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="3 gg · 5 note"
-                android:textColor="#3a3226"
-                android:textSize="8sp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="casual"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:shadowColor="#3a3226"
+                    android:shadowDx="1.3"
+                    android:shadowDy="1.0"
+                    android:shadowRadius="0.8"
+                    android:text="73"
+                    android:textColor="#3a3226"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
             </LinearLayout>
-        </FrameLayout>
-
-        <!-- 2. Ultima nota: cartoncino a quadretti con gli angoli stondati -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="66dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/widget_card_checks"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:layout_height="14dp"
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:shadowColor="#4a4132"
+                android:shadowDx="0.9"
+                android:shadowDy="0.7"
+                android:shadowRadius="0.6"
+                android:text="5 giorni · 12 note"
+                android:textColor="#4a4132"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- 2. Ultima nota -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="13dp"
                 android:fontFamily="casual"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:text="@string/widget_last_caption"
-                android:textColor="#5a4e38"
-                android:textSize="9sp"
+                android:textColor="#7a6f5b"
+                android:textSize="10sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/sum_last_day"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="ieri"
-                android:textColor="#3a3226"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:shadowColor="#3a3226"
-                android:shadowDx="1.2"
-                android:shadowDy="0.9"
-                android:shadowRadius="0.8" />
+                android:layout_height="28dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="casual"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:shadowColor="#3a3226"
+                    android:shadowDx="1.3"
+                    android:shadowDy="1.0"
+                    android:shadowRadius="0.8"
+                    android:text="ieri"
+                    android:textColor="#3a3226"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/sum_last_sub"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
+                android:layout_height="14dp"
                 android:fontFamily="casual"
                 android:gravity="center"
                 android:includeFontPadding="false"
                 android:maxLines="1"
-                android:text="21:30"
-                android:textColor="#3a3226"
+                android:shadowColor="#4a4132"
+                android:shadowDx="0.9"
+                android:shadowDy="0.7"
+                android:shadowRadius="0.6"
+                android:text="18:00"
+                android:textColor="#4a4132"
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- 3. Nuova nota: un vero pulsante in rilievo, appeso a un chiodo. Ogni tanto ondeggia attorno a quel
-             solo punto: il ViewFlipper alterna due copie IDENTICHE del pulsante e l'animazione di ingresso
-             (anim/widget_swing, pivot in alto al centro) è l'oscillazione smorzata. flipInterval = pausa fra
-             un'oscillazione e l'altra. -->
+        <!-- 3. Nuova nota: pulsante appeso al chiodo, fermo -->
         <LinearLayout
-            android:clipChildren="false"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight="0.9"
+            android:clipChildren="false"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -175,38 +177,38 @@
                 android:src="@drawable/widget_nail" />
 
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/widget_button"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingBottom="9dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="6dp"
+                android:rotation="2">
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/widget_button"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingBottom="9dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="6dp"
-                    android:rotation="2">
+                    android:fontFamily="casual"
+                    android:includeFontPadding="false"
+                    android:text="+"
+                    android:textColor="#3a3226"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="casual"
-                        android:includeFontPadding="false"
-                        android:text="+"
-                        android:textColor="#3a3226"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="casual"
-                        android:includeFontPadding="false"
-                        android:maxLines="1"
-                        android:text="@string/widget_new_note"
-                        android:textColor="#3a3226"
-                        android:textSize="11sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="casual"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:text="@string/widget_new_note"
+                    android:textColor="#3a3226"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

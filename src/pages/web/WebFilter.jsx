@@ -6,6 +6,7 @@ import {
   describeError,
   peopleUsageCounts,
   songsUsageList,
+  plainText,
 } from '../../lib/notes'
 import { listPeople, topByUsage } from '../../lib/people'
 import { listTags } from '../../lib/tags'
@@ -603,7 +604,7 @@ export default function WebFilter() {
                         <button type="button" onClick={() => navigate(`/dream/${n.id}`)} className="dream-result">
                           <span className="dr-t"><Icon name="moon" size={15} />{dreamTitle(n)}</span>
                           <span className="dr-d">{dayMonthLabel(dayKey(n.date))}</span>
-                          {n.content && <span className="dr-x">{n.content}</span>}
+                          {plainText(n.content) && <span className="dr-x">{plainText(n.content)}</span>}
                         </button>
                       </li>
                     ) : (

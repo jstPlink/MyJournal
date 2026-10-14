@@ -9,6 +9,29 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.7',
+    date: '2026-10-14 19:40',
+    changes: [
+      "Widget Android: ripristinata l'estetica di prima (sfondo a quadretti, quadratino di carta del mood, pulsante appeso al chiodo). Restano la larghezza 4×1 e il mood calcolato sugli ultimi 3 giorni.",
+    ],
+  },
+  {
+    version: '0.81.6',
+    date: '2026-10-14 19:10',
+    changes: [
+      "Sogni: il segnalino della luna ora è una nuvoletta (nel Calendario e nel Giorno), con lo stesso spessore di contorno della nuvoletta col titolo; nel Calendario è più staccato dal nome del giorno.",
+    ],
+  },
+  {
+    version: '0.81.5',
+    date: '2026-10-14 18:20',
+    changes: [
+      "Calendario: la lunetta del sogno sta accanto al nome del giorno (e non si perde più sotto foto, persone o canzoni).",
+      "Giorno: testo della nuvoletta e luna +20%, contorno celeste uguale per pallino, bolle e nuvoletta, e al passaggio del mouse la nuvoletta ondeggia e il pallino pulsa per far capire che si può aprire.",
+      "Sogni: nella ricerca si vede il testo e non più l'HTML; il testo incollato non porta più font e colori suoi (carattere tondeggiante e colore più chiaro); nuovo colore del titolo; «Nitidezza» su web più piccola del 30%.",
+    ],
+  },
+  {
     version: '0.81.4',
     date: '2026-10-14 17:10',
     changes: [

@@ -163,6 +163,8 @@ fonte di verità; qui un riepilogo:
 | `people`    | relation (multipla) | → collection `people`                          |
 | `tags`      | relation (multipla) | → collection `tags`                            |
 
+I **sogni** stanno in una collection a parte, `dreams` (`date`, `time`, `title`, `content`, `clarity`, `extra`), così non entrano nel mood né nei recap delle note.
+
 `people` e `tags` sono collection separate (`name`, più `immichPersonId` su
 `people`); `users` ha in più `immichUrl`, `immichApiKey`, `spotifyClientId`,
 `spotifyClientSecret`, `geminiApiKey` (tutte opzionali, impostabili da Profilo).
