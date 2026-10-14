@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.10',
+    date: '2026-10-14 13:40',
+    changes: [
+      "Calendario su telefono: niente scritte sugli sfondi, restano disegni (all'intensità originale) e macchie di caffè; nuvoletta del sogno più staccata dal bordo e giorno di nuovo basso.",
+      "Calendario web: nuvoletta del sogno ancora più staccata dal bordo destro.",
+    ],
+  },
+  {
     version: '0.81.9',
     date: '2026-10-14 13:05',
     changes: [

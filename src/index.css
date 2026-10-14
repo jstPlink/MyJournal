@@ -9419,7 +9419,7 @@ li:last-child > .st-row {
 .mp-page .mp-moon {
   position: absolute;
   top: 8px;
-  right: 56px;
+  right: 150px;
   z-index: 8;
   margin: 0;
 }
@@ -9429,16 +9429,18 @@ li:last-child > .st-row {
 .mp-page:has(.mp-moon) .mp-polas {
   top: 56px;
 }
-.mp-page.has-photo:has(.mp-moon) {
-  min-height: 232px;
-}
-.mp-page.has-photo.two-photo:has(.mp-moon) {
-  min-height: 242px;
+@media (min-width: 481px) {
+  .mp-page.has-photo:has(.mp-moon) {
+    min-height: 232px;
+  }
+  .mp-page.has-photo.two-photo:has(.mp-moon) {
+    min-height: 242px;
+  }
 }
 @media (max-width: 480px) {
   .mp-page .mp-moon {
     top: 6px;
-    right: 14px;
+    right: 44px;
     transform: scale(0.8);
     transform-origin: top right;
   }
@@ -9446,11 +9448,15 @@ li:last-child > .st-row {
     margin-top: 0;
   }
   .mp-notes-row {
-    margin-top: 0.9rem;
+    margin-top: 0.3rem;
+  }
+  /* niente scritte sullo sfondo: restano solo disegni e macchie di caffè */
+  .mp-scribbles span:not(.stain):not(.blot) {
+    display: none;
   }
 }
 
-/* ---- Web: decori di sfondo e macchie più trasparenti (decori -15%, macchie di caffè -20%) ---- */
+/* ---- Web: decori di sfondo più trasparenti (-15%); su telefono restano all'intensità originale, altrimenti non si vedono ---- */
 @media (min-width: 481px) {
   :root[data-skin-month='pages'] {
     --mp-nature: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='720'%20height='1360'%3E%3Cg%20fill='none'%20stroke='%23564e3c'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%20opacity='0.088'%3E%3Cg%20transform='translate(120%2070)%20rotate(-8)'%3E%3Cpath%20d='M-16%204q9%20-14%2016%20-2q7%20-12%2016%202'/%3E%3C/g%3E%3Cg%20transform='translate(300%20112)'%3E%3Cpath%20d='M0%20-24l-11%2015h6l-9%2013h9v6h10v-6h9l-9%20-13h6z'/%3E%3C/g%3E%3Cg%20transform='translate(520%2090)%20rotate(6)'%3E%3Cpath%20d='M-15%200q10%20-8%2022%200q-10%208%20-22%200M7%200l10%20-6v12z'/%3E%3C/g%3E%3Cg%20transform='translate(650%20155)'%3E%3Cpath%20d='M-6%205q6%208%2012%200q1%20-9%20-6%20-16q-7%207%20-6%2016zM-1%20-11q-3%20-10%20-9%20-13M-10%20-24l-5%20-2M-10%20-24l3%20-6M1%20-11q3%20-10%209%20-13M10%20-24l5%20-2M10%20-24l-3%20-6'/%3E%3C/g%3E%3Cg%20transform='translate(92%20220)'%3E%3Cpath%20d='M0%2014v-11M0%203q-12%200%20-13%20-13q0%20-15%2013%20-16q13%201%2013%2016q-1%2013%20-13%2013z'/%3E%3C/g%3E%3Cg%20transform='translate(420%20240)%20rotate(10)'%3E%3Cpath%20d='M-16%204q9%20-14%2016%20-2q7%20-12%2016%202'/%3E%3C/g%3E%3Cg%20transform='translate(600%20300)%20rotate(-14)'%3E%3Cpath%20d='M-2%2012l4%20-26M2%20-2q7%20-4%208%20-13M0%20-8q-7%20-4%20-8%20-13M4%20-12q7%20-3%209%20-11'/%3E%3C/g%3E%3Cg%20transform='translate(200%20330)%20rotate(8)'%3E%3Cpath%20d='M0%2014v-30M0%206q-6%20-3%20-6%20-10M0%200q6%20-3%206%20-10M0%20-6q-6%20-3%20-6%20-10M0%20-12q6%20-3%206%20-9'/%3E%3C/g%3E%3Cg%20transform='translate(330%20400)%20rotate(-4)'%3E%3Cpath%20d='M0%200q-7%20-2%20-12%204q3%20-12%2012%20-12q9%200%2012%2012q-5%20-6%20-12%204zM11%20-6l7%20-1'/%3E%3C/g%3E%3Cg%20transform='translate(540%20440)'%3E%3Cpath%20d='M0%20-24l-11%2015h6l-9%2013h9v6h10v-6h9l-9%20-13h6z'/%3E%3C/g%3E%3Cg%20transform='translate(110%20480)%20rotate(-6)'%3E%3Cpath%20d='M-15%200q10%20-8%2022%200q-10%208%20-22%200M7%200l10%20-6v12z'/%3E%3C/g%3E%3Cg%20transform='translate(660%20520)%20rotate(4)'%3E%3Cpath%20d='M-6%205q6%208%2012%200q1%20-9%20-6%20-16q-7%207%20-6%2016zM-1%20-11q-3%20-10%20-9%20-13M-10%20-24l-5%20-2M-10%20-24l3%20-6M1%20-11q3%20-10%209%20-13M10%20-24l5%20-2M10%20-24l-3%20-6'/%3E%3C/g%3E%3Cg%20transform='translate(250%20560)'%3E%3Cpath%20d='M0%2014v-11M0%203q-12%200%20-13%20-13q0%20-15%2013%20-16q13%201%2013%2016q-1%2013%20-13%2013z'/%3E%3C/g%3E%3Cg%20transform='translate(470%20600)%20rotate(-6)'%3E%3Cpath%20d='M-16%204q9%20-14%2016%20-2q7%20-12%2016%202'/%3E%3C/g%3E%3Cg%20transform='translate(90%20660)%20rotate(20)'%3E%3Cpath%20d='M-2%2012l4%20-26M2%20-2q7%20-4%208%20-13M0%20-8q-7%20-4%20-8%20-13M4%20-12q7%20-3%209%20-11'/%3E%3C/g%3E%3Cg%20transform='translate(600%20700)%20rotate(-8)'%3E%3Cpath%20d='M0%2014v-30M0%206q-6%20-3%20-6%20-10M0%200q6%20-3%206%20-10M0%20-6q-6%20-3%20-6%20-10M0%20-12q6%20-3%206%20-9'/%3E%3C/g%3E%3Cg%20transform='translate(330%20760)%20rotate(6)'%3E%3Cpath%20d='M0%200q-7%20-2%20-12%204q3%20-12%2012%20-12q9%200%2012%2012q-5%20-6%20-12%204zM11%20-6l7%20-1'/%3E%3C/g%3E%3Cg%20transform='translate(520%20820)'%3E%3Cpath%20d='M0%20-24l-11%2015h6l-9%2013h9v6h10v-6h9l-9%20-13h6z'/%3E%3C/g%3E%3Cg%20transform='translate(130%20880)%20rotate(8)'%3E%3Cpath%20d='M-15%200q10%20-8%2022%200q-10%208%20-22%200M7%200l10%20-6v12z'/%3E%3C/g%3E%3Cg%20transform='translate(650%20920)'%3E%3Cpath%20d='M0%2014v-11M0%203q-12%200%20-13%20-13q0%20-15%2013%20-16q13%201%2013%2016q-1%2013%20-13%2013z'/%3E%3C/g%3E%3Cg%20transform='translate(250%20980)%20rotate(-3)'%3E%3Cpath%20d='M-6%205q6%208%2012%200q1%20-9%20-6%20-16q-7%207%20-6%2016zM-1%20-11q-3%20-10%20-9%20-13M-10%20-24l-5%20-2M-10%20-24l3%20-6M1%20-11q3%20-10%209%20-13M10%20-24l5%20-2M10%20-24l-3%20-6'/%3E%3C/g%3E%3Cg%20transform='translate(470%201040)%20rotate(4)'%3E%3Cpath%20d='M-16%204q9%20-14%2016%20-2q7%20-12%2016%202'/%3E%3C/g%3E%3Cg%20transform='translate(110%201120)%20rotate(-12)'%3E%3Cpath%20d='M-2%2012l4%20-26M2%20-2q7%20-4%208%20-13M0%20-8q-7%20-4%20-8%20-13M4%20-12q7%20-3%209%20-11'/%3E%3C/g%3E%3Cg%20transform='translate(560%201180)%20rotate(10)'%3E%3Cpath%20d='M0%2014v-30M0%206q-6%20-3%20-6%20-10M0%200q6%20-3%206%20-10M0%20-6q-6%20-3%20-6%20-10M0%20-12q6%20-3%206%20-9'/%3E%3C/g%3E%3Cg%20transform='translate(330%201245)'%3E%3Cpath%20d='M0%20-24l-11%2015h6l-9%2013h9v6h10v-6h9l-9%20-13h6z'/%3E%3C/g%3E%3Cg%20transform='translate(620%201300)%20rotate(-6)'%3E%3Cpath%20d='M-16%204q9%20-14%2016%20-2q7%20-12%2016%202'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
@@ -9467,6 +9473,10 @@ li:last-child > .st-row {
   :root[data-skin-month='pages']:not([data-theme='dark']) .mp-page.mood-coral {
     --mp-doodle: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='610'%20height='1160'%3E%3Cg%20fill='none'%20stroke='%23564e3c'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.0782'%3E%3Cg%20transform='translate(285%2072)%20rotate(5)'%3E%3Cpath%20d='M-20%208q-12%200-12-12q0-12%2014-11q2-14%2018-14q16%200%2017%2016q12-1%2012%2010q0%2011-12%2011z'/%3E%3Cpath%20d='M-14%2014l-5%2012M0%2014l-5%2012M14%2014l-5%2012'/%3E%3C/g%3E%3Cg%20transform='translate(130%20160)%20rotate(-6)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(332%20150)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(200%20120)%20rotate(4)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(100%20300)%20rotate(-5)'%3E%3Cpath%20d='M-18%206q-11%200-11-11q0-11%2013-10q2-12%2016-12q14%200%2015%2014q11-1%2011%209q0%2010-11%2010z'/%3E%3C/g%3E%3Cg%20transform='translate(300%20342)%20rotate(13)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(150%20412)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(300%20442)%20rotate(-4)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3C/g%3E%3Cg%20fill='none'%20stroke='%23564e3c'%20stroke-width='2'%20stroke-linecap='round'%20opacity='0.1368'%3E%3Cg%20transform='translate(110%20500)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(280%20520)%20rotate(4)'%3E%3Cpath%20d='M-18%206q-11%200-11-11q0-11%2013-10q2-12%2016-12q14%200%2015%2014q11-1%2011%209q0%2010-11%2010z'/%3E%3C/g%3E%3Cg%20transform='translate(200%20595)%20rotate(-4)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(180%20110)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(90%20210)%20rotate(-5)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(320%20240)%20rotate(4)'%3E%3Cpath%20d='M-20%208q-12%200-12-12q0-12%2014-11q2-14%2018-14q16%200%2017%2016q12-1%2012%2010q0%2011-12%2011z'/%3E%3C/g%3E%3Cg%20transform='translate(90%20340)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(320%20380)%20rotate(6)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(180%20470)%20rotate(-4)'%3E%3Cpath%20d='M-20%208q-12%200-12-12q0-12%2014-11q2-14%2018-14q16%200%2017%2016q12-1%2012%2010q0%2011-12%2011z'/%3E%3C/g%3E%3Cg%20transform='translate(250%20285)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(95%20480)%20rotate(3)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(320%20540)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(430%20140)%20rotate(5)'%3E%3Cpath%20d='M-20%208q-12%200-12-12q0-12%2014-11q2-14%2018-14q16%200%2017%2016q12-1%2012%2010q0%2011-12%2011z'/%3E%3Cpath%20d='M-14%2014l-5%2012M0%2014l-5%2012M14%2014l-5%2012'/%3E%3C/g%3E%3Cg%20transform='translate(450%20440)%20rotate(5)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3Cg%20transform='translate(260%20760)'%3E%3Cpath%20d='M-14%20-8l-6%2016M0%20-8l-6%2016M14%20-8l-6%2016'/%3E%3C/g%3E%3Cg%20transform='translate(120%20820)%20rotate(-4)'%3E%3Cpath%20d='M-22%200q8%208%2016%200q8-8%2016%200q8%208%2016%200'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
+}
+
+/* macchie di caffè -20% (web e telefono) */
+@media all {
   .mp-scribbles span {
     opacity: calc(var(--so, 0.11) * 0.85);
   }
