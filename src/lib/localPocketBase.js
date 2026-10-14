@@ -30,6 +30,7 @@ const SCHEMAS = {
   people: { files: [], multi: [], json: [], number: [], date: [] },
   tags: { files: [], multi: [], json: [], number: [], date: [] },
   places: { files: [], multi: [], json: [], number: ['lat', 'lon'], date: [] },
+  dreams: { files: [], multi: [], json: ['extra'], number: ['clarity'], date: ['date', 'time'] },
   import_csvs: { files: [], multi: [], json: [], number: [], date: [] },
   recaps: { files: [], multi: [], json: [], number: [], date: [] },
   recap_jobs: { files: [], multi: [], json: [], number: ['queuedAt'], date: [] },

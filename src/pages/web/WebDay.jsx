@@ -7,6 +7,7 @@ import Icon from '../../components/Icon'
 import DayPages from './DayPages'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
 import { listNotesForDay, describeError } from '../../lib/notes'
+import { listDreamsForDay } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
 import { addDaysKey, fullDayLabel, parseWall } from '../../lib/dates'
 import { haptic } from '../../lib/haptics'
@@ -35,6 +36,7 @@ export default function WebDay() {
   const goBack = useGoBack()
   const { user } = useAuth()
   const [notes, setNotes] = useState([])
+  const [dreams, setDreams] = useState([])
   const [people, setPeople] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -50,6 +52,7 @@ export default function WebDay() {
       const list = await listNotesForDay(date)
       list.sort((a, b) => startOf(a) - startOf(b))
       setNotes(list)
+      setDreams(await listDreamsForDay(date))
     } catch (err) {
       setError(describeError(err))
       setNotes([])
@@ -167,6 +170,7 @@ export default function WebDay() {
             notes={notes}
             onNavigate={navigate}
             peopleById={peopleById}
+            dreams={dreams}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}
             fit

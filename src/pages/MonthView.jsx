@@ -16,6 +16,7 @@ import NewNoteWithGeminiSheet from '../components/NewNoteWithGeminiSheet'
 import NewNoteChoiceSheet from '../components/NewNoteChoiceSheet'
 import MonthPages from './web/MonthPages'
 import { listNotesInRange, groupByDay, describeError } from '../lib/notes'
+import { dreamDaysInRange } from '../lib/dreams'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
 import { playSound } from '../lib/sounds'
@@ -30,6 +31,7 @@ export default function MonthView() {
   const { cursor, setCursor } = useNav()
   const { user } = useAuth()
   const [notes, setNotes] = useState([])
+  const [dreamDays, setDreamDays] = useState(() => new Set())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [dir, setDir] = useState(0) // -1 / 1: direzione ultima transizione
@@ -64,6 +66,7 @@ export default function MonthView() {
     try {
       const list = await listNotesInRange(monthRange(year, month), { fresh })
       setNotes(list)
+      setDreamDays(await dreamDaysInRange(monthRange(year, month)))
     } catch (err) {
       setError(describeError(err))
       setNotes([])
@@ -209,6 +212,7 @@ export default function MonthView() {
             peopleById={pagesData.peopleById}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}
+            dreamDays={dreamDays}
           />
         </div>
 
@@ -250,6 +254,10 @@ export default function MonthView() {
         onManual={() => {
           setNoteChoiceOpen(false)
           navigate(`/note/new?date=${todayKey()}`)
+        }}
+        onDream={() => {
+          setNoteChoiceOpen(false)
+          navigate(`/dream/new?date=${todayKey()}`)
         }}
       />
 

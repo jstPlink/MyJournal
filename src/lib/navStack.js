@@ -3,7 +3,7 @@
 // Livelli:
 //   0  schermate principali: Calendario (/), Andamento (/dati), Statistiche (/statistiche)
 //   1  aperte da una principale: giorno (/day/..), Cerca (/filtri), Impostazioni (/profilo), Importa
-//   2  la nota (/note/..)
+//   2  la nota (/note/..) e il sogno (/dream/..)
 //   +  i pannelli (selettori, Gemini, immagini...) stanno sopra a tutto: si registrano
 //      con useBackClose e «indietro» li chiude prima di cambiare pagina.
 //
@@ -18,7 +18,7 @@ const KEY = 'myjournal.navStack'
 function level(path) {
   const p = path.split('?')[0]
   if (p === '/' || p === '/dati' || p === '/statistiche') return 0
-  if (p.startsWith('/note')) return 2
+  if (p.startsWith('/note') || p.startsWith('/dream')) return 2
   return 1
 }
 

@@ -6,6 +6,7 @@ import { durationMinutes, parseWall } from '../../lib/dates'
 import PersonAvatar from '../../components/PersonAvatar'
 import Icon from '../../components/Icon'
 import { haptic } from '../../lib/haptics'
+import { dreamMinutes, dreamTitle } from '../../lib/dreams'
 import {
   hash,
   handFor,
@@ -119,6 +120,7 @@ export default function DayPages({
   immichApiKey,
   fit = false,
   onCreate, // opzionale: con il giorno vuoto offre «Crea la prima nota»
+  dreams = [], // sogni del giorno: pallino con la luna sull'asse + nuvoletta (lib/dreams.js)
 }) {
   const trackRef = useRef(null)
   const [fitH, setFitH] = useState(0)
@@ -250,7 +252,7 @@ export default function DayPages({
             ))}
           </div>
 
-          {!items.length && (
+          {!items.length && !dreams.length && (
             <p className="dp-empty">
               Nessuna nota per questo giorno.
               {onCreate && (
@@ -263,6 +265,35 @@ export default function DayPages({
               )}
             </p>
           )}
+
+          {trackH > 0 &&
+            dreams.map((d) => {
+              const top = Math.min(DAY_MIN - 24, dreamMinutes(d)) * pxPerMin
+              return (
+                <button
+                  key={d.id}
+                  type="button"
+                  className="day-dream"
+                  style={{ top }}
+                  aria-label={`Sogno: ${dreamTitle(d)}`}
+                  onClick={() => {
+                    haptic(4, 'page')
+                    onNavigate(`/dream/${d.id}`)
+                  }}
+                >
+                  <span className="dd-dot">
+                    <Icon name="moon" size={12} />
+                  </span>
+                  <span className="dd-cloud">
+                    <i className="b1" />
+                    <i className="b2" />
+                    <i className="l1" />
+                    <i className="l2" />
+                    <span className="dd-t">{dreamTitle(d)}</span>
+                  </span>
+                </button>
+              )
+            })}
 
           {trackH > 0 && items.map((it) => {
             const top = it.startMin * pxPerMin

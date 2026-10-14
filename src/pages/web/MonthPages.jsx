@@ -123,6 +123,7 @@ export default function MonthPages({
   peopleById,
   immichUrl,
   immichApiKey,
+  dreamDays, // Set di giorni (AAAA-MM-GG) con almeno un sogno: lunetta sulla pagina
 }) {
   const pages = useMemo(() => {
     return grid
@@ -217,6 +218,7 @@ export default function MonthPages({
           weekday: weekdayLong(c.key),
           weekend: wdIdx === 0 || wdIdx === 6,
           has,
+          hasDream: Boolean(dreamDays?.has(c.key)),
           count: dayNotes.length,
           mood,
           kind: has ? moodKind(mood) : null,
@@ -243,7 +245,7 @@ export default function MonthPages({
           scribbles: has ? buildScribbles(c.key, titles) : [],
         }
       })
-  }, [grid, byDay, peopleById])
+  }, [grid, byDay, peopleById, dreamDays])
 
   // Ogni volta che si carica/ricarica il mese corrente (mobile: rimonta a
   // ogni cambio mese; web: `pages` cambia comunque perché dipende da
@@ -316,6 +318,12 @@ export default function MonthPages({
             >
               {pg.isToday && (
                 <span className="mp-today-tape" aria-hidden="true" />
+              )}
+
+              {pg.hasDream && (
+                <span className="mp-moon" title="Sogno" aria-label="Quel giorno hai segnato un sogno">
+                  <Icon name="moon" size={18} strokeWidth={2.4} />
+                </span>
               )}
 
               {pg.has && (

@@ -29,6 +29,7 @@ passaggio è automatico in base alla larghezza della finestra.
 | **Calendario** (mese) | `/` | Un foglio per ogni giorno con note: umore medio, titoli, persone, luogo, canzone, foto. Le persone sono targhette di colori diversi (uno per persona); se in un giorno sono più di 4 se ne vedono 3 e una targhetta «+x persone» per le altre. Si cambia mese con le frecce o scorrendo; l'app apre sul mese corrente. In cima "In questo giorno" (note degli anni passati) e il recap del mese. |
 | **Giorno** | `/day/AAAA-MM-GG` | Le note del giorno su una timeline di 24 ore (altezza del blocco = durata; l'anteprima del testo di ogni nota rispetta gli a capo, le righe vuote, gli spazi e gli elenchi come sono scritti nella nota); un giorno senza note mostra comunque la timeline, vuota, e il blocco «Recap del giorno». I titoli lunghi vanno su due righe (nell'editor della nota il titolo va a capo da solo). Recap del giorno in cima. |
 | **Nota** | `/note/new?date=…` e `/note/:id` | Editor: data, orari, mood, titolo, testo, e i pulsanti per immagini, persone, tag, canzoni, luogo. Salva (verde) o elimina (rosso). |
+| **Sogno** | `/dream/new?date=…` e `/dream/:id` | Pagina blu notte per scrivere un sogno: giorno, orario (00:00 se non sai quando), titolo, descrizione (anche a voce) e **nitidezza** con uno slider. Si apre dalla voce «Sogno» di «Nuova nota» (o dal pulsante con la luna nella barra laterale del web). |
 | **Andamento** | `/dati` | Grafico dell'umore nell'anno e mese per mese; da web ogni barretta apre quel giorno. |
 | **Statistiche** | `/statistiche` | Persone più presenti, giorni/settimane/mesi migliori e peggiori, note migliori e peggiori, tag e luogo più usati, note per mese, recap dell'anno. Ogni voce cliccabile apre le note corrispondenti. |
 | **Cerca** | `/filtri` | Filtri per periodo, mood, testo, luogo, persone, tag, canzoni; ordinamento e numero massimo di risultati. |
@@ -58,7 +59,8 @@ passaggio è automatico in base alla larghezza della finestra.
 - **Persone, tag, luoghi:** mentre scrivi il nome da aggiungere compaiono quelli già presenti che combaciano; se il nome esiste già non si crea una copia (nei selettori viene scelto). Tag e luoghi sono in ordine alfabetico su 2 colonne (3 da web).
 - **Bollino del mood:** nella vista giorno un cartoncino quadrato in alto a destra mostra il mood calcolato del giorno (0–100).
 - **Vocali:** dopo la registrazione il vocale resta salvato con un titolo e lo trascrivi quando vuoi con «Trascrivi»; nella nota con Gemini i vocali già trascritti restano finché non salvi la nota.
-- **Senza rete:** il salvataggio va in coda e si sincronizza da solo (vedi §9).
+- **Sogni:** i sogni stanno a parte dalle note, quindi **non entrano nel mood** del giorno, nei riassunti né nelle statistiche delle note. Nel **Calendario** una lunetta sul giorno dice che c'è un sogno; nel **Giorno** compare sull'asse delle ore, all'ora del sogno, con un pallino con la luna e una nuvoletta col titolo (l'orario non è scritto: si legge dalla posizione; toccala per aprirlo). In **Cerca** il filtro «Mostra» ha Note, Sogni o Tutto (per i sogni valgono periodo e testo); in **Statistiche** una scheda conta i sogni segnati nell'anno. Anche Esporta li include.
+- **Senza rete:** il salvataggio va in coda e si sincronizza da solo (vedi §9). (I sogni, per ora, si salvano solo con la rete.)
 
 ## 5. Impostazioni
 

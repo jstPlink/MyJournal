@@ -22,6 +22,7 @@ import ResetPassword from './pages/ResetPassword'
 import MonthView from './pages/MonthView'
 import DayView from './pages/DayView'
 import NoteView from './pages/NoteView'
+import DreamView from './pages/DreamView'
 import Profile from './pages/Profile'
 import DataView from './pages/DataView'
 import StatsView from './pages/StatsView'
@@ -43,6 +44,8 @@ function DesktopShell({ children }) {
   // Nota: sfondo un filo più scuro del cream standard — altrimenti si
   // confonde col foglio della nota (stesso tono).
   const isNotePage = pathname.startsWith('/note')
+  // la pagina del sogno ha un suo cielo celeste: occupa tutta l'area, senza la carta a righe dietro
+  const isDream = pathname.startsWith('/dream')
   return (
     <div
       className={
@@ -51,10 +54,10 @@ function DesktopShell({ children }) {
       }
     >
       <Sidebar />
-      <main className="min-w-0 flex-1 overflow-y-auto">
+      <main className={'min-w-0 flex-1 overflow-y-auto' + (isDream ? ' dream-main' : '')}>
         <div
           key={pathname}
-          className="anim-page mx-auto max-w-[1180px] px-8 py-8 xl:px-12"
+          className={'anim-page ' + (isDream ? '' : 'mx-auto max-w-[1180px] px-8 py-8 xl:px-12')}
         >
           {children}
         </div>
@@ -188,6 +191,22 @@ export default function App() {
               element={
                 <RequireAuth>
                   <Screen mobile={NoteView} desktop={WebNote} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/dream/new"
+              element={
+                <RequireAuth>
+                  <Screen mobile={DreamView} desktop={DreamView} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/dream/:id"
+              element={
+                <RequireAuth>
+                  <Screen mobile={DreamView} desktop={DreamView} />
                 </RequireAuth>
               }
             />

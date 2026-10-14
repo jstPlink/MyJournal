@@ -14,6 +14,7 @@ import { moodColor, moodTextColor } from '../../lib/mood'
 import Icon from '../../components/Icon'
 import PersonAvatar from '../../components/PersonAvatar'
 import { dateRangeBounds, dayKey, dayMonthLabel, timeLabel } from '../../lib/dates'
+import { listDreamsFiltered, dreamTitle } from '../../lib/dreams'
 
 const SORTS = [
   { key: 'mood-desc', label: 'Mood più alto' },
@@ -83,6 +84,7 @@ export default function WebFilter() {
     hasSongs: false,
     hasPlace: false,
   })
+  const [kind, setKind] = useState('notes') // cosa cercare: 'notes' | 'dreams' | 'all'
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -150,7 +152,11 @@ export default function WebFilter() {
       const { start, end } = dateRangeBounds(filters.from, filters.to)
       const moodMin = filters.moodMin > 0 ? filters.moodMin / 100 : undefined
       const moodMax = filters.moodMax < 100 ? filters.moodMax / 100 : undefined
-      const list = await listNotesFiltered({
+      const dreamList =
+        kind === 'notes'
+          ? []
+          : (await listDreamsFiltered({ start, end, text: filters.text })).map((d) => ({ ...d, _dream: true }))
+      const list = kind === 'dreams' ? [] : await listNotesFiltered({
         start,
         end,
         moodMin,
@@ -163,7 +169,7 @@ export default function WebFilter() {
         hasSongs: filters.hasSongs,
         hasPlace: filters.hasPlace,
       })
-      const sorted = sortNotes(list, filters.sort)
+      const sorted = [...sortNotes(list, filters.sort), ...dreamList]
       const limit = Number(filters.limit)
       setResults(limit > 0 ? sorted.slice(0, limit) : sorted)
     } catch (err) {
@@ -187,6 +193,29 @@ export default function WebFilter() {
 
       <div className="grid gap-8 lg:grid-cols-[340px_1fr]">
         <div className="space-y-3">
+          <div className="wf-sub">
+            <p className="wf-title">
+              <Icon name="list" size={15} />
+              Mostra
+            </p>
+            <div className="wf-chips">
+              <ChipButton active={kind === 'notes'} onClick={() => setKind('notes')}>
+                Note
+              </ChipButton>
+              <ChipButton icon="moon" active={kind === 'dreams'} onClick={() => setKind('dreams')}>
+                Sogni
+              </ChipButton>
+              <ChipButton active={kind === 'all'} onClick={() => setKind('all')}>
+                Tutto
+              </ChipButton>
+            </div>
+            {kind !== 'notes' && (
+              <p className="text-xs text-ink-soft">
+                Per i sogni valgono solo periodo e testo (titolo e descrizione).
+              </p>
+            )}
+          </div>
+
           <div className="wf-sub">
             <p className="wf-title">
               <Icon name="calendar" size={15} />
@@ -562,12 +591,22 @@ export default function WebFilter() {
           {results !== null && (
             <>
               <p className="wf-results-head">
-                {results.length} nota{results.length === 1 ? '' : 'e'} trovat
-                {results.length === 1 ? 'a' : 'e'}
+                {kind === 'notes'
+                  ? `${results.length} ${results.length === 1 ? 'nota trovata' : 'note trovate'}`
+                  : `${results.length} ${results.length === 1 ? 'risultato' : 'risultati'}`}
               </p>
               <div className="wf-results">
                 <ul>
-                  {results.map((n, i) => (
+                  {results.map((n, i) =>
+                    n._dream ? (
+                      <li key={'d' + n.id}>
+                        <button type="button" onClick={() => navigate(`/dream/${n.id}`)} className="dream-result">
+                          <span className="dr-t"><Icon name="moon" size={15} />{dreamTitle(n)}</span>
+                          <span className="dr-d">{dayMonthLabel(dayKey(n.date))}</span>
+                          {n.content && <span className="dr-x">{n.content}</span>}
+                        </button>
+                      </li>
+                    ) : (
                     <li key={n.id}>
                       <button
                         type="button"
@@ -597,7 +636,8 @@ export default function WebFilter() {
                         </span>
                       </button>
                     </li>
-                  ))}
+                  )
+)}
                 </ul>
               </div>
             </>

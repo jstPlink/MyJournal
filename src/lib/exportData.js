@@ -2,6 +2,7 @@ import { pb } from './pocketbase'
 import { downloadTextFile } from './integrationDocs'
 import { plainText, parsePlace } from './notes'
 import { dayKey, timeInputValue } from './dates'
+import { listDreamsFiltered, dreamTitle } from './dreams'
 
 // Export completo del diario (client-side). Le immagini restano sul server:
 // l'export contiene i nomi file, non i binari.
@@ -16,19 +17,23 @@ async function fetchAll() {
     pb.collection('people').getFullList({ sort: 'name' }),
     pb.collection('tags').getFullList({ sort: 'name' }),
   ])
-  return { notes, people, tags }
+  // i sogni (collection a parte); se il server non l'ha ancora la lista è vuota
+  const dreams = await listDreamsFiltered()
+  dreams.reverse() // dal più vecchio al più recente, come le note
+  return { notes, people, tags, dreams }
 }
 
 export async function exportJson() {
-  const { notes, people, tags } = await fetchAll()
+  const { notes, people, tags, dreams } = await fetchAll()
   const payload = {
     app: 'MyJournal',
     appVersion: typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : null,
     exportedAt: new Date().toISOString(),
-    counts: { notes: notes.length, people: people.length, tags: tags.length },
+    counts: { notes: notes.length, people: people.length, tags: tags.length, dreams: dreams.length },
     people,
     tags,
     notes,
+    dreams,
   }
   downloadTextFile(
     `myjournal-export-${stamp()}.json`,
@@ -38,7 +43,7 @@ export async function exportJson() {
 }
 
 export async function exportMarkdown() {
-  const { notes, people, tags } = await fetchAll()
+  const { notes, people, tags, dreams } = await fetchAll()
   const pById = new Map(people.map((p) => [p.id, p.name]))
   const tById = new Map(tags.map((t) => [t.id, t.name]))
 
@@ -68,6 +73,15 @@ export async function exportMarkdown() {
 
     const body = plainText(n.content)
     if (body) out.push('', body)
+  }
+  if (dreams.length) {
+    out.push('', '## Sogni', '', `${dreams.length} sogni.`)
+    for (const d of dreams) {
+      out.push('', `### ${dayKey(d.date)} ${timeInputValue(d.time)} · ${dreamTitle(d)}`)
+      out.push('', `Nitidezza: ${Math.round(Number(d.clarity) * 100)}/100`)
+      const body = plainText(d.content)
+      if (body) out.push('', body)
+    }
   }
   out.push('')
   downloadTextFile(`myjournal-export-${stamp()}.md`, out.join('\n'))

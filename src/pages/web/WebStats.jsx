@@ -13,6 +13,7 @@ import { listTags } from '../../lib/tags'
 import { computeYearStats } from '../../lib/stats'
 import { moodColor, moodTextColor } from '../../lib/mood'
 import { MONTHS_IT, dayKey, dayMonthLabel, parseWall, timeLabel } from '../../lib/dates'
+import { countDreamsInYear } from '../../lib/dreams'
 
 function shortDM(key) {
   const p = parseWall(key)
@@ -141,6 +142,7 @@ export default function WebStats() {
   const immichApiKey = user?.immichApiKey?.trim()
   const year = cursor.year
   const [yearNotes, setYearNotes] = useState([])
+  const [dreamCount, setDreamCount] = useState(0)
   const [allTimeCount, setAllTimeCount] = useState(null)
   const [people, setPeople] = useState([])
   const [tags, setTags] = useState([])
@@ -152,7 +154,7 @@ export default function WebStats() {
     setLoading(true)
     setError('')
     try {
-      const [notes, total, ppl, tgs] = await Promise.all([
+      const [notes, total, ppl, tgs, dreams] = await Promise.all([
         listNotesInRange({
           start: `${year}-01-01 00:00:00.000Z`,
           end: `${year}-12-31 23:59:59.999Z`,
@@ -160,8 +162,10 @@ export default function WebStats() {
         countAllNotes(),
         listPeople(),
         listTags(),
+        countDreamsInYear(year),
       ])
       setYearNotes(notes)
+      setDreamCount(dreams)
       setAllTimeCount(total)
       setPeople(ppl)
       setTags(tgs)
@@ -321,6 +325,10 @@ export default function WebStats() {
           value={stats.avgMood != null ? Math.round(stats.avgMood * 100) : '—'}
           icon="sparkles"
         />
+      </div>
+
+      <div className="st-tiles st-tiles-dream">
+        <StatCard label={`Sogni segnati nel ${year}`} value={dreamCount} icon="moon" />
       </div>
 
       <PeriodRecapCard

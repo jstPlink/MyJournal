@@ -8,7 +8,7 @@ import { useBackClose } from '../hooks/useBack'
 // mostrare in barra, la scelta emerge solo quando serve. Stessa materia di
 // carta/cartoncino della barra mobile (.ncs-*, in index.css), non più il
 // pannello bianco generico degli altri picker (tag/luogo/canzone).
-export default function NewNoteChoiceSheet({ open, onClose, onGemini, onManual }) {
+export default function NewNoteChoiceSheet({ open, onClose, onGemini, onManual, onDream }) {
   useBackClose(open, onClose)
   if (!open) return null
 
@@ -65,6 +65,25 @@ export default function NewNoteChoiceSheet({ open, onClose, onGemini, onManual }
               <span>Scrivi la nota da zero, come sempre.</span>
             </span>
           </button>
+
+          {onDream && (
+            <button
+              type="button"
+              onClick={() => {
+                haptic()
+                onDream()
+              }}
+              className="ncs-option ncs-dream"
+            >
+              <span className="ncs-opt-icon dream">
+                <Icon name="moon" size={17} />
+              </span>
+              <span className="ncs-opt-text">
+                <b>Sogno</b>
+                <span>Titolo, descrizione e quanto lo ricordi.</span>
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </div>

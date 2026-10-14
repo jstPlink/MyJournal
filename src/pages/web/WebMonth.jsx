@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useNav } from '../../context/NavContext'
 import { useAuth } from '../../context/AuthContext'
 import { listNotesInRange, groupByDay, describeError } from '../../lib/notes'
+import { dreamDaysInRange } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
 import OnThisDay from '../../components/OnThisDay'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
@@ -129,6 +130,7 @@ export default function WebMonth() {
   const immichUrl = user?.immichUrl?.trim()
   const immichApiKey = user?.immichApiKey?.trim()
   const [notes, setNotes] = useState([])
+  const [dreamDays, setDreamDays] = useState(() => new Set())
   const [people, setPeople] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -183,6 +185,12 @@ export default function WebMonth() {
         end: `${grid[41].key} 23:59:59.999Z`,
       })
       setNotes(list)
+      setDreamDays(
+        await dreamDaysInRange({
+          start: `${grid[0].key} 00:00:00.000Z`,
+          end: `${grid[41].key} 23:59:59.999Z`,
+        }),
+      )
     } catch (err) {
       setError(describeError(err))
       setNotes([])
@@ -304,6 +312,7 @@ export default function WebMonth() {
         peopleById={peopleById}
         immichUrl={immichUrl}
         immichApiKey={immichApiKey}
+        dreamDays={dreamDays}
       />
     </div>
   )

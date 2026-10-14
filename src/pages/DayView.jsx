@@ -14,6 +14,7 @@ import NewNoteChoiceSheet from '../components/NewNoteChoiceSheet'
 import PeriodRecapCard from '../components/PeriodRecapCard'
 import DayPages from './web/DayPages'
 import { listNotesForDay, describeError } from '../lib/notes'
+import { listDreamsForDay } from '../lib/dreams'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
 import { addDaysKey, dayMonthLabel, parseWall } from '../lib/dates'
@@ -38,6 +39,7 @@ export default function DayView() {
   const goBack = useGoBack()
   const { user } = useAuth()
   const [notes, setNotes] = useState([])
+  const [dreams, setDreams] = useState([])
   const [people, setPeople] = useState([])
   const [tags, setTags] = useState([])
   const [loading, setLoading] = useState(true)
@@ -59,6 +61,7 @@ export default function DayView() {
       const list = await listNotesForDay(date)
       list.sort((a, b) => startOf(a) - startOf(b))
       setNotes(list)
+      setDreams(await listDreamsForDay(date))
     } catch (err) {
       setError(describeError(err))
       setNotes([])
@@ -174,6 +177,7 @@ export default function DayView() {
             notes={notes}
             onNavigate={navigate}
             peopleById={peopleById}
+            dreams={dreams}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}
             fit
@@ -199,6 +203,10 @@ export default function DayView() {
         onManual={() => {
           setNoteChoiceOpen(false)
           navigate(`/note/new?date=${date}`)
+        }}
+        onDream={() => {
+          setNoteChoiceOpen(false)
+          navigate(`/dream/new?date=${date}`)
         }}
       />
 

@@ -9,6 +9,46 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.4',
+    date: '2026-10-14 17:10',
+    changes: [
+      "Sogno, web: «Nitidezza» più grande e senza «sfocato» e «nitido»; giorno e orario dritti; via la scritta sull'orario; indietro, anno e «Segna il sogno» lontani dal bordo; sullo sfondo costellazioni, lune, nuvolette e stelle. Più spazio sopra ai pulsanti e righe del foglio più leggere.",
+    ],
+  },
+  {
+    version: '0.81.3',
+    date: '2026-10-14 16:20',
+    changes: [
+      "Sogno, web: la cartella scura dietro la barra laterale ora sta sopra al cielo celeste; «Indietro» e «Segna il sogno» hanno lo stile e la misura degli altri pulsanti dell'app; anno, giorno e orario sono più grandi.",
+      "Sogno, telefono: la targhetta dell'anno è più grande e il cielo va da bordo a bordo, senza la carta ai lati sugli schermi più larghi.",
+    ],
+  },
+  {
+    version: '0.81.2',
+    date: '2026-10-14 15:10',
+    changes: [
+      "Sogno, web: il cielo celeste occupa tutta l'area, senza la carta a righe sotto; tolto il pulsante del microfono.",
+      "Sogno, telefono: il microfono è un pallino celeste fisso in basso al centro (rosso e pulsante mentre registra); indietro e salva hanno la misura degli altri tasti dell'app; giorno e orario sono pendagli con l'etichetta, si toccano e i selettori si aprono dentro lo schermo; la barra della nitidezza ha la scritta «Nitidezza» al centro, senza «sfocato» e «nitido».",
+    ],
+  },
+  {
+    version: '0.81.1',
+    date: '2026-10-14 13:30',
+    changes: [
+      "Pagina del sogno rifatta: sfondo a onde celesti, festone con i pendagli (giorno e orario storti, appesi), anno in una lunetta, foglio tondo con le Z che salgono e fascia di nuvole e stelle in basso. Niente più barra rigida.",
+      "Nitidezza con una barra nuova: puntini che da sfocati diventano nitidi, con un anello giallo come cursore.",
+    ],
+  },
+  {
+    version: '0.81.0',
+    date: '2026-10-14 12:30',
+    changes: [
+      "Sogni: nuova voce «Sogno» in «Nuova nota». La pagina è come quella della nota (data e orario, righello della nitidezza, foglio con titolo e descrizione, anche a voce) in versione celeste. Se non sai a che ora, lascia 00:00.",
+      "I sogni compaiono nel Calendario (una lunetta sul giorno) e nel Giorno (pallino con la luna sull'asse e nuvoletta col titolo, senza orario). In Cerca c'è il filtro «Mostra» Note / Sogni / Tutto e in Statistiche il contatore dei sogni dell'anno. Non entrano nel mood né nei riassunti.",
+      "Serve la nuova versione del server (migration dei sogni) per poterli salvare.",
+    ],
+  },
+  {
     version: '0.80.0',
     date: '2026-10-14 10:30',
     changes: [

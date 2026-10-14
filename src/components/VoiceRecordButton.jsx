@@ -66,7 +66,7 @@ function blobToBase64(blob) {
 // «Trascrivi». `draftId` lega i vocali a una nota Gemini in sospeso: l'elenco
 // mostra solo quelli di quella nota (più quelli vecchi senza nota); senza
 // `draftId` mostra solo i vocali non legati a nessuna nota.
-export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId }) {
+export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId, bubble = false }) {
   const { user } = useAuth()
   const groqKey = user?.groqApiKey?.trim()
   const [state, setState] = useState('idle') // idle | recording | transcribing
@@ -258,7 +258,29 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
 
   return (
     <div className="gms-voice">
-      {state === 'recording' ? (
+      {bubble ? (
+        <>
+          <button
+            type="button"
+            onClick={state === 'recording' ? stop : start}
+            disabled={disabled || state === 'transcribing'}
+            className={
+              'dream-mic' +
+              (state === 'recording' ? ' recording' : '') +
+              (state === 'transcribing' ? ' busy' : '')
+            }
+            title={state === 'recording' ? 'Ferma la registrazione' : 'Detta un vocale'}
+            aria-label={state === 'recording' ? 'Ferma la registrazione' : 'Detta un vocale'}
+          >
+            <Icon name={state === 'recording' ? 'square' : 'mic'} size={22} />
+          </button>
+          {state !== 'idle' && (
+            <span className="dream-mic-status">
+              {state === 'recording' ? `${fmtTime(seconds)} · mancano ${Math.max(0, MAX_SECONDS - seconds)}s` : progress || 'Trascrivo…'}
+            </span>
+          )}
+        </>
+      ) : state === 'recording' ? (
         <button
           type="button"
           onClick={stop}

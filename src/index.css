@@ -8588,3 +8588,653 @@ li:last-child > .st-row {
   background: rgba(255, 255, 255, 0.55);
   box-shadow: 0 1px 2px rgba(20, 12, 4, 0.25);
 }
+
+
+/* ---------- Sogni ---------- */
+/* Palette celeste, sulla stessa carta del resto dell'app:
+   cielo #cfe6f7 / #dcecf9, contorno #6f9fc8, inchiostro #1f3f63, luna #3b6f9c */
+
+/* Opzione «Sogno» nella scelta della nuova nota */
+.ncs-option.ncs-dream {
+  background: #dcecf9;
+  color: #1f3f63;
+  border-color: #6f9fc8;
+}
+.ncs-option.ncs-dream .ncs-opt-text b {
+  color: #1f3f63;
+}
+.ncs-option.ncs-dream .ncs-opt-text span {
+  color: #4b6f93;
+}
+.ncs-opt-icon.dream {
+  background: #bcd8ee;
+  color: #2f5f8a;
+}
+
+/* Vista giorno: pallino con la luna sull'asse delle ore + nuvoletta col titolo (niente orario scritto) */
+.day-dream {
+  position: absolute;
+  left: -10px;
+  right: 0;
+  height: 28px;
+  z-index: 4;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: var(--cursor-pointer);
+  pointer-events: none;
+}
+.dd-dot,
+.dd-cloud {
+  pointer-events: auto;
+}
+.dd-dot {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #cfe6f7;
+  color: #2f5f8a;
+  border: 1.5px solid #6f9fc8;
+  box-shadow: 0 1px 3px rgba(30, 60, 100, 0.3);
+}
+.dd-cloud {
+  position: absolute;
+  left: 38px;
+  top: 2px;
+  max-width: calc(100% - 52px);
+  padding: 4px 13px;
+  border-radius: 14px;
+  background: #bcd8ee;
+  color: #1f3f63;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: visible;
+  box-shadow: 0 2px 5px rgba(30, 60, 100, 0.28);
+}
+.dd-cloud .dd-t {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* gobbe della nuvoletta e bolle che la legano al pallino */
+.dd-cloud i {
+  position: absolute;
+  background: #bcd8ee;
+  border-radius: 50%;
+}
+.dd-cloud i.l1 { width: 14px; height: 14px; left: 14px; top: -6px; }
+.dd-cloud i.l2 { width: 17px; height: 17px; left: 38px; top: -8px; }
+.dd-cloud i.b1 { width: 5px; height: 5px; left: -17px; top: 11px; }
+.dd-cloud i.b2 { width: 8px; height: 8px; left: -11px; top: 8px; }
+
+/* Calendario: lunetta sulla riga del giorno */
+.mp-moon {
+  position: absolute;
+  z-index: 3;
+  right: 10px;
+  top: 8px;
+  color: #3b6f9c;
+  filter: drop-shadow(0 1px 1px rgba(30, 60, 100, 0.25));
+  pointer-events: none;
+}
+
+/* Pagina del sogno: onde celesti in alto, festone con i pendagli (giorno e orario storti),
+   foglio tondo con le Z, nuvole e stelle in basso. Telefono = colonna; web = .dream-page-wide. */
+.dream-page {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #e7f2fb;
+  color: #1f3f63;
+  padding-bottom: 76px;
+}
+.dream-page > * {
+  position: relative;
+  z-index: 1;
+}
+.dream-page > .dream-waves,
+.dream-page > .dream-garland,
+.dream-page > .dream-bottom {
+  position: absolute;
+  z-index: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+.dream-waves {
+  top: 0;
+}
+.dream-garland {
+  top: 62px;
+}
+.dream-bottom {
+  bottom: 0;
+}
+.dream-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: calc(env(safe-area-inset-top) + 12px) 14px 0;
+}
+.dream-bubble {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(40, 90, 140, 0.28);
+}
+.dream-back {
+  background: #fff;
+  border: 1.5px solid #8fb6dc;
+  color: #2f5f8a;
+}
+.dream-save {
+  background: #9ccb86;
+  border: 1.5px solid #6f9a5c;
+  color: #1d3a2a;
+}
+.dream-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 62px;
+  padding: 3px 13px;
+  border-radius: 999px;
+  background: #f4e7b0;
+  border: 1.5px solid #d8c470;
+  color: #6b5510;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 5px rgba(40, 90, 140, 0.22);
+}
+.dream-clocks {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 10px 0;
+}
+.dream-hang {
+  position: relative;
+  padding-top: 20px;
+}
+.dream-hang::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 22px;
+  border-left: 1.4px solid #6f9fc8;
+}
+.dream-hang-a .dream-lcd {
+  transform: rotate(-7deg);
+}
+.dream-hang-b .dream-lcd {
+  transform: rotate(7deg);
+}
+/* i selettori di data e ora si aprono dritti e dentro lo schermo (il pendolo è solo il pulsante) */
+.dream-hang-a .dp-cal {
+  left: 0;
+  transform: none;
+}
+.dream-hang-b .tp-pop {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+.dream-lcd {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: #e3e9ee;
+  border: 1.5px solid #fff;
+  box-shadow: 0 2px 5px rgba(40, 90, 140, 0.28);
+  font-family: 'MyJournal LCD', var(--font-mono, monospace);
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  color: #243;
+}
+.dream-body-wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 6px 14px 0;
+}
+.dream-clarity {
+  padding: 2px 6px 6px;
+}
+.dream-clarity-title {
+  font-size: 0.74rem;
+  color: #4b6f93;
+}
+.clarity-box {
+  position: relative;
+  touch-action: none;
+  cursor: pointer;
+  outline: none;
+}
+.clarity-box:focus-visible {
+  outline: 2px solid #d8a93a;
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.clarity-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 56px;
+}
+.clarity-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -3px;
+  font-size: 0.7rem;
+  color: #4b6f93;
+}
+.dream-sheet {
+  position: relative;
+  flex: 1;
+  min-height: 250px;
+  margin-top: 34px;
+  padding: 20px 18px 16px;
+  background: #fff;
+  border: 1.5px solid #bcd8ee;
+  border-radius: 38px 38px 28px 28px;
+  box-shadow: 0 8px 16px rgba(40, 90, 140, 0.22);
+  display: flex;
+  flex-direction: column;
+}
+.dream-z {
+  position: absolute;
+  font-weight: 700;
+  pointer-events: none;
+}
+.dream-z1 { right: 20px; top: -20px; color: #5f93bf; transform: rotate(8deg); font-size: 0.95rem; }
+.dream-z2 { right: 34px; top: -33px; color: #7fa9cf; transform: rotate(-6deg); font-size: 1.25rem; }
+.dream-z3 { right: 10px; top: -52px; color: #9cc0de; transform: rotate(10deg); font-size: 1.5rem; }
+.dream-title {
+  display: block;
+  width: 100%;
+  resize: none;
+  padding: 0;
+  margin-bottom: 8px;
+  background: none;
+  border: none;
+  outline: none;
+  text-align: center;
+  line-height: 1.2;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
+  font-size: 1.55rem;
+  color: #1f3f63;
+}
+.dream-title::placeholder {
+  color: rgba(75, 111, 147, 0.7);
+}
+.dream-body {
+  flex: 1;
+  min-height: 190px;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-size: 1.05rem;
+  line-height: 27px;
+  color: #1f3f63;
+  background-image: repeating-linear-gradient(transparent 0 26px, rgba(31, 63, 99, 0.07) 26px 27px);
+}
+.dream-hint {
+  margin: 4px 2px 0;
+  font-size: 0.74rem;
+  color: #5d7b99;
+}
+.dream-voice {
+  margin-top: 12px;
+}
+.dream-error {
+  margin-top: 12px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(181, 82, 74, 0.13);
+  color: #8a3a32;
+  font-size: 0.85rem;
+}
+.dream-delete {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1.5px solid #b5524a;
+  background: transparent;
+  color: #8a3a32;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.dream-save-wide {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: #9ccb86;
+  border: 1.5px solid #6f9a5c;
+  color: #1d3a2a;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 5px rgba(40, 90, 140, 0.28);
+}
+
+/* Web: la barra è solo onde + tre elementi, i pendagli stanno nella colonna di sinistra */
+.dream-page-wide {
+  min-height: calc(100dvh - 4rem);
+  padding-bottom: 80px;
+}
+.dream-page-wide .dream-top {
+  padding-top: 14px;
+  padding-left: 22px;
+  padding-right: 22px;
+  align-items: flex-start;
+}
+.dream-page-wide .dream-year {
+  margin-top: 0;
+}
+.dream-cols {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: 26px;
+  padding: 10px 28px 0;
+  align-items: start;
+}
+.dream-left {
+  padding-top: 8px;
+}
+.dream-page-wide .dream-clocks {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  padding: 0 0 0 6px;
+}
+.dream-page-wide .dream-hang-b {
+  margin-left: 70px;
+}
+.dream-page-wide .dream-lcd {
+  font-size: 1.15rem;
+  padding: 5px 16px;
+}
+.dream-page-wide .dream-clarity {
+  margin-top: 26px;
+}
+.dream-right {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 34px;
+}
+.dream-page-wide .dream-sheet {
+  margin-top: 0;
+  min-height: 330px;
+  padding: 26px 30px 22px;
+}
+.dream-page-wide .dream-body {
+  min-height: 260px;
+}
+
+/* Ricerca: risultati-sogno a nuvoletta */
+.dream-result {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 16px;
+  margin: 8px 0;
+  border-radius: 18px;
+  background: #dcecf9;
+  color: #1f3f63;
+  border: 1.5px dashed #6f9fc8;
+}
+.dream-result .dr-t {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+.dream-result .dr-t svg {
+  color: #3b6f9c;
+  flex: none;
+}
+.dream-result .dr-d {
+  margin-top: 2px;
+  font-size: 0.78rem;
+  color: #4b6f93;
+}
+.dream-result .dr-x {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #2c4d70;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Statistiche: contatore dei sogni dell'anno, su una riga sua */
+.st-tiles.st-tiles-dream {
+  grid-template-columns: 1fr;
+  margin-top: 16px;
+}
+.st-tiles-dream .st-tile {
+  background-color: #dcecf9;
+  background-image: none;
+  border-color: #6f9fc8;
+}
+.st-tiles-dream .st-tile-label,
+.st-tiles-dream .st-tile-sub {
+  color: #4b6f93;
+}
+.st-tiles-dream .st-tile-value {
+  color: #1f3f63;
+}
+
+/* ---- Pagina del sogno: ritocchi (web a tutta area, pallino del microfono, pendagli leggibili) ---- */
+.dream-main {
+  background: #e7f2fb;
+}
+/* i pendagli stanno sopra al foglio, altrimenti il selettore di ora/data si apre sotto di lui */
+.dream-page > .dream-clocks {
+  z-index: 6;
+}
+.dream-clocks {
+  padding: 8px 22px 0;
+}
+.dream-lcd {
+  padding: 5px 16px;
+  min-height: 44px;
+}
+.dream-lcd-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+}
+.dream-lcd-in small {
+  font-family: var(--font-sans, sans-serif);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4b6f93;
+}
+/* telefono: indietro e salva della misura degli altri tasti, tinti di celeste */
+.dream-back-m {
+  background-color: #fff;
+  background-image: none;
+  border: 2px solid #8fb6dc;
+  color: #2f5f8a;
+  box-shadow: 0 3px 7px rgba(40, 90, 140, 0.28);
+}
+.dream-save-m {
+  box-shadow: 0 3px 7px rgba(40, 90, 140, 0.28);
+}
+.dream-page:not(.dream-page-wide) .dream-year {
+  margin-top: 50px;
+}
+.dream-page:not(.dream-page-wide) .dream-garland {
+  top: 74px;
+}
+.clarity-center {
+  margin-top: -3px;
+  text-align: center;
+  font-size: 0.78rem;
+  color: #4b6f93;
+}
+/* microfono: pallino fisso in basso al centro dello schermo, stile celeste */
+.dream-mic {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 20px);
+  transform: translateX(-50%);
+  z-index: 30;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  border: 2px solid #8fb6dc;
+  color: #2f5f8a;
+  box-shadow: 0 4px 10px rgba(40, 90, 140, 0.35);
+}
+.dream-mic.recording {
+  background: #f3b6ae;
+  border-color: #b5524a;
+  color: #5a1f19;
+  animation: dreamMicPulse 1.2s ease-in-out infinite;
+}
+.dream-mic.busy {
+  opacity: 0.75;
+  animation: dreamMicPulse 1.2s ease-in-out infinite;
+}
+@keyframes dreamMicPulse {
+  0%, 100% { box-shadow: 0 4px 10px rgba(40, 90, 140, 0.35), 0 0 0 0 rgba(181, 82, 74, 0.35); }
+  50% { box-shadow: 0 4px 10px rgba(40, 90, 140, 0.35), 0 0 0 12px rgba(181, 82, 74, 0); }
+}
+.dream-mic-status {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 90px);
+  transform: translateX(-50%);
+  z-index: 30;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #cfe6f7;
+  border: 1.5px solid #6f9fc8;
+  color: #1f3f63;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.dream-page:not(.dream-page-wide) {
+  padding-bottom: 96px;
+}
+/* web: il cielo occupa tutta l'area; il contenuto resta di larghezza ragionevole */
+.dream-page-wide {
+  min-height: 100dvh;
+}
+.dream-page-wide .dream-top,
+.dream-page-wide .dream-cols {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ---- Sogno: strati, misure e bordi ---- */
+/* la cartella scura dietro la barra laterale esce di 14px a destra: deve stare sopra al cielo celeste */
+.sb-wrap {
+  z-index: 2;
+}
+/* telefono: niente PhoneShell (colonna da 440px con la carta ai lati): il cielo va da bordo a bordo */
+.dream-shell {
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  background: #e7f2fb;
+}
+.dream-page:not(.dream-page-wide) .dream-year {
+  gap: 7px;
+  padding: 6px 20px;
+  font-size: 1.15rem;
+  margin-top: 44px;
+}
+.dream-page:not(.dream-page-wide) .dream-garland {
+  top: 80px;
+}
+/* web: misure dei pulsanti come nel resto dell'app (ne-back / ne-save) e pendagli più grandi */
+.dream-page-wide .dream-top {
+  align-items: center;
+  padding-top: 88px;
+}
+.dream-page-wide .dream-year {
+  gap: 7px;
+  padding: 7px 20px;
+  font-size: 1.05rem;
+}
+.dream-page-wide .dream-lcd {
+  font-size: 1.5rem;
+  padding: 8px 24px;
+  min-height: 56px;
+}
+.dream-page-wide .dream-lcd-in small {
+  font-size: 0.7rem;
+}
+
+/* ---- Sogno, web: rifiniture ---- */
+.dream-page > .dream-scatter {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+/* pulsanti e anno lontani dal bordo dello schermo */
+.dream-page-wide .dream-top {
+  padding-left: 56px;
+  padding-right: 56px;
+}
+/* giorno e orario dritti, uno sotto l'altro, allineati a sinistra */
+.dream-page-wide .dream-hang-a .dream-lcd,
+.dream-page-wide .dream-hang-b .dream-lcd {
+  transform: none;
+}
+.dream-page-wide .dream-hang-b {
+  margin-left: 0;
+}
+.dream-page-wide .dream-clocks {
+  padding-left: 4px;
+}
+.dream-page-wide .dream-clarity-title {
+  display: block;
+  margin-bottom: 4px;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #6a9bc7;
+}

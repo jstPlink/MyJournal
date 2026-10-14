@@ -84,6 +84,15 @@ export default function Sidebar() {
           >
             <Icon name="sparkles" size={18} />
           </button>
+          <button
+            type="button"
+            onClick={() => navigate(`/dream/new?date=${newNoteDate}`)}
+            title="Sogno"
+            aria-label="Sogno"
+            className="sb-gemini"
+          >
+            <Icon name="moon" size={18} />
+          </button>
         </div>
 
         <NewNoteWithGeminiSheet
