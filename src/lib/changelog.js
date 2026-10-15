@@ -9,6 +9,42 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.16',
+    date: '2026-10-15 15:30',
+    changes: [
+      "Giorno su telefono: sogno ancora più vicino alle note adiacenti.",
+    ],
+  },
+  {
+    version: '0.81.15',
+    date: '2026-10-15 15:00',
+    changes: [
+      "Giorno su telefono: meno spazio fra il sogno e le note vicine.",
+    ],
+  },
+  {
+    version: '0.81.14',
+    date: '2026-10-15 14:00',
+    changes: [
+      "Giorno su telefono: note e sogni non si sovrappongono più. Se due blocchi si toccherebbero, il successivo scende e, se non c'è spazio, il foglio si allunga e scorre; foto e contatori contano nell'altezza.",
+    ],
+  },
+  {
+    version: '0.81.13',
+    date: '2026-10-15 13:00',
+    changes: [
+      "Impostazioni → Suoni: interruttore per disattivare i suoni dell'app direttamente nella sezione.",
+    ],
+  },
+  {
+    version: '0.81.12',
+    date: '2026-10-15 12:00',
+    changes: [
+      "Giorno su telefono: note e sogni non si sovrappongono più, se serve il blocco successivo scende e il foglio si allunga.",
+      "Statistiche su telefono: le prime 4 informazioni (note totali, note dell'anno, mood medio, sogni) in una griglia 2×2.",
+    ],
+  },
+  {
     version: '0.81.11',
     date: '2026-10-14 14:00',
     changes: [

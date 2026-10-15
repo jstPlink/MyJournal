@@ -39,7 +39,7 @@ function shortDM(key) {
 // secondarie (settimana migliore, tag più usato...) — stessi componenti
 // portati identici dalla versione web (WebStats.jsx), le classi .st-*
 // si scalano da sole per il telefono via @media in index.css.
-function StatCard({ label, value, sub, icon, onClick, variant = 'tile' }) {
+function StatCard({ label, value, sub, icon, onClick, variant = 'tile', dream = false }) {
   if (variant === 'mini') {
     const Tag = onClick ? 'button' : 'div'
     return (
@@ -65,7 +65,7 @@ function StatCard({ label, value, sub, icon, onClick, variant = 'tile' }) {
   }
 
   return (
-    <div className="st-tile">
+    <div className={'st-tile' + (dream ? ' st-tile-dream' : '')}>
       <p className="st-tile-label">
         {icon && <Icon name={icon} size={11} />}
         {label}
@@ -307,7 +307,7 @@ export default function StatsView() {
 
         {loading && !yearNotes.length ? (
           <div className="st-tiles">
-            {Array.from({ length: 3 }).map((_, i) => (
+            {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="st-tile">
                 <Skeleton className="h-3 w-16" />
                 <Skeleton className="mt-3 h-6 w-12" />
@@ -324,10 +324,7 @@ export default function StatsView() {
                 value={stats.avgMood != null ? Math.round(stats.avgMood * 100) : '—'}
                 icon="sparkles"
               />
-            </div>
-
-            <div className="st-tiles st-tiles-dream">
-              <StatCard label={`Sogni segnati nel ${year}`} value={dreamCount} icon="moon" />
+              <StatCard label={`Sogni nel ${year}`} value={dreamCount} icon="moon" dream />
             </div>
 
             <PeriodRecapCard

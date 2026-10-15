@@ -1,4 +1,4 @@
-# MyJournal – Architettura (v0.81.11)
+# MyJournal – Architettura (v0.81.16)
 
 Panoramica tecnica e guida per rispondere alle domande sul progetto. Per l'uso dell'app vedi [docs/GUIDA.md](docs/GUIDA.md); per la
 cronologia, `src/lib/changelog.js`; per il deploy, [deploy/README.md](deploy/README.md).
@@ -216,7 +216,7 @@ Poi commit e push: il Dockerfile includerà l'APK nell'immagine web e dopo `pull
 
 **Firma:** l'APK è di **debug**, firmato con `~/.android/debug.keystore` del PC (ogni PC ha la sua: passare da un PC all'altro richiede `adb uninstall it.fplinio.myjournal` e rifare l'accesso, i dati sono sul server).
 
-**Installare sul telefono (debug wireless):** `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`; con firma diversa `INSTALL_FAILED_UPDATE_INCOMPATIBLE` → disinstalla e reinstalla. Versione attuale: versionCode 65 / versionName 1.64 (frontend v0.81.11).
+**Installare sul telefono (debug wireless):** `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`; con firma diversa `INSTALL_FAILED_UPDATE_INCOMPATIBLE` → disinstalla e reinstalla. Versione attuale: versionCode 70 / versionName 1.69 (frontend v0.81.11).
 
 **Regola di aggiornamento dell'app Android (vale **alla fine di ogni richiesta che tocca l'app o il telefono**, senza che l'utente debba chiederlo; se il debug wireless è collegato, installare sempre):** dopo le modifiche si alza la versione (`package.json`, voce in `changelog.js`, `versionCode`/`versionName` in `android/app/build.gradle`), si compila l'APK (`npm run android:build` + `gradlew assembleDebug`) e, **se il telefono è collegato** (`adb devices` mostra `device`; con più voci usare `adb -s IP:porta`), lo si **invia subito** con `adb install -r app-debug.apk`, verificando `versionCode`/`versionName` con `dumpsys package it.fplinio.myjournal`. Se il telefono non è collegato lo si dice e l'APK resta in `android/app/build/outputs/apk/debug/`. Il debug wireless cade spesso: `adb mdns services` e `adb connect IP:porta` (vedi sotto per MyMap, stessa procedura). Un APK compilato altrove (es. dal workflow manuale
 `.github/workflows/android-apk.yml`, artifact `myjournal-debug-apk`) ha un'altra firma e Android non lo installa sopra quello vecchio: va

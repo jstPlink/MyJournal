@@ -6,6 +6,7 @@ import { durationMinutes, parseWall } from '../../lib/dates'
 import PersonAvatar from '../../components/PersonAvatar'
 import Icon from '../../components/Icon'
 import DreamBadge from '../../components/DreamBadge'
+import { useIsWide } from '../../hooks/useIsWide'
 import { haptic } from '../../lib/haptics'
 import { dreamMinutes, dreamTitle } from '../../lib/dreams'
 import {
@@ -57,8 +58,18 @@ const DAY_MIN = 24 * 60
 // (vedi il componente).
 const TRACK_H = 1240
 const MIN_BLOCK_H = 30
+const DREAM_H = 34 // altezza di pallino + nuvoletta del sogno (.day-dream)
+const BLOCK_GAP = 3 // spazio minimo fra due blocchi quando si spostano
 const RAIL_HOURS = [0, 3, 6, 9, 12, 15, 18, 21, 24]
 const TICK_HOURS = [0, 6, 12, 18, 24]
+
+// Altezza minima del blocco di una nota su telefono: foto (78px + cornice) e
+// contatori impilati escono dal blocco se la nota dura poco.
+function phoneMinH(it) {
+  if (it.imgsCarousel.length) return 124
+  const badges = (it.people.length ? 1 : 0) + (it.placeName ? 1 : 0) + (it.songsCount ? 1 : 0)
+  return badges ? 8 + badges * 26 : 0
+}
 
 function startMinutesOf(value) {
   const p = parseWall(value)
@@ -124,12 +135,19 @@ export default function DayPages({
   dreams = [], // sogni del giorno: pallino con la luna sull'asse + nuvoletta (lib/dreams.js)
 }) {
   const trackRef = useRef(null)
+  const phone = !useIsWide()
+  // Con il foglio allungato (.grow) l'altezza del righello è quella delle 24h
+  // misurata prima: rimisurarla ora darebbe un ciclo (più alto → più spazio →
+  // più alto).
+  const grownRef = useRef(false)
   const [fitH, setFitH] = useState(0)
   useLayoutEffect(() => {
     if (!fit) return
     const el = trackRef.current
     if (!el) return
-    const update = () => setFitH(el.clientHeight)
+    const update = () => {
+      if (!grownRef.current) setFitH(el.clientHeight)
+    }
     update()
     const ro = new ResizeObserver(update)
     ro.observe(el)
@@ -214,8 +232,38 @@ export default function DayPages({
   const trackH = fit ? fitH : TRACK_H
   const pxPerMin = trackH / DAY_MIN
 
+  // Telefono: note e sogni stanno alla loro ora, ma se due blocchi si
+  // sovrapporrebbero il successivo scende sotto il precedente e il foglio si
+  // allunga (e la pagina scorre). Il righello delle ore resta quello vero.
+  // Da web (finestra larga) il foglio ha altezza fissa e non si sposta nulla.
+  const { pos, sheetH } = useMemo(() => {
+    const pos = new Map()
+    if (!phone || trackH <= 0) return { pos, sheetH: trackH }
+    const blocks = [
+      ...dreams.map((d) => ({
+        key: `d:${d.id}`,
+        top: Math.min(DAY_MIN - 24, dreamMinutes(d)) * pxPerMin,
+        h: DREAM_H,
+      })),
+      ...items.map((it) => ({
+        key: `n:${it.id}`,
+        top: it.startMin * pxPerMin,
+        h: Math.max(MIN_BLOCK_H, (it.endMin - it.startMin) * pxPerMin, 44, phoneMinH(it)),
+      })),
+    ].sort((a, b) => a.top - b.top)
+    let bottom = -Infinity
+    for (const b of blocks) {
+      const top = Math.max(b.top, bottom + BLOCK_GAP)
+      pos.set(b.key, top)
+      bottom = top + b.h
+    }
+    return { pos, sheetH: Math.max(trackH, bottom + BLOCK_GAP) }
+  }, [phone, trackH, pxPerMin, dreams, items])
+  const grow = fit && phone && sheetH > trackH + 1
+  grownRef.current = grow
+
   return (
-    <div className={'day-outer' + (fit ? ' fit' : '')}>
+    <div className={'day-outer' + (fit ? ' fit' : '') + (grow ? ' grow' : '')}>
       <div className="day-sheet" style={{ '--deco': deco }}>
         {moodValue != null && (
           <span
@@ -232,7 +280,7 @@ export default function DayPages({
         <div
           className="day-track"
           ref={trackRef}
-          style={fit ? undefined : { height: TRACK_H }}
+          style={fit && !grow ? undefined : { height: sheetH }}
         >
           <div className="day-rail" aria-hidden="true">
             {RAIL_HOURS.map((h) => (
@@ -269,7 +317,7 @@ export default function DayPages({
 
           {trackH > 0 &&
             dreams.map((d) => {
-              const top = Math.min(DAY_MIN - 24, dreamMinutes(d)) * pxPerMin
+              const top = pos.get(`d:${d.id}`) ?? Math.min(DAY_MIN - 24, dreamMinutes(d)) * pxPerMin
               return (
                 <button
                   key={d.id}
@@ -299,9 +347,9 @@ export default function DayPages({
             })}
 
           {trackH > 0 && items.map((it) => {
-            const top = it.startMin * pxPerMin
+            const top = pos.get(`n:${it.id}`) ?? it.startMin * pxPerMin
             const rawH = (it.endMin - it.startMin) * pxPerMin
-            const h = Math.max(MIN_BLOCK_H, rawH)
+            const h = Math.max(MIN_BLOCK_H, rawH, phone ? phoneMinH(it) : 0)
             const hasMedia = Boolean(it.placeName) || Boolean(it.song)
             return (
               <button

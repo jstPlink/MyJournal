@@ -2146,6 +2146,13 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   flex: 1 1 auto;
   min-height: 0;
 }
+.day-outer.fit.grow {
+  height: auto;
+}
+.day-outer.fit.grow .day-sheet,
+.day-outer.fit.grow .day-track {
+  flex: none;
+}
 .dp-empty {
   padding: 20px 4px 0;
   font-family: 'MyJournal Hand', 'Kalam', sans-serif;
@@ -6250,9 +6257,6 @@ li:last-child > .st-row {
     padding: 13px 14px 12px;
     border-radius: 13px;
   }
-  .st-tile:last-child {
-    grid-column: 1 / -1;
-  }
   .st-tile::before {
     top: 33px;
   }
@@ -9068,16 +9072,20 @@ li:last-child > .st-row {
   grid-template-columns: 1fr;
   margin-top: 16px;
 }
-.st-tiles-dream .st-tile {
+.st-tiles-dream .st-tile,
+.st-tile.st-tile-dream {
   background-color: #dcecf9;
   background-image: none;
   border-color: #6f9fc8;
 }
 .st-tiles-dream .st-tile-label,
-.st-tiles-dream .st-tile-sub {
+.st-tiles-dream .st-tile-sub,
+.st-tile-dream .st-tile-label,
+.st-tile-dream .st-tile-sub {
   color: #4b6f93;
 }
-.st-tiles-dream .st-tile-value {
+.st-tiles-dream .st-tile-value,
+.st-tile-dream .st-tile-value {
   color: #1f3f63;
 }
 
