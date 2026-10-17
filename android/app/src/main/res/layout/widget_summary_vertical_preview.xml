@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Anteprima del widget 1x3 verticale nel selettore dei widget (android:previewLayout, Android 12+): stesso
+     aspetto di widget_summary_vertical.xml con dati d'esempio e il pulsante fermo (niente ViewFlipper). -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clipChildren="false"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_background"
+    android:padding="4dp">
+
+    <LinearLayout
+        android:clipChildren="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp">
+
+        <!-- 1. Mood degli ultimi 3 giorni -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="13dp"
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="@string/widget_mood_caption_short"
+                android:textColor="#7a6f5b"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="16dp"
+                    android:layout_height="16dp">
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:rotation="5"
+                        android:src="@drawable/widget_paper_shadow" />
+
+                    <ImageView
+                        android:layout_width="13dp"
+                        android:layout_height="13dp"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginEnd="1dp"
+                        android:contentDescription="@null"
+                        android:rotation="-4"
+                        android:src="@drawable/widget_paper_square"
+                        android:tint="#6bb0cf" />
+                </FrameLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="casual"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:paddingStart="5dp"
+                    android:text="73"
+                    android:textColor="#3a3226"
+                    android:shadowColor="#3a3226"
+                    android:shadowDx="1.3"
+                    android:shadowDy="1.0"
+                    android:shadowRadius="0.8"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="2"
+                android:text="3 giorni · 7 note"
+                android:textColor="#4a4132"
+                android:shadowColor="#4a4132"
+                android:shadowDx="0.9"
+                android:shadowDy="0.7"
+                android:shadowRadius="0.6"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <!-- 2. Ultima nota -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="13dp"
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="@string/widget_last_caption"
+                android:textColor="#7a6f5b"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="2"
+                android:text="ieri"
+                android:textColor="#3a3226"
+                android:shadowColor="#3a3226"
+                android:shadowDx="1.3"
+                android:shadowDy="1.0"
+                android:shadowRadius="0.8"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="casual"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="21:40"
+                android:textColor="#4a4132"
+                android:shadowColor="#4a4132"
+                android:shadowDx="0.9"
+                android:shadowDy="0.7"
+                android:shadowRadius="0.6"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- 3. Nuova nota appesa a un chiodo (ondeggia ogni tanto: ViewFlipper con due copie identiche) -->
+        <LinearLayout
+            android:clipChildren="false"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:layout_marginBottom="-3dp"
+                android:contentDescription="@null"
+                android:src="@drawable/widget_nail" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/widget_button"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="9dp"
+                    android:paddingLeft="9dp"
+                    android:paddingRight="9dp"
+                    android:paddingTop="6dp"
+                    android:rotation="2">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="casual"
+                        android:includeFontPadding="false"
+                        android:text="+"
+                        android:textColor="#3a3226"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="casual"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="@string/widget_new_note"
+                        android:textColor="#3a3226"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

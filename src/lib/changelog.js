@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.17',
+    date: '2026-10-17 12:00',
+    changes: [
+      "Nuovo widget 1×3 verticale «MyJournal» (Android): gli stessi tre blocchi del 4×1 — mood degli ultimi 3 giorni, ultima nota, pulsante «Nuova nota» appeso al chiodo — impilati dall'alto in basso.",
+    ],
+  },
+  {
     version: '0.81.16',
     date: '2026-10-15 15:30',
     changes: [

@@ -36,14 +36,17 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] appWidgetIds) {
-        render(context, manager, appWidgetIds);
+        render(context, manager, appWidgetIds, R.layout.widget_summary);
     }
 
     /** Ridisegna tutte le istanze (dopo nuovi dati dall'app). */
     public static void updateAll(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         int[] ids = manager.getAppWidgetIds(new ComponentName(context, MyJournalSummaryWidget.class));
-        if (ids.length > 0) render(context, manager, ids);
+        if (ids.length > 0) render(context, manager, ids, R.layout.widget_summary);
+        // la variante verticale 1x3 (MyJournalSummaryVerticalWidget) ha gli stessi id con un altro layout
+        int[] vIds = manager.getAppWidgetIds(new ComponentName(context, MyJournalSummaryVerticalWidget.class));
+        if (vIds.length > 0) render(context, manager, vIds, R.layout.widget_summary_vertical);
     }
 
     private static PendingIntent open(Context context, String path, int code) {
@@ -53,7 +56,7 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
         return PendingIntent.getActivity(context, code, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
-    private static void render(Context context, AppWidgetManager manager, int[] ids) {
+    static void render(Context context, AppWidgetManager manager, int[] ids, int layout) {
         JSONObject data = null;
         try {
             String raw = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getString(KEY_DATA, null);
@@ -105,7 +108,7 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
         }
 
         for (int id : ids) {
-            RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.widget_summary);
+            RemoteViews v = new RemoteViews(context.getPackageName(), layout);
             v.setTextViewText(R.id.sum_mood_value, moodText);
             v.setInt(R.id.sum_mood_dot, "setColorFilter", moodColor);
             v.setTextViewText(R.id.sum_mood_sub, moodSub);
