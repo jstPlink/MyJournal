@@ -134,6 +134,9 @@ export default function NewNoteWithGeminiSheet({
   closeRef.current = closeSheet
 
   async function closeSheet() {
+    // toglie il fuoco al campo: senza, su telefono la tastiera può restare aperta e la
+    // pagina sotto (giorno, mese) rimane schiacciata alla sua altezza
+    document.activeElement?.blur?.()
     const voices = (await listVoices()).filter((v) => v.draftId === draftId)
     if (prompt.trim() || voices.length) {
       saveGeminiDraft({ id: draftId, dateKey, text: prompt })
@@ -158,6 +161,7 @@ export default function NewNoteWithGeminiSheet({
 
   async function generateFromPrompt() {
     if (!prompt.trim() || loading) return
+    document.activeElement?.blur?.()
     setLoading(true)
     setRetry(null)
     setError('')

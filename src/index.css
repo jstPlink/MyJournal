@@ -5333,6 +5333,21 @@ li:last-child > .wd-month-row {
   display: flex;
   flex-direction: column;
 }
+.gvs-main .gms-voice-title {
+  flex: none;
+  width: 100%;
+  height: auto;
+  line-height: 1.3;
+}
+.gvs-main .gvs-meta {
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.gms-voice-saved li {
+  min-height: 48px;
+}
 .gvs-meta {
   font-size: 0.72rem;
   color: var(--color-ink-soft);

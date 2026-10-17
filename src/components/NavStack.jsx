@@ -13,6 +13,12 @@ export default function NavStack() {
 
   trackLocation(pathname + search)
 
+  // Cambiando pagina si toglie il fuoco al campo di testo: su telefono, se la tastiera
+  // resta aperta, la pagina in cui si arriva rimane schiacciata alla sua altezza.
+  useEffect(() => {
+    document.activeElement?.blur?.()
+  }, [pathname])
+
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return
     let handle

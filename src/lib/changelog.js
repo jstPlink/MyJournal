@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.2',
+    date: '2026-10-17 21:00',
+    changes: [
+      "Vocali da trascrivere: righe compatte e allineate (prima il contenitore si allargava troppo).",
+      "Tornando indietro da una nota o da «Con Gemini» la tastiera si chiude: la vista giorno non resta più schiacciata.",
+    ],
+  },
+  {
     version: '0.82.1',
     date: '2026-10-17 19:30',
     changes: [
