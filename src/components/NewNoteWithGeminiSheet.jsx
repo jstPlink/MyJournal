@@ -1,4 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
+import PhoneShell from './PhoneShell'
+import MobileTopBar from './MobileTopBar'
+import { haptic } from '../lib/haptics'
 import Icon from './Icon'
 import { useBackClose } from '../hooks/useBack'
 import GeminiWait from './GeminiWait'
@@ -186,6 +190,146 @@ export default function NewNoteWithGeminiSheet({
       setLoading(false)
       setRetry(null)
     }
+  }
+
+  const instructionsBlock = (
+    <div className="gms-instructions">
+      <button
+        type="button"
+        onClick={() => setInstructionsOpen((v) => !v)}
+        className="gms-instructions-label"
+      >
+        <Icon name="edit" size={13} />
+        Istruzioni per le note
+        <Icon
+          name="chevron-right"
+          size={12}
+          className={'gms-instructions-chev' + (instructionsOpen ? ' open' : '')}
+        />
+      </button>
+      {instructionsOpen && (
+        <>
+          <textarea
+            rows={6}
+            placeholder='Es. "scrivi in tono ironico" oppure "non menzionare mai il lavoro a meno che non sia esplicito"'
+            value={instructions}
+            onChange={(e) => setInstructions(e.target.value)}
+            className="gms-field"
+          />
+          {instructionsStatus && (
+            <p
+              className={
+                'text-xs ' + (instructionsStatus.ok ? 'text-save-dark' : 'text-delete-dark')
+              }
+            >
+              {instructionsStatus.message}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={saveInstructions}
+            disabled={savingInstructions}
+            className="gms-instructions-save"
+          >
+            {savingInstructions ? 'Salvo…' : 'Salva istruzioni'}
+          </button>
+        </>
+      )}
+    </div>
+  )
+
+  const onTranscribed = (text) => {
+    // anche a pannello chiuso (trascrizione finita dopo la ✕): il testo
+    // finisce comunque nella bozza
+    const p = promptRef.current
+    const next = p.trim() ? `${p.trim()} ${text}` : text
+    promptRef.current = next
+    setPrompt(next)
+    keepDraft(next)
+  }
+
+  // Telefono: pagina intera, stessa estetica della nota da compilare. Il tasto in
+  // alto a destra genera; «indietro» salva la nota come bozza (closeSheet).
+  const isPhone =
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 1023px)').matches
+  if (isPhone) {
+    return createPortal(
+      <div className="ngp-page">
+        <PhoneShell>
+          <MobileTopBar className="mtop-note">
+            <div className="mtop-row1">
+              <button
+                type="button"
+                onClick={() => {
+                  haptic()
+                  closeSheet()
+                }}
+                className="mchev"
+                title="Indietro"
+                aria-label="Indietro"
+              >
+                <Icon name="chevron-left" size={19} strokeWidth={2.8} />
+              </button>
+              <span className="mtop-year">Con Gemini</span>
+              <button
+                type="button"
+                disabled={!ready || loading || !prompt.trim()}
+                onClick={generateFromPrompt}
+                title="Genera la nota"
+                aria-label="Genera la nota"
+                className="mcircle-action save"
+              >
+                <Icon name="check" size={19} strokeWidth={2.8} />
+              </button>
+            </div>
+          </MobileTopBar>
+
+          <main className="mnote-main anim-page ngp-main flex flex-1 flex-col px-4 py-4">
+            {!ready ? (
+              <p className="gms-empty">
+                Configura una chiave API Gemini in Profilo per usare questa funzione.
+              </p>
+            ) : loading ? (
+              <GeminiWait retry={retry} />
+            ) : (
+              <>
+                <p className="gms-hint">
+                  Racconta cosa è successo: Gemini ricava titolo, testo, tag, persone e luogo.
+                  Potrai correggere tutto prima di salvare.
+                </p>
+                <div className="ne-sheet mt-3 flex min-h-[34dvh] flex-none flex-col">
+                  <span className="ne-tape ne-tape-a" aria-hidden="true" />
+                  <span className="ne-tape ne-tape-b" aria-hidden="true" />
+                  <textarea
+                    autoFocus
+                    placeholder={placeholder}
+                    value={prompt}
+                    onChange={(e) => {
+                      const v = e.target.value
+                      setPrompt(v)
+                      keepDraft(v)
+                    }}
+                    className="ne-body ngp-text flex-1"
+                  />
+                </div>
+                <VoiceRecordButton
+                  fab
+                  apiKey={apiKey}
+                  draftId={draftId}
+                  disabled={loading}
+                  onSaved={() => ensureGeminiDraft({ id: draftId, dateKey, text: promptRef.current })}
+                  onTranscribed={onTranscribed}
+                />
+                <GeminiUsage />
+                {instructionsBlock}
+              </>
+            )}
+            {error && <p className="gms-error">{error}</p>}
+          </main>
+        </PhoneShell>
+      </div>,
+      document.body,
+    )
   }
 
   return (

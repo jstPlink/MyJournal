@@ -182,6 +182,7 @@ Oltre alla PWA esiste un'app Android (file **APK**) con lo stesso account e gli 
 
 - **Note a cavallo della notte:** una nota che inizia alle 22 e finisce alle 3 del giorno dopo compare in entrambi i giorni (nel secondo parte da mezzanotte, con la scritta «continua dalla notte»).
 - **Nuova nota con Gemini:** se chiudi il pannello con la ✕ il testo e i vocali restano come **bozza** (te lo dice un avviso). La linguetta a destra elenca le note Gemini in sospeso con il giorno a cui appartengono (il giorno aperto quando hai premuto «nuova nota», altrimenti oggi): tocca per riprenderle.
+  **Su telefono** è una pagina intera con la stessa carta a righe della nota: scrivi o detti con il tasto tondo rosso in basso al centro (si riempie mentre registri e mostra il cronometro), poi tocchi la spunta in alto a destra per generare; con «indietro» la nota resta come bozza.
 - **Vocali:** finita la registrazione il vocale resta salvato con un titolo (modificabile) e lo trascrivi quando vuoi con «Trascrivi».
 - **Titoli:** le note hanno sempre il titolo in maiuscolo.
 - **Mood Lab (nascosto):** in fondo alle Impostazioni, toccando 5 volte di seguito la riga «MyJournal · versione», si apre un banco di prova per la formula del mood con dati di esempio (non tocca le tue note). Con **Applica all'app** la formula che hai impostato (curva delle note, peso di durata e persone, curva dei giorni nel mese) diventa quella di tutto il tuo account; **Formula originale** la ripristina.

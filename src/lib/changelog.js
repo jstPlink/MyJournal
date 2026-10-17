@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.0',
+    date: '2026-10-17 18:00',
+    changes: [
+      "«Crea una nota con IA» su telefono è ora una pagina intera, con la stessa carta a righe della nota: scrivi o detti e tocchi la spunta in alto a destra per generare. Tornando indietro la nota si salva come bozza.",
+      "Nuovo tasto vocale: cerchio rosso con contorno, fisso in basso al centro; mentre registri si riempie di rosso e il cronometro scorre.",
+    ],
+  },
+  {
     version: '0.81.18',
     date: '2026-10-17 13:00',
     changes: [

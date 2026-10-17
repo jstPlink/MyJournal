@@ -9502,3 +9502,88 @@ li:last-child > .st-row {
     opacity: 0.8;
   }
 }
+
+/* Nuova nota con Gemini: pagina intera su telefono (NewNoteWithGeminiSheet) */
+.ngp-page {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  overflow-y: auto;
+  background: #d8d2c4;
+}
+.ngp-main {
+  padding-bottom: 150px;
+}
+.ngp-text {
+  display: block;
+  width: 100%;
+  min-height: 30dvh;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  resize: none;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+}
+.ngp-text::placeholder {
+  opacity: 0.55;
+}
+.ngp-main .gms-voice-saved {
+  background: var(--color-tag, #efe6cf);
+  border: 1px dashed #b9ab8b;
+  border-radius: 12px;
+}
+/* tasto vocale tondo, fisso in basso al centro: contorno rosso, in registrazione si riempie */
+.gfab {
+  position: fixed;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + 18px);
+  transform: translateX(-50%);
+  z-index: 75;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.gfab-btn {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #d9645a;
+  background: #f6f0df;
+  color: #d9645a;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25);
+  transition: background 0.25s, color 0.25s;
+}
+.gfab-btn.rec {
+  background: #d9645a;
+  color: #fff;
+  animation: gfabHalo 1.4s infinite;
+}
+.gfab-btn.busy {
+  opacity: 0.6;
+}
+.gfab-sq {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #fff;
+}
+.gfab-time {
+  padding: 1px 12px;
+  border-radius: 999px;
+  background: rgba(231, 223, 204, 0.94);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.gfab-time.rec {
+  color: #d9645a;
+}
+@keyframes gfabHalo {
+  0% { box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25), 0 0 0 0 rgba(217, 100, 90, 0.5); }
+  100% { box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25), 0 0 0 16px rgba(217, 100, 90, 0); }
+}
