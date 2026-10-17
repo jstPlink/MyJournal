@@ -3,7 +3,6 @@ import Icon from './Icon'
 import { useBackClose } from '../hooks/useBack'
 import GeminiWait from './GeminiWait'
 import VoiceRecordButton from './VoiceRecordButton'
-import GeminiUsage from './GeminiUsage'
 import {
   cleanupNoteText,
   writeNoteText,
@@ -235,7 +234,6 @@ export default function GeminiSheet({
                   setInstructions((p) => (p.trim() ? `${p.trim()} ${text}` : text))
                 }
               />
-              <GeminiUsage />
               <button
                 type="button"
                 disabled={!instructions.trim() || loading}

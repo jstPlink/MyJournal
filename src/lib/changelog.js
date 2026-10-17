@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.1',
+    date: '2026-10-17 19:30',
+    changes: [
+      "Vocali da trascrivere: nuovo aspetto a elenco (ascolto, titolo, «Trascrivi» ed «Elimina»). Tra un tentativo e l'altro di Gemini passano 5 secondi. Tolti il testo «Racconta cosa è successo…» e il contatore delle richieste dalle schermate di scrittura (resta in Impostazioni).",
+    ],
+  },
+  {
     version: '0.82.0',
     date: '2026-10-17 18:00',
     changes: [

@@ -7,7 +7,6 @@ import Icon from './Icon'
 import { useBackClose } from '../hooks/useBack'
 import GeminiWait from './GeminiWait'
 import VoiceRecordButton from './VoiceRecordButton'
-import GeminiUsage from './GeminiUsage'
 import {
   draftNoteFromPrompt,
   describeGeminiError,
@@ -293,10 +292,6 @@ export default function NewNoteWithGeminiSheet({
               <GeminiWait retry={retry} />
             ) : (
               <>
-                <p className="gms-hint">
-                  Racconta cosa è successo: Gemini ricava titolo, testo, tag, persone e luogo.
-                  Potrai correggere tutto prima di salvare.
-                </p>
                 <div className="ne-sheet mt-3 flex min-h-[34dvh] flex-none flex-col">
                   <span className="ne-tape ne-tape-a" aria-hidden="true" />
                   <span className="ne-tape ne-tape-b" aria-hidden="true" />
@@ -320,7 +315,6 @@ export default function NewNoteWithGeminiSheet({
                   onSaved={() => ensureGeminiDraft({ id: draftId, dateKey, text: promptRef.current })}
                   onTranscribed={onTranscribed}
                 />
-                <GeminiUsage />
                 {instructionsBlock}
               </>
             )}
@@ -357,10 +351,6 @@ export default function NewNoteWithGeminiSheet({
             <GeminiWait retry={retry} />
           ) : (
             <div className="gms-stack">
-              <p className="gms-hint">
-                Racconta cosa è successo: Gemini prova a ricavare titolo, testo,
-                tag, persone e luogo. Potrai correggere tutto prima di salvare.
-              </p>
               <textarea
                 autoFocus
                 rows={9}
@@ -388,7 +378,6 @@ export default function NewNoteWithGeminiSheet({
                   keepDraft(next)
                 }}
               />
-              <GeminiUsage />
               <button
                 type="button"
                 disabled={!prompt.trim()}

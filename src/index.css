@@ -5298,44 +5298,76 @@ li:last-child > .wd-month-row {
   color: var(--color-delete-dark);
 }
 .gms-voice-saved {
-  margin-top: 8px;
-  padding: 8px 10px;
-  border: 1.5px dashed var(--color-line);
+  margin-top: 14px;
+  padding: 4px 12px;
+  border: 1.5px dashed #b9ab8b;
   border-radius: 12px;
-  background: var(--color-cream);
-  font-size: 0.74rem;
+  background: var(--color-tag, #efe6cf);
+  font-size: 0.8rem;
   color: var(--color-ink-soft);
 }
+.gvs-head {
+  margin: 6px 0 2px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
 .gms-voice-saved ul {
-  margin: 4px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 .gms-voice-saved li {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 3px 0;
+  gap: 8px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(52, 44, 28, 0.14);
 }
-.gms-voice-saved li span {
+.gms-voice-saved li:first-child {
+  border-top: 0;
+}
+.gvs-main {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.gvs-meta {
+  font-size: 0.72rem;
+  color: var(--color-ink-soft);
+}
+.gms-voice-saved li.done {
+  color: var(--color-ink-soft);
+}
+.gvs-play {
+  flex: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--color-ink, #3a3226);
+  color: #f6f0df;
+  font-size: 0.7rem;
+}
+.gms-voice-saved li.done .gvs-play {
+  background: #7a9a4a;
+}
+.gms-voice-retry,
+.gms-voice-discard {
+  flex: none;
+  padding: 3px 11px;
+  border: 1px solid var(--color-line, #cabfa8);
+  border-radius: 999px;
+  background: #f6f0df;
+  font-size: 0.74rem;
   font-weight: 700;
   color: var(--color-ink);
 }
 .gms-voice-discard {
-  font-size: 0.74rem;
-  font-weight: 700;
   color: var(--color-delete-dark);
 }
 .gms-voice-saved button:disabled {
   opacity: 0.5;
-}
-.gms-voice-retry {
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--color-ink);
-  text-decoration: underline;
-  text-underline-offset: 2px;
 }
 /* Richiesta di piccola correzione sotto l'anteprima (GeminiSheet.jsx): stesso
    riquadro degli altri campi ma separato da un bordo tratteggiato, come

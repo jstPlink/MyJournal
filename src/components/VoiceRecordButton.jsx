@@ -58,6 +58,49 @@ function blobToBase64(blob) {
 // «Trascrivi». `draftId` lega i vocali a una nota Gemini in sospeso: l'elenco
 // mostra solo quelli di quella nota (più quelli vecchi senza nota); senza
 // `draftId` mostra solo i vocali non legati a nessuna nota.
+// Riproduce un vocale salvato (anteprima, senza trascrivere).
+function VoicePlay({ voice }) {
+  const [playing, setPlaying] = useState(false)
+  const audio = useRef(null)
+  const url = useRef('')
+
+  useEffect(
+    () => () => {
+      audio.current?.pause()
+      if (url.current) URL.revokeObjectURL(url.current)
+    },
+    [],
+  )
+
+  function toggle() {
+    if (!audio.current) {
+      url.current = URL.createObjectURL(voice.blob)
+      audio.current = new Audio(url.current)
+      audio.current.onended = () => setPlaying(false)
+    }
+    if (playing) {
+      audio.current.pause()
+      setPlaying(false)
+    } else {
+      audio.current.play().then(
+        () => setPlaying(true),
+        () => setPlaying(false),
+      )
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-label={playing ? 'Ferma' : 'Ascolta'}
+      className="gvs-play"
+    >
+      {playing ? '■' : '▶'}
+    </button>
+  )
+}
+
 export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId, bubble = false, fab = false }) {
   const { user } = useAuth()
   const groqKey = user?.groqApiKey?.trim()
@@ -313,31 +356,34 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
       )}
       {saved.length > 0 && (
         <div className="gms-voice-saved">
-          <p>
-            {saved.length === 1
-              ? '1 vocale salvato sul dispositivo, da trascrivere quando vuoi:'
-              : `${saved.length} vocali salvati sul dispositivo, da trascrivere quando vuoi:`}
-            {draftId && saved.some((v) => v.transcribed) ? ' (i trascritti restano finché non crei la nota)' : ''}
+          <p className="gvs-head">
+            {(() => {
+              const todo = saved.filter((v) => !v.transcribed).length
+              return todo === 1 ? '1 vocale da trascrivere' : `${todo} vocali da trascrivere`
+            })()}
           </p>
           <ul>
             {saved.map((v) => (
-              <li key={v.id}>
-                <input
-                  type="text"
-                  defaultValue={v.title || ''}
-                  placeholder="Titolo del vocale"
-                  aria-label="Titolo del vocale"
-                  maxLength={60}
-                  onBlur={(e) => {
-                    const t = e.target.value.trim()
-                    if (t !== (v.title || '')) updateVoice(v.id, { title: t })
-                  }}
-                  className="gms-voice-title"
-                />
-                <span className="gms-voice-meta">
-                  {v.transcribed ? '✓ trascritto · ' : ''}
-                  {fmtLen(v.seconds || 0)} · {fmtAgo(v.createdAt)}
-                </span>
+              <li key={v.id} className={v.transcribed ? 'done' : ''}>
+                <VoicePlay voice={v} />
+                <div className="gvs-main">
+                  <input
+                    type="text"
+                    defaultValue={v.title || ''}
+                    placeholder="Titolo del vocale"
+                    aria-label="Titolo del vocale"
+                    maxLength={60}
+                    onBlur={(e) => {
+                      const t = e.target.value.trim()
+                      if (t !== (v.title || '')) updateVoice(v.id, { title: t })
+                    }}
+                    className="gms-voice-title"
+                  />
+                  <span className="gvs-meta">
+                    {v.transcribed ? '✓ trascritto · ' : ''}
+                    {fmtLen(v.seconds || 0)} · {fmtAgo(v.createdAt)}
+                  </span>
+                </div>
                 <button
                   type="button"
                   disabled={state !== 'idle'}

@@ -139,8 +139,8 @@ async function callGeminiOnce(apiKey, contents, model = MODEL) {
 }
 
 // Se una richiesta fallisce per un intoppo momentaneo si riprova da sole: dopo
-// 3 secondi, poi 5, poi 7 e infine 9 — in tutto 5 tentativi prima di arrendersi.
-const RETRY_DELAYS_MS = [3000, 5000, 7000, 9000]
+// 5 secondi, per 4 volte — in tutto 5 tentativi prima di arrendersi.
+const RETRY_DELAYS_MS = [5000, 5000, 5000, 5000]
 const OVERLOAD_MAX_ATTEMPTS = RETRY_DELAYS_MS.length + 1
 
 // Vale la pena riprovare? Sì per i guasti momentanei (server sovraccarico o
