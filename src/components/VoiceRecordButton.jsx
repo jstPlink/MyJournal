@@ -4,7 +4,6 @@ import Icon from './Icon'
 import { transcribeAudio, transcribeWithGroq, describeGeminiError } from '../lib/gemini'
 import { useAuth } from '../context/AuthContext'
 import { blobToWav } from '../lib/audio'
-import { hapticAlert } from '../lib/haptics'
 import { playSound } from '../lib/sounds'
 import { deleteVoice, listVoices, saveVoice, subscribeVoices, updateVoice } from '../lib/voiceStore'
 
@@ -17,15 +16,8 @@ const fmtAgo = (t) => {
   return h < 24 ? `${h} h fa` : `${Math.round(h / 24)} g fa`
 }
 
-// Oltre i 120 secondi si ferma da sola: un vocale per una nota non dovrebbe
-// servirne di più, ed evita registrazioni lasciate aperte per sbaglio (audio
-// via via più pesante da inviare e da trascrivere). Il pulsante mostra il tempo
-// trascorso (che cresce) e si riempie da sinistra verso destra; negli ultimi
-// WARN_SECONDS si allarga per fare spazio al testo "mancano Ns", diventa rosso
-// e lampeggia. Una vibrazione avvisa quando mancano ALERT_AT secondi.
-const MAX_SECONDS = 120
-const WARN_SECONDS = 30
-const ALERT_AT = [30, 20, 10, 5]
+// Nessun limite di durata: il pulsante mostra il tempo trascorso e si ferma solo quando
+// lo tocchi.
 
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
@@ -228,13 +220,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
       setSeconds(0)
       setState('recording')
       timerRef.current = setInterval(() => {
-        const elapsed = ++elapsedRef.current
-        setSeconds(elapsed)
-        if (ALERT_AT.includes(MAX_SECONDS - elapsed)) {
-          hapticAlert()
-          playSound('recWarn')
-        }
-        if (elapsed >= MAX_SECONDS) stop()
+        setSeconds(++elapsedRef.current)
       }, 1000)
     } catch (err) {
       // motivo preciso, per capire al volo cosa non va sul telefono
@@ -276,7 +262,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
           </button>
           {state !== 'idle' && (
             <span className="dream-mic-status">
-              {state === 'recording' ? `${fmtTime(seconds)} · mancano ${Math.max(0, MAX_SECONDS - seconds)}s` : progress || 'Trascrivo…'}
+              {state === 'recording' ? fmtTime(seconds) : progress || 'Trascrivo…'}
             </span>
           )}
         </>
@@ -284,20 +270,11 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
         <button
           type="button"
           onClick={stop}
-          className={'gms-voice-btn recording' + (MAX_SECONDS - seconds <= WARN_SECONDS ? ' ending' : '')}
+          className="gms-voice-btn recording"
         >
-          <span
-            className="gms-voice-fill"
-            aria-hidden="true"
-            style={{ width: `${Math.min(100, (seconds / MAX_SECONDS) * 100)}%` }}
-          />
           <span className="gms-voice-label">
             <Icon name="square" size={13} />
             Ferma · {fmtTime(seconds)}
-            <span className="gms-voice-more">
-              {' '}
-              · mancano {Math.max(0, MAX_SECONDS - seconds)}s
-            </span>
           </span>
         </button>
       ) : (

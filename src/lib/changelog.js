@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.81.18',
+    date: '2026-10-17 13:00',
+    changes: [
+      "Vocali: tolto il limite di durata (prima 120 secondi). Il pulsante mostra il tempo che passa e la registrazione si ferma solo quando lo tocchi.",
+    ],
+  },
+  {
     version: '0.81.17',
     date: '2026-10-17 12:00',
     changes: [
