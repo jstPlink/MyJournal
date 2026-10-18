@@ -70,13 +70,11 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
 
         // ---- blocco centrale: mood degli ultimi 3 giorni ----
         String moodText = "—";
-        String moodSub = data == null ? "apri l'app" : "nessuna nota";
         int moodColor = Color.parseColor("#b9b4a8");
         if (data != null) {
             JSONArray days = data.optJSONArray("days");
             double sum = 0;
             int nDays = 0;
-            int nNotes = 0;
             for (int i = 0; days != null && i < days.length(); i++) {
                 JSONObject d = days.optJSONObject(i);
                 if (d == null) continue;
@@ -84,12 +82,10 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
                 if (day.compareTo(weekStart) < 0 || day.compareTo(today) > 0) continue;
                 sum += d.optDouble("m", 0);
                 nDays++;
-                nNotes += d.optInt("n", 0);
             }
             if (nDays > 0) {
                 double avg = sum / nDays;
                 moodText = String.valueOf(Math.round(avg * 100)); // in centesimi (0–100)
-                moodSub = nDays + (nDays == 1 ? " giorno · " : " giorni · ") + nNotes + (nNotes == 1 ? " nota" : " note");
                 moodColor = gradientColor(data.optJSONArray("stops"), avg);
             }
         }
@@ -111,7 +107,6 @@ public class MyJournalSummaryWidget extends AppWidgetProvider {
             RemoteViews v = new RemoteViews(context.getPackageName(), layout);
             v.setTextViewText(R.id.sum_mood_value, moodText);
             v.setInt(R.id.sum_mood_dot, "setColorFilter", moodColor);
-            v.setTextViewText(R.id.sum_mood_sub, moodSub);
             v.setTextViewText(R.id.sum_last_day, lastDay);
             v.setTextViewText(R.id.sum_last_sub, lastSub);
 

@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.6',
+    date: '2026-10-18 13:00',
+    changes: [
+      "Widget 4×1 e 1×3: tolta la scritta «x giorni · y note» sotto la media del mood.",
+    ],
+  },
+  {
     version: '0.82.5',
     date: '2026-10-18 12:00',
     changes: [

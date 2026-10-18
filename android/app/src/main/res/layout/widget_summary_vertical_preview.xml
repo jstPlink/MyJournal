@@ -100,22 +100,6 @@
                         android:shadowRadius="0.8"
                         android:textSize="21sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:fontFamily="casual"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:maxLines="2"
-                        android:text="3 giorni · 7 note"
-                        android:textColor="#4a4132"
-                        android:shadowColor="#4a4132"
-                        android:shadowDx="0.9"
-                        android:shadowDy="0.7"
-                        android:shadowRadius="0.6"
-                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <ImageView
