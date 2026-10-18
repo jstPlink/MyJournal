@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.3',
+    date: '2026-10-18 10:00',
+    changes: [
+      "Widget 4×1: il mood degli ultimi 3 giorni (didascalia, numero e «x giorni · y note») sta ora in un cartoncino del colore del mood, un po' storto e con un pezzetto di nastro, al posto del quadratino di carta accanto al numero.",
+    ],
+  },
+  {
     version: '0.82.2',
     date: '2026-10-17 21:00',
     changes: [
