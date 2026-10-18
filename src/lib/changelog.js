@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.4',
+    date: '2026-10-18 11:00',
+    changes: [
+      "Widget 1×3 verticale: anche qui il mood degli ultimi 3 giorni sta in un cartoncino del colore del mood.",
+    ],
+  },
+  {
     version: '0.82.3',
     date: '2026-10-18 10:00',
     changes: [

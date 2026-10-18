@@ -20,92 +20,100 @@
         android:paddingBottom="6dp"
         android:paddingTop="6dp">
 
-        <!-- 1. Mood degli ultimi 3 giorni -->
+        <!-- 1. Mood degli ultimi 3 giorni, in un cartoncino del colore del mood (come nel 4x1) -->
         <LinearLayout
             android:id="@+id/sum_block_mood"
+            android:clipChildren="false"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="13dp"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="@string/widget_mood_caption_short"
-                android:textColor="#7a6f5b"
-                android:textSize="10sp"
-                android:textStyle="bold" />
+            <FrameLayout
+                android:clipChildren="false"
+                android:layout_width="62dp"
+                android:layout_height="66dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="28dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="1dp"
+                    android:contentDescription="@null"
+                    android:rotation="-1"
+                    android:src="@drawable/widget_paper_shadow" />
 
-                <FrameLayout
-                    android:layout_width="16dp"
-                    android:layout_height="16dp">
+                <ImageView
+                    android:id="@+id/sum_mood_dot"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:contentDescription="@null"
+                    android:rotation="-2"
+                    android:src="@drawable/widget_card"
+                    android:tint="#b9b4a8" />
 
-                    <ImageView
-                        android:layout_width="13dp"
-                        android:layout_height="13dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@null"
-                        android:rotation="5"
-                        android:src="@drawable/widget_paper_shadow" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingLeft="3dp"
+                    android:paddingRight="3dp"
+                    android:rotation="-2">
 
-                    <ImageView
-                        android:id="@+id/sum_mood_dot"
-                        android:layout_width="13dp"
-                        android:layout_height="13dp"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="1dp"
-                        android:layout_marginEnd="1dp"
-                        android:contentDescription="@null"
-                        android:rotation="-4"
-                        android:src="@drawable/widget_paper_square"
-                        android:tint="#b9b4a8" />
-                </FrameLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="casual"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="@string/widget_mood_caption_short"
+                        android:textColor="#b8281e0f"
+                        android:textSize="9sp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/sum_mood_value"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:fontFamily="casual"
-                    android:includeFontPadding="false"
-                    android:maxLines="1"
-                    android:paddingStart="5dp"
-                    android:text="—"
-                    android:textColor="#3a3226"
-                    android:shadowColor="#3a3226"
-                    android:shadowDx="1.3"
-                    android:shadowDy="1.0"
-                    android:shadowRadius="0.8"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/sum_mood_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="casual"
+                        android:includeFontPadding="false"
+                        android:maxLines="1"
+                        android:text="—"
+                        android:textColor="#2a2113"
+                        android:shadowColor="#2a2113"
+                        android:shadowDx="1.2"
+                        android:shadowDy="0.9"
+                        android:shadowRadius="0.7"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/sum_mood_sub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:fontFamily="casual"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:maxLines="2"
-                android:textColor="#4a4132"
-                android:shadowColor="#4a4132"
-                android:shadowDx="0.9"
-                android:shadowDy="0.7"
-                android:shadowRadius="0.6"
-                android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/sum_mood_sub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:fontFamily="casual"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:maxLines="2"
+                        android:textColor="#cc2a2113"
+                        android:textSize="9sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="26dp"
+                    android:layout_height="8dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="-3dp"
+                    android:contentDescription="@null"
+                    android:rotation="3"
+                    android:src="@drawable/widget_card_tape" />
+            </FrameLayout>
         </LinearLayout>
 
         <!-- 2. Ultima nota -->
