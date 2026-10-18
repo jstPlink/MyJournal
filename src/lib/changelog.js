@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.5',
+    date: '2026-10-18 12:00',
+    changes: [
+      "Widget 4×1 e 1×3: il cartoncino del mood ha i lati dentellati e la texture di cartone, come i cartoncini dell'app, e il testo ha di nuovo i caratteri e le dimensioni di prima.",
+    ],
+  },
+  {
     version: '0.82.4',
     date: '2026-10-18 11:00',
     changes: [

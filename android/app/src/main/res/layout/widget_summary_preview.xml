@@ -19,8 +19,9 @@
         android:paddingEnd="8dp"
         android:paddingStart="8dp">
 
-        <!-- 1. Mood degli ultimi 3 giorni: tutto il blocco sta in un cartoncino del colore del mood
-             (ombra storta dietro + cartoncino tinto + nastro adesivo), un po' ruotato come un foglietto. -->
+        <!-- 1. Mood degli ultimi 3 giorni, in un cartoncino del colore del mood: lati dentellati e
+             texture di cartone (immagini generate da scripts/generate-widget-cards.js), ombra storta
+             dietro e nastro adesivo sopra. Il colore lo dà MyJournalSummaryWidget.render sull'id sum_mood_dot. -->
         <LinearLayout
             android:clipChildren="false"
             android:layout_width="0dp"
@@ -37,11 +38,12 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="2dp"
                     android:layout_marginStart="1dp"
+                    android:layout_marginTop="2dp"
                     android:contentDescription="@null"
                     android:rotation="-1"
-                    android:src="@drawable/widget_paper_shadow" />
+                    android:scaleType="fitXY"
+                    android:src="@drawable/widget_card_wide_shadow" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -50,8 +52,19 @@
                     android:layout_marginEnd="1dp"
                     android:contentDescription="@null"
                     android:rotation="-2"
-                    android:src="@drawable/widget_card"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/widget_card_wide"
                     android:tint="#6bb0cf" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="1dp"
+                    android:contentDescription="@null"
+                    android:rotation="-2"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/widget_card_wide_tex" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -62,13 +75,14 @@
 
                     <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="13dp"
                         android:fontFamily="casual"
+                        android:gravity="center"
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:text="@string/widget_mood_caption"
-                        android:textColor="#b8281e0f"
-                        android:textSize="9sp"
+                        android:textColor="#5a4f3c"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -79,12 +93,12 @@
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:text="73"
-                        android:textColor="#2a2113"
-                        android:shadowColor="#2a2113"
-                        android:shadowDx="1.2"
-                        android:shadowDy="0.9"
-                        android:shadowRadius="0.7"
-                        android:textSize="24sp"
+                        android:textColor="#3a3226"
+                        android:shadowColor="#3a3226"
+                        android:shadowDx="1.3"
+                        android:shadowDy="1.0"
+                        android:shadowRadius="0.8"
+                        android:textSize="21sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -96,12 +110,16 @@
                         android:includeFontPadding="false"
                         android:maxLines="1"
                         android:text="3 giorni · 7 note"
-                        android:textColor="#cc2a2113"
+                        android:textColor="#4a4132"
+                        android:shadowColor="#4a4132"
+                        android:shadowDx="0.9"
+                        android:shadowDy="0.7"
+                        android:shadowRadius="0.6"
                         android:textSize="10sp" />
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="28dp"
                     android:layout_height="9dp"
                     android:layout_gravity="top|center_horizontal"
                     android:layout_marginTop="-3dp"
