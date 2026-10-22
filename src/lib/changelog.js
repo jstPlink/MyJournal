@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.7',
+    date: '2026-10-22 10:00',
+    changes: [
+      "Impostazioni → Canzoni: i titoli più lunghi di 32 caratteri si tagliano con «…».",
+    ],
+  },
+  {
     version: '0.82.6',
     date: '2026-10-18 13:00',
     changes: [

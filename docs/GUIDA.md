@@ -67,7 +67,7 @@ passaggio è automatico in base alla larghezza della finestra.
 - **Suoni:** in Aspetto si accendono o spengono (sì/no); nella sezione **Suoni** si regola il volume (con un tasto per provarlo). Sono per dispositivo e comprendono il «tic» dei pulsanti, il cambio mese/anno, l'apertura di giorni e note, il salvataggio e l'eliminazione delle note e la dettatura vocale. Il suono della notifica dei promemoria è una campanella a parte e segue il volume delle notifiche del telefono.
 - **Aspetto:** animazioni (sì/no/sistema), suoni (sì/no) e sfondo: **Nessuno, Puntini, Righe, Quadretti** oppure **Immagine** (una tua foto, che resta solo sul dispositivo). Sono preferenze **per dispositivo**. Per ora l'app è solo **chiara**, col carattere **tondeggiante** e il cursore di sistema: non si scelgono più.
 - **Dati utente** (sincronizzati sull'account): **Colori del mood** (sei colori e le soglie), **Persone**, **Tag**, **Luoghi** (anche
-  modifica di nome e posizione, che si propaga alle note), **Canzoni** (sola lettura, con quante note le usano). Cancellare una persona
+  modifica di nome e posizione, che si propaga alle note), **Canzoni** (sola lettura, con quante note le usano; i titoli più lunghi di 32 caratteri sono tagliati con «…»). Cancellare una persona
   o un luogo collegato a delle note chiede se sostituirlo o toglierlo ovunque.
 - **Integrazioni:** Immich, **MyMap**, Spotify, Gemini (vedi §6–§8).
 - **Account:** dice dove sono i tuoi dati (su questo dispositivo o sul tuo server) e permette di cambiare; «Esci» c'è solo con un server.

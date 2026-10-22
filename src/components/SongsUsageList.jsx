@@ -5,6 +5,12 @@ import { songsUsageList, describeError } from '../lib/notes'
 // A differenza di persone/luoghi/tag non è un'entità curata (arriva da
 // Spotify nota per nota, senza un id proprio): sola lettura, niente
 // rinomina/rimozione/riassegnazione.
+//
+// I titoli più lunghi di MAX_TITLE caratteri si tagliano con «…» (il titolo intero resta
+// nel suggerimento al tocco prolungato / al passaggio del mouse).
+const MAX_TITLE = 32
+const cut = (t) => (t.length > MAX_TITLE ? `${t.slice(0, MAX_TITLE).trimEnd()}…` : t)
+
 export default function SongsUsageList() {
   const [songs, setSongs] = useState(null)
   const [error, setError] = useState('')
@@ -35,8 +41,8 @@ export default function SongsUsageList() {
             }
             aria-hidden="true"
           />
-          <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">
-            {s.title}
+          <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink" title={s.title}>
+            {cut(s.title)}
           </span>
           <span className="shrink-0 rounded-full border border-line bg-tag px-2 py-0.5 text-xs font-bold tabular-nums text-ink-soft">
             {s.count} {s.count === 1 ? 'nota' : 'note'}
