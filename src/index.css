@@ -9010,9 +9010,6 @@ li:last-child > .st-row {
 .dream-voice .gvs-meta {
   color: #6a7f95;
 }
-.dream-page .gfab-btn {
-  background: #fff;
-}
 .dream-page .gfab-btn.rec {
   background: #d9645a;
 }
@@ -9669,4 +9666,44 @@ li:last-child > .st-row {
 @keyframes gfabHalo {
   0% { box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25), 0 0 0 0 rgba(217, 100, 90, 0.5); }
   100% { box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25), 0 0 0 16px rgba(217, 100, 90, 0); }
+}
+
+/* sogno: tasti indietro e salva a cartoncino celeste (telefono e web) */
+.dream-back-m,
+.dream-page-wide .ne-back {
+  background-color: #d6e8f7;
+  background-image: none;
+  border: 2px dashed #5b86ad;
+  color: #234a70;
+  box-shadow: 0 3px 7px rgba(40, 90, 140, 0.3);
+}
+.dream-page-wide .ne-back:hover {
+  border-color: #2f5f8a;
+}
+.dream-save-m {
+  background: #bfe0b0;
+  border: 2px dashed #5d8d4c;
+  color: #1d3a2a;
+}
+.dream-page-wide .ne-save {
+  background-color: #bfe0b0;
+  background-image: none;
+  border: 2px dashed #5d8d4c;
+  border-radius: 8px;
+  color: #1d3a2a;
+  box-shadow: 0 3px 7px rgba(40, 90, 140, 0.3);
+  transform: rotate(1.5deg);
+}
+/* web: il tasto vocale sta nella colonna di sinistra, sotto la nitidezza */
+.gfab.inline {
+  position: static;
+  transform: none;
+  align-items: flex-start;
+}
+.dream-mic-slot {
+  margin-top: 28px;
+  padding-left: 6px;
+}
+.dream-page .gfab-btn {
+  background: #fff;
 }

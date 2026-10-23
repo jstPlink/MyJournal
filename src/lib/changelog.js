@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.9',
+    date: '2026-10-23 15:00',
+    changes: [
+      "Sogno sul web: ora si può dettare a voce. Il tasto tondo rosso sta nella colonna di sinistra, sotto la nitidezza, e i vocali registrati compaiono in un riquadro celeste sotto il foglio.",
+      "Sogno (web e telefono): «Indietro» e «Salva» sono cartoncini celesti con il bordo tratteggiato.",
+    ],
+  },
+  {
     version: '0.82.8',
     date: '2026-10-23 12:00',
     changes: [

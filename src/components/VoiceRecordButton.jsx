@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Capacitor } from '@capacitor/core'
 import Icon from './Icon'
 import { transcribeAudio, transcribeWithGroq, describeGeminiError } from '../lib/gemini'
@@ -101,7 +102,7 @@ function VoicePlay({ voice }) {
   )
 }
 
-export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId, bubble = false, fab = false }) {
+export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disabled, draftId, bubble = false, fab = false, listHost = null }) {
   const { user } = useAuth()
   const groqKey = user?.groqApiKey?.trim()
   const [state, setState] = useState('idle') // idle | recording | transcribing
@@ -285,10 +286,63 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
     }
   }
 
+  const savedBlock =
+    saved.length > 0 ? (
+          <div className="gms-voice-saved">
+            <p className="gvs-head">
+              {(() => {
+                const todo = saved.filter((v) => !v.transcribed).length
+                return todo === 1 ? '1 vocale da trascrivere' : `${todo} vocali da trascrivere`
+              })()}
+            </p>
+            <ul>
+              {saved.map((v) => (
+                <li key={v.id} className={v.transcribed ? 'done' : ''}>
+                  <VoicePlay voice={v} />
+                  <div className="gvs-main">
+                    <input
+                      type="text"
+                      defaultValue={v.title || ''}
+                      placeholder="Titolo del vocale"
+                      aria-label="Titolo del vocale"
+                      maxLength={60}
+                      onBlur={(e) => {
+                        const t = e.target.value.trim()
+                        if (t !== (v.title || '')) updateVoice(v.id, { title: t })
+                      }}
+                      className="gms-voice-title"
+                    />
+                    <span className="gvs-meta">
+                      {v.transcribed ? '✓ trascritto · ' : ''}
+                      {fmtLen(v.seconds || 0)} · {fmtAgo(v.createdAt)}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    disabled={state !== 'idle'}
+                    onClick={() => retrySaved(v)}
+                    className="gms-voice-retry"
+                  >
+                    Trascrivi
+                  </button>
+                  <button
+                    type="button"
+                    disabled={state !== 'idle'}
+                    onClick={() => discardSaved(v)}
+                    className="gms-voice-discard"
+                  >
+                    Elimina
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+    ) : null
+
   return (
     <div className="gms-voice">
       {fab ? (
-        <div className="gfab">
+        <div className={'gfab' + (fab === 'inline' ? ' inline' : '')}>
           {(state !== 'idle' || false) && (
             <span className={'gfab-time' + (state === 'recording' ? ' rec' : '')}>
               {state === 'recording' ? fmtTime(seconds) : progress || 'Trascrivo…'}
@@ -354,57 +408,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
           {error}
         </p>
       )}
-      {saved.length > 0 && (
-        <div className="gms-voice-saved">
-          <p className="gvs-head">
-            {(() => {
-              const todo = saved.filter((v) => !v.transcribed).length
-              return todo === 1 ? '1 vocale da trascrivere' : `${todo} vocali da trascrivere`
-            })()}
-          </p>
-          <ul>
-            {saved.map((v) => (
-              <li key={v.id} className={v.transcribed ? 'done' : ''}>
-                <VoicePlay voice={v} />
-                <div className="gvs-main">
-                  <input
-                    type="text"
-                    defaultValue={v.title || ''}
-                    placeholder="Titolo del vocale"
-                    aria-label="Titolo del vocale"
-                    maxLength={60}
-                    onBlur={(e) => {
-                      const t = e.target.value.trim()
-                      if (t !== (v.title || '')) updateVoice(v.id, { title: t })
-                    }}
-                    className="gms-voice-title"
-                  />
-                  <span className="gvs-meta">
-                    {v.transcribed ? '✓ trascritto · ' : ''}
-                    {fmtLen(v.seconds || 0)} · {fmtAgo(v.createdAt)}
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  disabled={state !== 'idle'}
-                  onClick={() => retrySaved(v)}
-                  className="gms-voice-retry"
-                >
-                  Trascrivi
-                </button>
-                <button
-                  type="button"
-                  disabled={state !== 'idle'}
-                  onClick={() => discardSaved(v)}
-                  className="gms-voice-discard"
-                >
-                  Elimina
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {listHost ? createPortal(savedBlock, listHost) : savedBlock}
     </div>
   )
 }

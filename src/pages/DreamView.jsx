@@ -117,17 +117,20 @@ export default function DreamView() {
   const monthStr = parsed ? MONTHS_IT[parsed.mo - 1].slice(0, 3).toUpperCase() : '---'
   const [hh, mm] = (time || DEFAULT_DREAM_TIME).split(':')
 
-  const voice = !wide && (user?.geminiApiKey?.trim() || user?.groqApiKey?.trim()) && (
-    <div className="dream-voice">
-      <VoiceRecordButton
-        fab
+  // «listHost»: sul web il tasto sta nella colonna di sinistra e l'elenco dei vocali va sotto il foglio
+  const [listHost, setListHost] = useState(null)
+  const canDictate = Boolean(user?.geminiApiKey?.trim() || user?.groqApiKey?.trim())
+  const voiceButton = (
+    <VoiceRecordButton
+        fab={wide ? 'inline' : true}
+        listHost={wide ? listHost : null}
         apiKey={user?.geminiApiKey?.trim()}
         onTranscribed={(t) =>
           setContent((c) => (c.replace(/<[^>]*>/g, '').trim() ? c + '<br><br>' : '') + escapeHtml(t))
         }
       />
-    </div>
   )
+  const voice = canDictate && (wide ? <div className="dream-voice" ref={setListHost} /> : <div className="dream-voice">{voiceButton}</div>)
 
   const backBtn = (
     <button
@@ -265,6 +268,7 @@ export default function DreamView() {
               {timeClock}
             </div>
             {clarityBlock}
+            {canDictate && <div className="dream-mic-slot">{voiceButton}</div>}
           </div>
           <div className="dream-right">
             {sheet}
