@@ -120,7 +120,7 @@ export default function DreamView() {
   const voice = !wide && (user?.geminiApiKey?.trim() || user?.groqApiKey?.trim()) && (
     <div className="dream-voice">
       <VoiceRecordButton
-        bubble
+        fab
         apiKey={user?.geminiApiKey?.trim()}
         onTranscribed={(t) =>
           setContent((c) => (c.replace(/<[^>]*>/g, '').trim() ? c + '<br><br>' : '') + escapeHtml(t))

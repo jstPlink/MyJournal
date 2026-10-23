@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.82.8',
+    date: '2026-10-23 12:00',
+    changes: [
+      "Sogno su telefono: il tasto vocale è il cerchio rosso con contorno che si riempie mentre registri (come in «Con Gemini»), e i vocali registrati stanno in un riquadro celeste con righe compatte (ascolto, titolo, «Trascrivi» ed «Elimina»).",
+    ],
+  },
+  {
     version: '0.82.7',
     date: '2026-10-22 10:00',
     changes: [

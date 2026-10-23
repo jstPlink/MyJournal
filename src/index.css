@@ -8983,6 +8983,42 @@ li:last-child > .st-row {
 .dream-voice {
   margin-top: 12px;
 }
+/* vocali registrati nella pagina del sogno: riquadro celeste che si fonde con il cielo */
+.dream-voice .gms-voice-saved {
+  background: #eaf3fc;
+  border: 1.5px dashed #6f9fc8;
+  color: #4b6f93;
+}
+.dream-voice .gvs-head,
+.dream-voice .gms-voice-saved li {
+  color: #2a4a6b;
+}
+.dream-voice .gms-voice-saved li {
+  border-top-color: rgba(47, 95, 138, 0.2);
+}
+.dream-voice .gvs-play {
+  background: #2a4a6b;
+}
+.dream-voice .gms-voice-saved li.done .gvs-play {
+  background: #7a9a4a;
+}
+.dream-voice .gms-voice-retry,
+.dream-voice .gms-voice-discard {
+  background: #fff;
+  border-color: #a9c4de;
+}
+.dream-voice .gvs-meta {
+  color: #6a7f95;
+}
+.dream-page .gfab-btn {
+  background: #fff;
+}
+.dream-page .gfab-btn.rec {
+  background: #d9645a;
+}
+.dream-page .gfab-time {
+  background: rgba(255, 255, 255, 0.92);
+}
 .dream-error {
   margin-top: 12px;
   padding: 9px 12px;
