@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.83.0',
+    date: '2026-10-23 18:00',
+    changes: [
+      "Bozze dei sogni: se esci da un sogno nuovo senza salvarlo (indietro, tasto di Android) il sogno resta come bozza e compare in una linguetta celeste con la luna, accanto a quella delle note. Toccandola si riapre la pagina del sogno con titolo, testo, nitidezza e vocali; il cestino la scarta.",
+    ],
+  },
+  {
     version: '0.82.9',
     date: '2026-10-23 15:00',
     changes: [

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Icon from '../components/Icon'
 import DatePickerPopover from '../components/DatePickerPopover'
 import TimePickerPopover from '../components/TimePickerPopover'
@@ -15,6 +15,14 @@ import { haptic } from '../lib/haptics'
 import { playSound } from '../lib/sounds'
 import { MONTHS_IT, dayKey, fullDayLabel, parseWall, timeInputValue, todayKey } from '../lib/dates'
 import { describeError } from '../lib/notes'
+import { toast } from '../lib/toast'
+import { listVoices } from '../lib/voiceStore'
+import {
+  discardDreamDraft,
+  ensureDreamDraft,
+  newDreamDraftId,
+  saveDreamDraft,
+} from '../lib/dreamDrafts'
 import {
   DEFAULT_DREAM_TIME,
   createDream,
@@ -38,17 +46,41 @@ export default function DreamView() {
   const wide = useIsWide()
   const { user } = useAuth()
   const isNew = !id
+  // bozza ripresa dalla linguetta celeste (DreamDraftsTab)
+  const location = useLocation()
+  const resume = isNew ? location.state?.dreamDraft || null : null
+  const [draftId] = useState(() => resume?.id || newDreamDraftId())
 
-  const [dateKey, setDateKey] = useState(search.get('date') || todayKey())
-  const [time, setTime] = useState(DEFAULT_DREAM_TIME)
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [clarity, setClarity] = useState(0.5)
-  const [extra, setExtra] = useState({})
+  const [dateKey, setDateKey] = useState(resume?.dateKey || search.get('date') || todayKey())
+  const [time, setTime] = useState(resume?.time || DEFAULT_DREAM_TIME)
+  const [title, setTitle] = useState(resume?.title || '')
+  const [content, setContent] = useState(resume?.content || '')
+  const [clarity, setClarity] = useState(resume?.clarity ?? 0.5)
+  const [extra, setExtra] = useState(resume?.extra || {})
   const [loading, setLoading] = useState(!isNew)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
+
+  // Uscendo da un sogno nuovo senza salvarlo (indietro, tasto di Android, cambio pagina) la
+  // bozza resta sul dispositivo e compare nella linguetta celeste.
+  const latest = useRef({})
+  latest.current = { dateKey, time, title, content, clarity, extra }
+  const savedRef = useRef(false)
+  useEffect(() => {
+    if (!isNew) return undefined
+    return () => {
+      if (savedRef.current) return
+      const d = latest.current
+      const hasText = Boolean(d.title.trim() || d.content.replace(/<[^>]*>/g, '').trim())
+      listVoices().then((all) => {
+        const hasVoices = all.some((v) => v.draftId === draftId)
+        if (!hasText && !hasVoices) return
+        saveDreamDraft({ id: draftId, ...d })
+        toast("Sogno salvato come bozza: lo trovi nell'etichetta celeste a destra dello schermo.")
+      })
+    }
+  }, [isNew, draftId])
 
   useEffect(() => {
     if (isNew) return
@@ -87,6 +119,8 @@ export default function DreamView() {
       const data = { date: dateKey, time, title, content, clarity, extra }
       if (isNew) await createDream(data)
       else await updateDream(id, data)
+      savedRef.current = true
+      if (isNew) await discardDreamDraft(draftId)
       playSound('save')
       navigate(`/day/${dateKey}`, { replace: true })
     } catch (err) {
@@ -123,6 +157,8 @@ export default function DreamView() {
   const voiceButton = (
     <VoiceRecordButton
         fab={wide ? 'inline' : true}
+        draftId={isNew ? draftId : undefined}
+        onSaved={() => isNew && ensureDreamDraft({ id: draftId, ...latest.current })}
         listHost={wide ? listHost : null}
         apiKey={user?.geminiApiKey?.trim()}
         onTranscribed={(t) =>

@@ -29,7 +29,7 @@ export default function SideTab({ icon = 'cloud', badge = null, children, body =
     <div
       className={
         (dropped ? '' : 'anim-drop ') + (kick ? 'side-tab-kick ' : '') + 'side-tab pointer-events-auto flex max-w-[min(17rem,calc(100vw-0.5rem))] flex-col items-stretch overflow-hidden text-ink ' +
-        (tone === 'paper' ? 'paper bg-cream ' : 'warn bg-warn ') +
+        (tone === 'paper' ? 'paper bg-cream ' : tone === 'dream' ? 'dream ' : 'warn bg-warn ') +
         (open ? 'w-64' : 'w-auto')
       }
     >

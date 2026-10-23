@@ -14,6 +14,7 @@ import {
   subscribeGeminiDrafts,
 } from '../lib/geminiDrafts'
 import { deleteVoice, listVoices, subscribeVoices, updateVoice } from '../lib/voiceStore'
+import { listDreamDrafts, subscribeDreamDrafts } from '../lib/dreamDrafts'
 import { dayKey } from '../lib/dates'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
@@ -21,7 +22,7 @@ import { dayMonthLabel } from '../lib/dates'
 import { playSound } from '../lib/sounds'
 import { noteInstructionsOf } from '../lib/aiInstructions'
 
-function ago(ms) {
+export function ago(ms) {
   const m = Math.max(0, Math.round((Date.now() - ms) / 60_000))
   if (m < 1) return 'adesso'
   if (m < 60) return `${m} min fa`
@@ -31,10 +32,10 @@ function ago(ms) {
   return d === 1 ? 'ieri' : `${d} giorni fa`
 }
 
-const fmtLen = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+export const fmtLen = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 
 // Riproduce un vocale salvato (anteprima, senza trascrivere).
-function VoicePlay({ voice }) {
+export function VoicePlay({ voice }) {
   const [playing, setPlaying] = useState(false)
   const audio = useRef(null)
   const url = useRef('')
@@ -85,6 +86,7 @@ function VoicePlay({ voice }) {
 export default function DraftsTab() {
   const manual = useSyncExternalStore(subscribeDrafts, listDrafts)
   const gemini = useSyncExternalStore(subscribeGeminiDrafts, listGeminiDrafts)
+  const dreams = useSyncExternalStore(subscribeDreamDrafts, listDreamDrafts)
   const { user } = useAuth()
   const navigate = useNavigate()
   const { pathname } = useLocation()
@@ -122,7 +124,7 @@ export default function DraftsTab() {
   // Vocali registrati ma non ancora trascritti che non appartengono a nessuna nota in
   // sospeso (es. dettati nel pannello Gemini di una nota già aperta, poi chiuso):
   // compaiono come una voce a parte, da riprendere con un tocco.
-  const geminiIds = new Set(gemini.map((d) => d.id))
+  const geminiIds = new Set([...gemini, ...dreams].map((d) => d.id))
   const loose = voices.filter((v) => !v.transcribed && !geminiIds.has(v.draftId))
   const items = [
     ...manualShown.map((d) => ({ kind: 'manual', d })),

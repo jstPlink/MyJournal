@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import PendingSync from './PendingSync'
 import SideTab from './SideTab'
 import DraftsTab from './DraftsTab'
+import DreamDraftsTab from './DreamDraftsTab'
 import RecapQueueTab from './RecapQueueTab'
 import { useAuth } from '../context/AuthContext'
 import { useConnection } from '../hooks/useConnection'
@@ -34,6 +35,7 @@ export default function StatusPills() {
     <div className="pointer-events-none fixed right-0 top-1/2 z-50 flex -translate-y-1/2 flex-col items-end gap-2">
       <PendingSync />
       <RecapQueueTab />
+      <DreamDraftsTab />
       <DraftsTab />
       {isAuthed && conn.status !== 'ok' && (
         <SideTab icon="cloud" actionLabel="Riprova ad aggiornare" onAction={prefetchAll}>
