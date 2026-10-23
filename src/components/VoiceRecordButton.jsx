@@ -348,16 +348,33 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
               {state === 'recording' ? fmtTime(seconds) : progress || 'Trascrivo…'}
             </span>
           )}
-          <button
-            type="button"
-            onClick={state === 'recording' ? stop : start}
-            disabled={disabled || state === 'transcribing'}
-            className={'gfab-btn' + (state === 'recording' ? ' rec' : '') + (state === 'transcribing' ? ' busy' : '')}
-            title={state === 'recording' ? 'Ferma la registrazione' : 'Detta un vocale'}
-            aria-label={state === 'recording' ? 'Ferma la registrazione' : 'Detta un vocale'}
-          >
-            {state === 'recording' ? <span className="gfab-sq" /> : <Icon name="mic" size={30} />}
-          </button>
+          <span className="gfab-shadow">
+            <button
+              type="button"
+              onClick={state === 'recording' ? stop : start}
+              disabled={disabled || state === 'transcribing'}
+              className={'gfab-btn' + (state === 'recording' ? ' rec' : '') + (state === 'transcribing' ? ' busy' : '')}
+              title={state === 'recording' ? 'Ferma la registrazione' : 'Detta un vocale'}
+              aria-label={state === 'recording' ? 'Ferma la registrazione' : 'Detta un vocale'}
+            >
+              {state === 'recording' ? (
+                <span className="gfab-bars" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
+              ) : (
+                <svg viewBox="0 0 40 40" width="38" height="38" aria-hidden="true">
+                  <g stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="15" y="6" width="10" height="18" rx="5" fill="currentColor" />
+                    <path d="M9 20c0 6 5 11 11 11s11-5 11-11" fill="none" />
+                  </g>
+                </svg>
+              )}
+            </button>
+          </span>
         </div>
       ) : bubble ? (
         <>

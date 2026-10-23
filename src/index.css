@@ -9016,9 +9016,6 @@ li:last-child > .st-row {
 .dream-voice .gvs-meta {
   color: #6a7f95;
 }
-.dream-page .gfab-btn.rec {
-  background: #d9645a;
-}
 .dream-page .gfab-time {
   background: rgba(255, 255, 255, 0.92);
 }
@@ -9620,7 +9617,8 @@ li:last-child > .st-row {
   border: 1px dashed #b9ab8b;
   border-radius: 12px;
 }
-/* tasto vocale tondo, fisso in basso al centro: contorno rosso, in registrazione si riempie */
+/* tasto vocale a timbro: sigillo dentellato rosso, un po' storto, fisso in basso al centro;
+   in registrazione scurisce e mostra un'onda sonora animata */
 .gfab {
   position: fixed;
   left: 50%;
@@ -9632,31 +9630,59 @@ li:last-child > .st-row {
   align-items: center;
   gap: 6px;
 }
+.gfab-shadow {
+  display: block;
+  transform: rotate(-4deg);
+  filter: drop-shadow(0 4px 3px rgba(20, 12, 4, 0.35));
+}
 .gfab-btn {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 3px solid #d9645a;
-  background: #f6f0df;
-  color: #d9645a;
+  width: 88px;
+  height: 88px;
+  border: 0;
   display: grid;
   place-items: center;
-  box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25);
-  transition: background 0.25s, color 0.25s;
+  color: #fff;
+  background-color: #d9645a;
+  background-image: repeating-radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.08) 0 2px, transparent 2px 5px);
+  clip-path: polygon(100.0% 50.0%, 93.6% 56.3%, 98.0% 64.1%, 90.0% 68.3%, 92.1% 77.0%, 83.3% 78.8%, 82.7% 87.8%, 73.8% 87.0%, 70.8% 95.5%, 62.4% 92.2%, 57.1% 99.5%, 50.0% 94.0%, 42.9% 99.5%, 37.6% 92.2%, 29.2% 95.5%, 26.2% 87.0%, 17.3% 87.8%, 16.7% 78.8%, 7.9% 77.0%, 10.0% 68.3%, 2.0% 64.1%, 6.4% 56.3%, 0.0% 50.0%, 6.4% 43.7%, 2.0% 35.9%, 10.0% 31.7%, 7.9% 23.0%, 16.7% 21.2%, 17.3% 12.2%, 26.2% 13.0%, 29.2% 4.5%, 37.6% 7.8%, 42.9% 0.5%, 50.0% 6.0%, 57.1% 0.5%, 62.4% 7.8%, 70.8% 4.5%, 73.8% 13.0%, 82.7% 12.2%, 83.3% 21.2%, 92.1% 23.0%, 90.0% 31.7%, 98.0% 35.9%, 93.6% 43.7%);
+  transition: background-color 0.25s;
+}
+.gfab-btn:active {
+  transform: scale(0.96);
 }
 .gfab-btn.rec {
-  background: #d9645a;
-  color: #fff;
-  animation: gfabHalo 1.4s infinite;
+  background-color: #b9463d;
+  animation: gfabPulse 1.2s ease-in-out infinite;
 }
 .gfab-btn.busy {
   opacity: 0.6;
 }
-.gfab-sq {
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
+.gfab-bars {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  height: 32px;
+}
+.gfab-bars i {
+  display: block;
+  width: 4px;
+  border-radius: 2px;
   background: #fff;
+  animation: gfabEq 0.9s ease-in-out infinite;
+}
+.gfab-bars i:nth-child(2n) {
+  animation-delay: -0.3s;
+}
+.gfab-bars i:nth-child(3n) {
+  animation-delay: -0.55s;
+}
+@keyframes gfabEq {
+  0%, 100% { height: 6px; }
+  50% { height: 28px; }
+}
+@keyframes gfabPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 .gfab-time {
   padding: 1px 12px;
@@ -9668,10 +9694,6 @@ li:last-child > .st-row {
 }
 .gfab-time.rec {
   color: #d9645a;
-}
-@keyframes gfabHalo {
-  0% { box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25), 0 0 0 0 rgba(217, 100, 90, 0.5); }
-  100% { box-shadow: 0 3px 8px rgba(60, 40, 10, 0.25), 0 0 0 16px rgba(217, 100, 90, 0); }
 }
 
 /* sogno: tasti indietro e salva a cartoncino celeste (telefono e web) */
@@ -9709,7 +9731,4 @@ li:last-child > .st-row {
 .dream-mic-slot {
   margin-top: 28px;
   padding-left: 6px;
-}
-.dream-page .gfab-btn {
-  background: #fff;
 }

@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.83.1',
+    date: '2026-10-23 20:00',
+    changes: [
+      "Nuovo tasto per registrare i vocali: un sigillo rosso dentellato, un po' storto, con un microfono semplice. Mentre registri diventa più scuro e mostra un'onda sonora animata, con il cronometro sopra. Vale in «Con Gemini» e nel sogno (telefono e web).",
+    ],
+  },
+  {
     version: '0.83.0',
     date: '2026-10-23 18:00',
     changes: [
