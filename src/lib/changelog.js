@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.83.2',
+    date: '2026-10-24 12:00',
+    changes: [
+      "Calendario web: il menu per cambiare anno o mese ora si apre subito sotto il suo orologio, non più staccato e molto più in basso.",
+    ],
+  },
+  {
     version: '0.83.1',
     date: '2026-10-23 20:00',
     changes: [
