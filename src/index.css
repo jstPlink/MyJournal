@@ -6959,6 +6959,11 @@ li:last-child > .st-row {
 .mn-pop.wide {
   width: 165px;
 }
+/* vista web: il menu si apre subito sotto il proprio orologio (il 297px
+   di base serve al layout telefono) */
+.mn-pop.web {
+  margin-top: 8px;
+}
 .mn-list {
   display: flex;
   max-height: 220px;

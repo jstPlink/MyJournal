@@ -74,7 +74,7 @@ function ClockDropdownList({ items, wide }) {
   }, [])
 
   return (
-    <div className={'mn-pop' + (wide ? ' wide' : '')} ref={popRef}>
+    <div className={'mn-pop web' + (wide ? ' wide' : '')} ref={popRef}>
       <div className="mn-list" ref={listRef}>
         {items.map(({ key, label, active, onClick }) => (
           <button
