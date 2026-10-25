@@ -28,6 +28,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'
 import mjlib  # noqa: E402
 
 DEFAULT_URL = 'https://myjournal.fplinio.it'
+# Il token di accesso (NON la password) viene salvato qui, così non serve riaccedere a ogni esecuzione.
+TOKEN_FILE = os.path.join(os.path.expanduser('~'), '.myjournal-token.json')
 
 
 class Api:
@@ -36,7 +38,7 @@ class Api:
         self.token = None
         self.user = None
 
-    def call(self, method, path, body=None):
+    def call(self, method, path, body=None, fatal=True):
         req = urllib.request.Request(self.url + path, method=method,
                                      data=json.dumps(body).encode('utf-8') if body is not None else None)
         req.add_header('Content-Type', 'application/json')
@@ -50,12 +52,38 @@ class Api:
             with urllib.request.urlopen(req, timeout=60) as r:
                 return json.loads(r.read().decode('utf-8') or '{}')
         except urllib.error.HTTPError as e:
+            if not fatal:
+                return None
             raise SystemExit('Errore %s %s: %s' % (e.code, path, e.read().decode('utf-8', 'replace')[:300]))
 
     def login(self, email, password):
         j = self.call('POST', '/api/collections/users/auth-with-password',
                       {'identity': email, 'password': password})
         self.token, self.user = j['token'], j['record']['id']
+        self.save_token()
+
+    def save_token(self):
+        try:
+            json.dump({'url': self.url, 'token': self.token, 'user': self.user}, open(TOKEN_FILE, 'w'))
+        except OSError:
+            pass
+
+    def try_cached(self):
+        """Riusa il token salvato (e lo rinnova) se ancora valido. True se l'accesso è già fatto."""
+        try:
+            c = json.load(open(TOKEN_FILE))
+        except (OSError, ValueError):
+            return False
+        if c.get('url') != self.url:
+            return False
+        self.token = c['token']
+        j = self.call('POST', '/api/collections/users/auth-refresh', {}, fatal=False)
+        if not j or 'token' not in j:
+            self.token = None
+            return False
+        self.token, self.user = j['token'], j['record']['id']
+        self.save_token()
+        return True
 
     def list_notes(self, d1, d2):
         out, page = [], 1
@@ -90,12 +118,13 @@ def main():
     ap.add_argument('files', nargs='*')
     ap.add_argument('--url', default=os.environ.get('MJ_URL', DEFAULT_URL))
     ap.add_argument('--dry-run', action='store_true')
+    ap.add_argument('--logout', action='store_true', help='elimina il token salvato ed esce')
     ap.add_argument('--update-existing', action='store_true')
     ap.add_argument('--create-people', nargs='+', metavar='NOME')
     ap.add_argument('--create-missing-people', action='store_true',
                     help='crea in anagrafica le persone citate nelle note (campo _people) che non esistono')
     a = ap.parse_args()
-    if not a.files and not a.create_people:
+    if not a.files and not a.create_people and not a.logout:
         ap.error('indica almeno un file *-note.json oppure --create-people')
 
     notes = []
@@ -103,11 +132,21 @@ def main():
         notes += json.load(open(f, encoding='utf-8'))
     print('Note nei file: %d' % len(notes))
 
-    email = os.environ.get('MJ_EMAIL') or input('Email: ').strip()
-    password = os.environ.get('MJ_PASSWORD') or getpass.getpass('Password (non viene mostrata): ')
     api = Api(a.url)
-    api.login(email, password)
-    print('Accesso eseguito.')
+    if a.logout:
+        try:
+            os.remove(TOKEN_FILE)
+            print('Token salvato eliminato.')
+        except OSError:
+            print('Nessun token salvato.')
+        return
+    if api.try_cached():
+        print('Accesso eseguito con il token salvato (nessuna password richiesta).')
+    else:
+        email = os.environ.get('MJ_EMAIL') or input('Email: ').strip()
+        password = os.environ.get('MJ_PASSWORD') or getpass.getpass('Password (non viene mostrata): ')
+        api.login(email, password)
+        print('Accesso eseguito. Il token è stato salvato in %s: le prossime volte non servirà la password.' % TOKEN_FILE)
 
     if a.create_people:
         existing = {p['name'] for p in api.call('GET', '/api/collections/people/records?perPage=500&fields=name')['items']}
