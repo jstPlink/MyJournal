@@ -9,9 +9,9 @@ L'app è su **https://myjournal.fplinio.it** (PocketBase). Mai usare l'indirizzo
 Non chiedere né digitare mai la password dell'utente: la inserisce lui.
 
 ## Via 1 (preferita): script da terminale
-Lo lancia **l'utente** sul suo PC; lo script chiede email e password (la password non si vede e non viene salvata):
+Lo lancia **l'utente** sul suo PC, **sempre con il percorso completo** (il terminale si apre in `C:\Users\plink`, non nel repo); lo script chiede email e password (la password non si vede e non viene salvata):
 ```
-python .claude\skills\myjournal-import-notes\scripts\import_notes.py "C:\Users\plink\Desktop\Note\2025-10-note.json" "C:\Users\plink\Desktop\Note\2025-11-note.json"
+python C:\Users\plink\Desktop\Github\MyJournal\.claude\skills\myjournal-import-notes\scripts\import_notes.py C:\Users\plink\Desktop\Note\2025-10-note.json C:\Users\plink\Desktop\Note\2025-11-note.json
 ```
 - `--dry-run`: non scrive niente, mostra quante note creerebbe.
 - `--update-existing`: aggiorna (PATCH) anche le note già presenti con stessa data e titolo.
