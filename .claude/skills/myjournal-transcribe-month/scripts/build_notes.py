@@ -49,11 +49,11 @@ def main():
     extra = json.load(open(a.people_extra, encoding='utf-8')) if a.people_extra else None
     people, tags = mjlib.load_people(a.export, extra)
 
-    entries = [e for e in mjlib.load_entries(plan['xlsx'], plan['sheet'], layout, y) if e['month'] == mo]
+    entries = mjlib.load_entries(plan['xlsx'], plan['sheet'], layout, y)
     xl_by_day = {}
     for e in entries:
         if e['day']:
-            xl_by_day.setdefault(e['day'], []).extend(e['lines'])
+            xl_by_day.setdefault((e['month'], e['day']), []).extend(e['lines'])
     ds = mjlib.load_docushare(plan['docushare'], y, plan.get('fixes')) if plan.get('docushare') else {}
 
     warnings, out, md = [], [], []
@@ -69,13 +69,13 @@ def main():
             for spec in n['lines']:
                 if isinstance(spec, dict):
                     dd = spec.get('day', d)
-                    text_lines += pick(xl_by_day.get(dd, []), spec['x'])
+                    text_lines += pick(xl_by_day.get((spec.get('month', nm), dd), []), spec['x'])
                 elif spec.startswith('t:'):
                     text_lines.append(spec[2:])
                 elif spec.startswith('x:'):
-                    text_lines += pick(xl_by_day.get(d, []), spec[2:])
+                    text_lines += pick(xl_by_day.get((nm, d), []), spec[2:])
                 elif spec.startswith('d:'):
-                    text_lines += pick(ds.get((mo, d), []), spec[2:])
+                    text_lines += pick(ds.get((nm, d), []), spec[2:])
                 else:
                     warnings.append('specifica sconosciuta %r (giorno %d)' % (spec, d))
         text = '\n'.join(text_lines).strip('\n')
@@ -97,7 +97,7 @@ def main():
             elif a.export or extra:
                 warnings.append('TAG SCONOSCIUTO: %s (%02d %s)' % (t, d, n['title']))
         out.append(dict(content=text.replace('\n', '\r\n'),
-                        date='%d-%02d-%02d 00:00:00.000Z' % (y, nm, d), images=[], mood=round(n['mood'], 2),
+                        date='%d-%02d-%02d 00:00:00.000Z' % (n.get('year', y), nm, d), images=[], mood=round(n['mood'], 2),
                         people=ids, place=n.get('place', ''), songs=[], tags=tag_ids,
                         timeEnd='2000-01-01 %s:00.000Z' % n['end'], timeStart='2000-01-01 %s:00.000Z' % n['start'],
                         title=n['title'].upper(),
@@ -109,7 +109,7 @@ def main():
             n['title'].upper(), n['start'], n['end'], str(n['mood']).replace('.', ','),
             ', '.join(n.get('people', [])) or '—', ', '.join(n.get('tags', [])) or '—', text))
 
-    for x, z in mjlib.overlaps([dict(day=n.get('month', mo) * 40 + n['day'], title=n['title'], start=n['start'], end=n['end'])
+    for x, z in mjlib.overlaps([dict(day=(n.get('month', mo) + 12 * (n.get('year', y) - y)) * 40 + n['day'], title=n['title'], start=n['start'], end=n['end'])
                                 for n in plan['notes']]):
         warnings.append('SOVRAPPOSIZIONE DI ORARI: %s <-> %s' % (x, z))
 

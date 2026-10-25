@@ -24,7 +24,7 @@ LAYOUTS = {
     # 2018 : A mese, B giorno settimana, C giorno, D testo, E titolo, F «sunto», G mood del mese
     'y2018': dict(month=1, weekday=2, day=3, text=4, title=5, summary=6, mood=7, mood_per_row=False, old=True),
     # 2019 : A mood, B mese, C giorno settimana, D giorno, E testo, F titolo, G appunti del mese
-    'y2019': dict(mood=1, month=2, weekday=3, day=4, text=5, title=6, summary=7, mood_per_row=True, old=True),
+    'y2019': dict(mood=1, month=2, weekday=3, day=4, text=5, title=6, summary=7, mood_per_row=False, old=True, no_reverse=True),
 }
 
 
@@ -55,7 +55,7 @@ _SLEEP = re.compile(r'^\s*\d\d:\d\d~?\s*[<>](\s+[\d:~]+)?\s*$')
 _TIME0 = re.compile(r'^\s*(\d\d):(\d\d)')
 
 
-def normalize_old_lines(lines):
+def normalize_old_lines(lines, allow_reverse=True):
     """Regole per i vecchi fogli (2016-2019), decise dall'utente:
     - le righe del sonno (`02:35 <`, `10:50 > 8:15`) vengono TOLTE;
     - il suffisso `c` dopo l'orario (`23:30c`) viene tolto (significato sconosciuto);
@@ -73,7 +73,7 @@ def normalize_old_lines(lines):
              for b in blocks if _TIME0.match(b[0])]
     down = sum(1 for a, b in zip(times, times[1:]) if a > b)
     up = sum(1 for a, b in zip(times, times[1:]) if a < b)
-    if down > up:
+    if allow_reverse and down > up:
         blocks.reverse()
     return [l for b in blocks for l in b]
 
@@ -100,7 +100,7 @@ def load_entries(xlsx, sheet, layout, year):
         day = int(day) if isinstance(day, (int, float)) else None
         lines = _clean_cell(cell('text'))
         if cfg.get('old'):
-            lines = normalize_old_lines(lines)
+            lines = normalize_old_lines(lines, allow_reverse=not cfg.get('no_reverse'))
         title = ' '.join(_clean_cell(cell('title')))
         if not lines and not title and day is None:
             continue
