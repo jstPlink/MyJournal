@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import YearMoodChart from '../../components/YearMoodChart'
 import Icon from '../../components/Icon'
+import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import { useNav } from '../../context/NavContext'
 import { listNotesInRange, describeError } from '../../lib/notes'
 import { yearWeeklyMood, moodColor, moodTextColor } from '../../lib/mood'
@@ -62,6 +63,32 @@ export default function WebData() {
   const [notes, setNotes] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [openYear, setOpenYear] = useState(false)
+  const navRef = useRef(null)
+
+  useEffect(() => {
+    if (!openYear) return
+    const onDown = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) setOpenYear(false)
+    }
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpenYear(false)
+    }
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [openYear])
+
+  // anni proposti nel menu: stessa logica della vista calendario
+  const yearOptions = useMemo(() => {
+    const base = Math.max(year, new Date().getFullYear())
+    const years = []
+    for (let y = base + 2; y >= base - 12; y--) years.push(y)
+    return years
+  }, [year])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -98,28 +125,30 @@ export default function WebData() {
             Andamento
             <span className="hl" aria-hidden="true" />
           </h1>
-          <div className="flex items-center gap-2 justify-self-center">
-            <button
-              type="button"
-              aria-label="Anno precedente"
-              onClick={() => setCursor((c) => ({ ...c, year: c.year - 1 }))}
-              className="ne-clock-arrow"
-            >
-              <Icon name="chevron-left" size={18} />
-            </button>
-            <span className="ne-clock-face inline">
-              <span className="ne-clock-screen">
-                <span className="ne-clock-digits">{year}</span>
-              </span>
-            </span>
-            <button
-              type="button"
-              aria-label="Anno successivo"
-              onClick={() => setCursor((c) => ({ ...c, year: c.year + 1 }))}
-              className="ne-clock-arrow"
-            >
-              <Icon name="chevron-right" size={18} />
-            </button>
+          <div ref={navRef} className="justify-self-center">
+            <ClockNav
+              label={year}
+              ariaLabel="Scegli anno"
+              prevLabel="Anno precedente"
+              nextLabel="Anno successivo"
+              open={openYear}
+              onPrev={() => setCursor((c) => ({ ...c, year: c.year - 1 }))}
+              onNext={() => setCursor((c) => ({ ...c, year: c.year + 1 }))}
+              onToggle={() => setOpenYear((v) => !v)}
+              dropdown={
+                <ClockDropdownList
+                  items={yearOptions.map((y) => ({
+                    key: y,
+                    label: y,
+                    active: y === year,
+                    onClick: () => {
+                      setCursor((c) => ({ ...c, year: y }))
+                      setOpenYear(false)
+                    },
+                  }))}
+                />
+              }
+            />
           </div>
           <span className="justify-self-end text-sm text-ink-soft">
             {loading && 'Aggiorno…'}

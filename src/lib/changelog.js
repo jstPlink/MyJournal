@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.83.3',
+    date: '2026-10-25 12:00',
+    changes: [
+      "Andamento web: toccando l'anno si apre il menu per scegliere l'anno, come nel calendario.",
+    ],
+  },
+  {
     version: '0.83.2',
     date: '2026-10-24 12:00',
     changes: [
