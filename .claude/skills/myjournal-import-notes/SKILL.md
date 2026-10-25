@@ -22,6 +22,8 @@ python C:\Users\plink\Desktop\Github\MyJournal\.claude\skills\myjournal-import-n
 
 Prima di dire all'utente di lanciarlo: esegui `build_notes.py` e leggi gli avvisi; controlla che le persone nuove esistano o vadano create (`--create-people`) e di rigenerare i JSON con i loro id (`--people-extra`).
 
+**Accesso**: la **prima volta** lo script chiede email e password; poi salva solo il **token di accesso** in `C:\Users\plink\.myjournal-token.json` (la password non viene salvata) e lo rinnova a ogni esecuzione: finché lo usi con regolarità **non serve più riaccedere**. Se scade chiede di nuovo i dati. `--logout` cancella il token salvato.
+
 **Problemi noti**: `Errore 403 ... error code: 1010` = Cloudflare blocca lo User-Agent di Python; lo script ora ne invia uno da browser (verificato con `/api/health`). Se ricompare, il blocco è sull'IP o sulle regole di Cloudflare: usare la Via 2.
 
 ## Via 2: sessione del browser (se l'utente ha già fatto l'accesso)
