@@ -40,6 +40,10 @@ class Api:
         req = urllib.request.Request(self.url + path, method=method,
                                      data=json.dumps(body).encode('utf-8') if body is not None else None)
         req.add_header('Content-Type', 'application/json')
+        # Cloudflare (error code 1010) rifiuta lo User-Agent predefinito di Python-urllib
+        req.add_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+                                     '(KHTML, like Gecko) Chrome/124.0 Safari/537.36')
+        req.add_header('Accept', 'application/json')
         if self.token:
             req.add_header('Authorization', self.token)
         try:

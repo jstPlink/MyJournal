@@ -22,6 +22,8 @@ python C:\Users\plink\Desktop\Github\MyJournal\.claude\skills\myjournal-import-n
 
 Prima di dire all'utente di lanciarlo: esegui `build_notes.py` e leggi gli avvisi; controlla che le persone nuove esistano o vadano create (`--create-people`) e di rigenerare i JSON con i loro id (`--people-extra`).
 
+**Problemi noti**: `Errore 403 ... error code: 1010` = Cloudflare blocca lo User-Agent di Python; lo script ora ne invia uno da browser (verificato con `/api/health`). Se ricompare, il blocco è sull'IP o sulle regole di Cloudflare: usare la Via 2.
+
 ## Via 2: sessione del browser (se l'utente ha già fatto l'accesso)
 Nel browser integrato su `https://myjournal.fplinio.it` (l'utente fa il login), in `javascript_tool`:
 - token e id utente: `JSON.parse(localStorage.getItem('pocketbase_auth'))` (`.token`, `.record.id`), header `Authorization: <token>`;
