@@ -15,6 +15,7 @@ python .claude\skills\myjournal-import-notes\scripts\import_notes.py "C:\Users\p
 ```
 - `--dry-run`: non scrive niente, mostra quante note creerebbe.
 - `--update-existing`: aggiorna (PATCH) anche le note già presenti con stessa data e titolo.
+- I file `*-note.json` contengono i **nomi** delle persone (`_people`) e dei tag (`_tags`): lo script li risolve in id leggendo il server. Le persone mancanti vengono segnalate; con `--create-missing-people` le crea (colore targhetta come l'app).
 - `--create-people "Nome Cognome" ...`: crea persone in anagrafica con il colore della targhetta calcolato come l'app.
 - Variabili d'ambiente opzionali `MJ_EMAIL`, `MJ_PASSWORD`, `MJ_URL`.
 - Alla fine stampa per ogni mese: note sul server, **doppioni** e **sovrapposizioni di orario**.
