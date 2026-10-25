@@ -63,3 +63,8 @@ Vedi la skill `myjournal-analyze-sheet` e `scripts/mjlib.py` (profili `annales`,
 - **Persone (vecchi anni)**: Pirozzi → Valerio Pirozzi · Peppe → Elisa DeBenedettis · Annio → Annio Masella · Vales/Vale → Valerio Sabato · Miki → Michele Panarelli · Giovanni → Giovanni Genga · Pamela Verducci → Pamela Verducci · Leppe → Giuseppe Carone · Bea/Beatrice → Beatrice Prenna · Bianca → Bianca Lore · **Gian → forse Gianandrea Muia (verificare caso per caso con l'utente)** · **Eleonora, Danilo, Fabiana: chiedere ogni volta** (Eleonora potrebbe essere la cugina).
 - **Chi c'è in anagrafica va segnalato nella nota; chi manca va aggiunto** (lo script di import li crea con `--create-missing-people`). Nomi senza cognome noto: crea con il solo nome (es. «Bruno», «Nicole») e segnalalo in coda.
 - Il piano può coprire più mesi: usa `month` per nota (vedi `build_notes.py`).
+- **Gian / Gianluca prima di gennaio 2019 = Gianluca Esperto** (crearlo in anagrafica quando serve). **Gianandrea Muia può comparire solo dopo gennaio 2019.**
+- Gatta dell'utente: **Zara** (non è una persona).
+- Persone confermate dall'utente: Elisa DeBenedettis; crea **Nicole Cotogni** (solo lei: Bruno resta nel testo, senza scheda).
+- Voce con solo titolo e senza giorno/testo: datarla come indicato dall'utente (es. «Troviamo Zara» ~ 17 luglio 2016), il contenuto è il titolo; orari stimati.
+- Eventi di più giorni (fiere): se c'è un sabato scegli il sabato, altrimenti il primo giorno.
