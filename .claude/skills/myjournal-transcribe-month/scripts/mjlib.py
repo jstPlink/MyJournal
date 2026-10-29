@@ -19,6 +19,8 @@ LAYOUTS = {
     # 2020+ : C mese (prima riga del mese), D lettera giorno, E giorno, F testo, G titolo, H mood
     'annales': dict(month=3, weekday=4, day=5, text=6, title=7, mood=8, mood_per_row=True),
     # 2016 e 2017 : B mese, C giorno, D testo, E titolo, F mood del mese
+    # 2022 : come annales ma il mood grezzo è in K (H = K-2 è la colonna derivata con formula)
+    'annales2022': dict(month=3, weekday=4, day=5, text=6, title=7, mood=11, mood_per_row=True),
     'y2016': dict(month=2, day=3, text=4, title=5, mood=6, mood_per_row=False, old=True),
     'y2017': dict(month=2, day=3, text=4, title=5, mood=6, mood_per_row=False, old=True),
     # 2018 : A mese, B giorno settimana, C giorno, D testo, E titolo, F «sunto», G mood del mese
