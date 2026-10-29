@@ -6749,7 +6749,11 @@ li:last-child > .st-row {
   white-space: nowrap;
 }
 .day-label-hand.weekend {
-  color: var(--color-weekend);
+  /* stessi colori del giorno del weekend nella vista mese (.mp-page.wknd) */
+  color: color-mix(in srgb, var(--mp-wknd-ink) 78%, #000);
+}
+.day-label-hand.weekend .hl {
+  background: var(--mp-hl-wknd);
 }
 /* stesso evidenziatore nero del titolo di Andamento/Statistiche
    (.wd-page-title .hl) — stessa materia "scritta a mano", stesso segno. */

@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.84.1',
+    date: '2026-10-29 13:00',
+    changes: [
+      "Giorno (web): la data di sabato e domenica ha gli stessi colori del weekend nella vista mese (scritta e sottolineatura).",
+    ],
+  },
+  {
     version: '0.84.0',
     date: '2026-10-29 12:00',
     changes: [
