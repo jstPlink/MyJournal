@@ -9,6 +9,16 @@
 
 export const CHANGELOG = [
   {
+    version: '0.84.0',
+    date: '2026-10-29 12:00',
+    changes: [
+      "Giorno (web): i tag delle note compaiono accanto alla nota come targhette gialline; targhette dei nomi, tag, luogo, canzone e foto sono centrate in verticale sulla nota.",
+      "Giorno: le note brevi non tagliano più il titolo, l'etichetta del mood non è più tagliata in alto, di sabato e domenica la data è rossa, via la scritta «continua dalla notte».",
+      "Statistiche web: le 4 schede in cima stanno su una riga e toccando l'anno si apre il selettore, come in Andamento.",
+      "Selettore dell'orario: la rotellina del mouse scorre più piano. Titolo della nota: niente più barra di scorrimento, il campo si allunga. Web: niente barre di scorrimento orizzontali spurie.",
+    ],
+  },
+  {
     version: '0.83.3',
     date: '2026-10-25 12:00',
     changes: [

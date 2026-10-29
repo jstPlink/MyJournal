@@ -9,7 +9,8 @@ import PeriodRecapCard from '../../components/PeriodRecapCard'
 import { listNotesForDay, describeError } from '../../lib/notes'
 import { listDreamsForDay } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
-import { addDaysKey, fullDayLabel, parseWall } from '../../lib/dates'
+import { listTags } from '../../lib/tags'
+import { addDaysKey, fullDayLabel, isWeekend, parseWall } from '../../lib/dates'
 import { haptic } from '../../lib/haptics'
 
 // Stessa logica della vista giorno mobile (src/pages/DayView.jsx): l'intera
@@ -38,6 +39,7 @@ export default function WebDay() {
   const [notes, setNotes] = useState([])
   const [dreams, setDreams] = useState([])
   const [people, setPeople] = useState([])
+  const [tags, setTags] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const peopleById = useMemo(
@@ -74,7 +76,12 @@ export default function WebDay() {
     listPeople()
       .then(setPeople)
       .catch(() => setPeople([]))
+    listTags()
+      .then(setTags)
+      .catch(() => setTags([]))
   }, [])
+
+  const tagsById = useMemo(() => new Map(tags.map((t) => [t.id, t])), [tags])
 
   const go = useCallback(
     (delta) => navigate(`/day/${addDaysKey(date, delta)}`),
@@ -122,7 +129,7 @@ export default function WebDay() {
                 non si può modificare direttamente (solo ± un giorno con le
                 frecce), a differenza degli altri orologi della vista mese
                 e nota — lo stile "cliccabile" era fuorviante. */}
-            <span className="day-label-hand">
+            <span className={'day-label-hand' + (isWeekend(date) ? ' weekend' : '')}>
               {fullDayLabel(date)}
               <span className="hl" aria-hidden="true" />
             </span>
@@ -161,7 +168,7 @@ export default function WebDay() {
           fissa qui, DayPages misura lo spazio disponibile. Larghezza piena,
           non più w-3/5: stessa larghezza della vista mese, che non ha alcun
           tetto sulla propria griglia (solo l'header lo ha). */}
-      <div className="min-h-0 flex-1 overflow-hidden">
+      <div className="min-h-0 flex-1 overflow-hidden pt-8">
         {loading ? (
           <p className="p-6 text-center text-ink-soft">Carico…</p>
         ) : (
@@ -170,6 +177,7 @@ export default function WebDay() {
             notes={notes}
             onNavigate={navigate}
             peopleById={peopleById}
+            tagsById={tagsById}
             dreams={dreams}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}

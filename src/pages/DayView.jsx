@@ -51,6 +51,8 @@ export default function DayView() {
     [people],
   )
 
+  const tagsById = useMemo(() => new Map(tags.map((t) => [t.id, t])), [tags])
+
   const parsed = parseWall(date)
   const year = parsed?.y ?? new Date().getFullYear()
 
@@ -177,6 +179,7 @@ export default function DayView() {
             notes={notes}
             onNavigate={navigate}
             peopleById={peopleById}
+            tagsById={tagsById}
             dreams={dreams}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}

@@ -76,6 +76,14 @@ function startMinutesOf(value) {
   return p ? p.h * 60 + p.mi : 0
 }
 
+// Altezza minima del cartoncino da web: il foglio è compresso sulle 24h, quindi
+// una nota breve avrebbe un blocco più basso del suo titolo (tagliato).
+// Padding 24px + 21px a riga di titolo (fino a 2) + l'etichetta «continua».
+function webMinH(it) {
+  const lines = it.title.length > 34 ? 2 : 1
+  return 28 + lines * 21
+}
+
 // Larghezza casuale del cartoncino, stabile per nota: ~47% ± 16% (40–55%,
 // più spazio a titolo e contenuti — su mobile è ignorata: il cartoncino
 // riempie lo spazio libero, vedi .dn-card in index.css).
@@ -128,6 +136,7 @@ export default function DayPages({
   notes,
   onNavigate,
   peopleById,
+  tagsById,
   immichUrl,
   immichApiKey,
   fit = false,
@@ -179,6 +188,10 @@ export default function DayPages({
         }
       }
 
+      const tags = (n.tags || [])
+        .map((id) => tagsById?.get(id))
+        .filter(Boolean)
+
       const song = (n.songs || [])[0] || null
       const songsCount = (n.songs || []).length
       const imgs = (n.images || []).slice(0, 2).map((fn) => ({
@@ -202,6 +215,7 @@ export default function DayPages({
         cw: cardWidthFor(n.id),
         cr: `${tilt(`${n.id}~cr`, 0.8).toFixed(2)}deg`,
         people,
+        tags,
         placeName,
         placeMap,
         song,
@@ -212,7 +226,7 @@ export default function DayPages({
     })
     list.sort((a, b) => a.startMin - b.startMin)
     return list
-  }, [notes, peopleById])
+  }, [notes, peopleById, tagsById])
 
   // Decori di sfondo più fitti quanto più il giorno ha dati (note, persone,
   // luoghi, canzoni, foto) — stesso unico asset "natura", solo ripetuto.
@@ -349,7 +363,7 @@ export default function DayPages({
           {trackH > 0 && items.map((it) => {
             const top = pos.get(`n:${it.id}`) ?? it.startMin * pxPerMin
             const rawH = (it.endMin - it.startMin) * pxPerMin
-            const h = Math.max(MIN_BLOCK_H, rawH, phone ? phoneMinH(it) : 0)
+            const h = Math.max(MIN_BLOCK_H, rawH, phone ? phoneMinH(it) : webMinH(it))
             const hasMedia = Boolean(it.placeName) || Boolean(it.song)
             return (
               <button
@@ -381,7 +395,6 @@ export default function DayPages({
                     className="dn-card"
                     style={{ '--cr': it.cr, '--mood': moodColor(it.mood) }}
                   >
-                    {it.carried && <span className="dn-carry">continua dalla notte</span>}
                     <span className="dn-title">
                       <span className="hl" aria-hidden="true" />
                       <span className="dn-title-text">{it.title}</span>
@@ -392,9 +405,10 @@ export default function DayPages({
                   {/* Vista mobile: contatori compatti impilati in verticale
                       fra cartoncino e foto (persone, luogo, canzoni — icona +
                       numero). Nascosti da desktop. */}
-                  {(it.people.length > 0 || it.placeName || it.songsCount > 0) && (
+                  {(it.people.length > 0 || it.tags.length > 0 || it.placeName || it.songsCount > 0) && (
                     <span className="dn-side-mobile">
                       <DnMiniBadge kind="people" icon="user" count={it.people.length} />
+                      <DnMiniBadge kind="tag" icon="tag" count={it.tags.length} />
                       <DnMiniBadge kind="place" icon="map-pin" count={it.placeName ? 1 : 0} />
                       <DnMiniBadge kind="song" icon="cassette" count={it.songsCount} />
                     </span>
@@ -408,10 +422,18 @@ export default function DayPages({
                   />
                 </span>
 
-                {(it.people.length > 0 || hasMedia) && (
+                {(it.people.length > 0 || it.tags.length > 0 || hasMedia) && (
                   <span className="dn-side" aria-hidden="true">
-                    {it.people.length > 0 && (
+                    {(it.people.length > 0 || it.tags.length > 0) && (
                       <span className="dn-tapes">
+                        {it.tags.map((tag) => (
+                          <span
+                            key={tag.id}
+                            className="dn-tag"
+                          >
+                            #{tag.name}
+                          </span>
+                        ))}
                         {it.people.map((person) => {
                           return (
                             <span

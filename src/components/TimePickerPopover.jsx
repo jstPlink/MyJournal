@@ -5,6 +5,7 @@ function pad2(n) {
 }
 
 const MINUTE_STEP = 5
+const WHEEL_GAIN = 0.3 // frazione dello scorrimento normale della rotellina
 const HOURS = Array.from({ length: 24 }, (_, i) => pad2(i))
 const MINUTES = Array.from({ length: 60 / MINUTE_STEP }, (_, i) => pad2(i * MINUTE_STEP))
 
@@ -56,6 +57,20 @@ export default function TimePickerPopover({
     hourListRef.current?.children[h]?.scrollIntoView({ block: 'center' })
     minuteListRef.current?.children[minuteIdx]?.scrollIntoView({ block: 'center' })
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open])
+
+  // Una tacca della rotellina del mouse sposta di poche voci, non di una
+  // decina: listener non passivo per poter ridurre lo scorrimento.
+  useEffect(() => {
+    if (!open) return
+    const lists = [hourListRef.current, minuteListRef.current].filter(Boolean)
+    const onWheel = (e) => {
+      if (e.ctrlKey) return
+      e.preventDefault()
+      e.currentTarget.scrollTop += e.deltaY * WHEEL_GAIN
+    }
+    lists.forEach((el) => el.addEventListener('wheel', onWheel, { passive: false }))
+    return () => lists.forEach((el) => el.removeEventListener('wheel', onWheel))
   }, [open])
 
   return (

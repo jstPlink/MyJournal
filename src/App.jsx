@@ -54,7 +54,7 @@ function DesktopShell({ children }) {
       }
     >
       <Sidebar />
-      <main className={'min-w-0 flex-1 overflow-y-auto' + (isDream ? ' dream-main' : '')}>
+      <main className={'min-w-0 flex-1 overflow-y-auto overflow-x-hidden' + (isDream ? ' dream-main' : '')}>
         <div
           key={pathname}
           className={'anim-page ' + (isDream ? '' : 'mx-auto max-w-[1180px] px-8 py-8 xl:px-12')}

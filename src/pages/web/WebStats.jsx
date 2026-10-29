@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useNav } from '../../context/NavContext'
 import { useAuth } from '../../context/AuthContext'
@@ -7,6 +7,7 @@ import CountUp from '../../components/CountUp'
 import PersonAvatar from '../../components/PersonAvatar'
 import NotesListSheet from '../../components/NotesListSheet'
 import Icon from '../../components/Icon'
+import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import { listNotesInRange, countAllNotes, describeError } from '../../lib/notes'
 import { listPeople } from '../../lib/people'
 import { listTags } from '../../lib/tags'
@@ -23,7 +24,7 @@ function shortDM(key) {
 // variant 'tile' = i 3 scontrini in cima (numero grande, senza icona a
 // parte l'etichetta); variant 'mini' = le targhette secondarie (settimana
 // migliore, tag più usato...), orizzontali con icona a destra.
-function StatCard({ label, value, sub, icon, onClick, variant = 'tile' }) {
+function StatCard({ label, value, sub, icon, onClick, variant = 'tile', dream = false }) {
   if (variant === 'mini') {
     const Tag = onClick ? 'button' : 'div'
     return (
@@ -49,7 +50,7 @@ function StatCard({ label, value, sub, icon, onClick, variant = 'tile' }) {
   }
 
   return (
-    <div className="st-tile">
+    <div className={'st-tile' + (dream ? ' st-tile-dream' : '')}>
       <p className="st-tile-label">
         {icon && <Icon name={icon} size={13} />}
         {label}
@@ -149,6 +150,32 @@ export default function WebStats() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [listSheet, setListSheet] = useState(null) // { title, subtitle, notes } | null
+  const [openYear, setOpenYear] = useState(false)
+  const navRef = useRef(null)
+
+  useEffect(() => {
+    if (!openYear) return
+    const onDown = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) setOpenYear(false)
+    }
+    const onKey = (e) => {
+      if (e.key === 'Escape') setOpenYear(false)
+    }
+    document.addEventListener('pointerdown', onDown)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onDown)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [openYear])
+
+  // anni proposti nel menu: stessa logica di Andamento
+  const yearOptions = useMemo(() => {
+    const base = Math.max(year, new Date().getFullYear())
+    const years = []
+    for (let y = base + 2; y >= base - 12; y--) years.push(y)
+    return years
+  }, [year])
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -282,28 +309,30 @@ export default function WebStats() {
             Statistiche
             <span className="hl" aria-hidden="true" />
           </h1>
-          <div className="flex items-center gap-2 justify-self-center">
-            <button
-              type="button"
-              aria-label="Anno precedente"
-              onClick={() => setCursor((c) => ({ ...c, year: c.year - 1 }))}
-              className="ne-clock-arrow"
-            >
-              <Icon name="chevron-left" size={18} />
-            </button>
-            <span className="ne-clock-face inline">
-              <span className="ne-clock-screen">
-                <span className="ne-clock-digits">{year}</span>
-              </span>
-            </span>
-            <button
-              type="button"
-              aria-label="Anno successivo"
-              onClick={() => setCursor((c) => ({ ...c, year: c.year + 1 }))}
-              className="ne-clock-arrow"
-            >
-              <Icon name="chevron-right" size={18} />
-            </button>
+          <div ref={navRef} className="justify-self-center">
+            <ClockNav
+              label={year}
+              ariaLabel="Scegli anno"
+              prevLabel="Anno precedente"
+              nextLabel="Anno successivo"
+              open={openYear}
+              onPrev={() => setCursor((c) => ({ ...c, year: c.year - 1 }))}
+              onNext={() => setCursor((c) => ({ ...c, year: c.year + 1 }))}
+              onToggle={() => setOpenYear((v) => !v)}
+              dropdown={
+                <ClockDropdownList
+                  items={yearOptions.map((y) => ({
+                    key: y,
+                    label: y,
+                    active: y === year,
+                    onClick: () => {
+                      setCursor((c) => ({ ...c, year: y }))
+                      setOpenYear(false)
+                    },
+                  }))}
+                />
+              }
+            />
           </div>
           <span className="justify-self-end text-sm text-ink-soft">
             {loading && 'Aggiorno…'}
@@ -317,7 +346,7 @@ export default function WebStats() {
         </p>
       )}
 
-      <div className="st-tiles">
+      <div className="st-tiles st-tiles-four">
         <StatCard label="Note totali" value={allTimeCount ?? '—'} icon="list" />
         <StatCard label={`Note nel ${year}`} value={stats.noteCount} icon="calendar" />
         <StatCard
@@ -325,10 +354,7 @@ export default function WebStats() {
           value={stats.avgMood != null ? Math.round(stats.avgMood * 100) : '—'}
           icon="sparkles"
         />
-      </div>
-
-      <div className="st-tiles st-tiles-dream">
-        <StatCard label={`Sogni segnati nel ${year}`} value={dreamCount} icon="moon" />
+        <StatCard label={`Sogni nel ${year}`} value={dreamCount} icon="moon" dream />
       </div>
 
       <PeriodRecapCard

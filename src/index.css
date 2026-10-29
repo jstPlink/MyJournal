@@ -2430,12 +2430,14 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .dn-side {
   position: absolute;
   left: calc(var(--cw, 38%) + 4%);
-  top: 0;
+  /* centrata in verticale sulla nota, non in cima */
+  top: 50%;
+  transform: translateY(-50%);
   right: 5%;
   z-index: 6;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
   pointer-events: none;
 }
@@ -2444,6 +2446,32 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 .dn-side > * {
   flex: 0 0 auto;
+}
+.dn-tag {
+  align-self: center;
+  padding: 7px 14px 8px 15px;
+  border-radius: 11px 3px 3px 11px;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 1.06rem;
+  line-height: 1;
+  white-space: nowrap;
+  color: rgba(51, 41, 28, 0.72);
+  /* nastro adesivo come la linguetta del mood nel mese (.mp-tab) */
+  background-color: #f1e3a6; /* cartoncino giallino, unico per tutti i tag */
+  background-image: linear-gradient(
+    116deg,
+    rgba(255, 255, 255, 0.34) 0 22%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.22) 62%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  box-shadow: 2px 3px 6px rgba(20, 12, 4, 0.2),
+    inset 0 0 0 2px #cdbd7a;
+  transform: rotate(-2.5deg);
+}
+.dn-tag:nth-child(even) {
+  transform: rotate(1.5deg);
 }
 .dn-tapes {
   display: flex;
@@ -2495,7 +2523,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .dn-media {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
@@ -2676,7 +2704,8 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 .dn-polas {
   position: absolute;
   right: -14px;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 3;
   display: flex;
   pointer-events: none;
@@ -5831,6 +5860,9 @@ li:last-child > .wf-result {
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
+.st-tiles.st-tiles-four {
+  grid-template-columns: repeat(4, 1fr);
+}
 .st-tile {
   position: relative;
   background-color: var(--color-cream);
@@ -6715,6 +6747,9 @@ li:last-child > .st-row {
   font-size: 1.7rem;
   color: var(--color-ink);
   white-space: nowrap;
+}
+.day-label-hand.weekend {
+  color: var(--color-weekend);
 }
 /* stesso evidenziatore nero del titolo di Andamento/Statistiche
    (.wd-page-title .hl) — stessa materia "scritta a mano", stesso segno. */
