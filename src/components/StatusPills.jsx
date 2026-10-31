@@ -24,13 +24,15 @@ export default function StatusPills() {
 
   useEffect(() => {
     if (!isAuthed) return
-    prefetchAll()
+    // il grosso scaricamento parte dopo la prima schermata, per non rubarle banda
+    const first = setTimeout(prefetchAll, 2500)
     const onOnline = () => prefetchAll()
     // ritorno in primo piano: riscarica le note se l'archivio ha più di 2 minuti
     const onVisible = () => document.visibilityState === 'visible' && refreshNotesIfStale()
     window.addEventListener('online', onOnline)
     document.addEventListener('visibilitychange', onVisible)
     return () => {
+      clearTimeout(first)
       window.removeEventListener('online', onOnline)
       document.removeEventListener('visibilitychange', onVisible)
     }

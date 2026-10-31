@@ -1,4 +1,4 @@
-# MyJournal – Architettura (v0.84.3)
+# MyJournal – Architettura (v0.84.4)
 
 Panoramica tecnica e guida per rispondere alle domande sul progetto. Per l'uso dell'app vedi [docs/GUIDA.md](docs/GUIDA.md); per la
 cronologia, `src/lib/changelog.js`; per il deploy, [deploy/README.md](deploy/README.md).

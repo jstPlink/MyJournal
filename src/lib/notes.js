@@ -59,12 +59,23 @@ function storeRemove(id) {
   persistStore()
 }
 
+// Impronta economica dell'elenco (al posto di un JSON.stringify di tutto il
+// diario, pesante con migliaia di note): basta a capire se qualcosa è cambiato.
+function signature(list) {
+  let h = list.length
+  for (const n of list) {
+    const str = `${n.id}|${n.title}|${n.mood}|${n.date}|${n.timeStart}|${n.timeEnd}|${n.place}|${n.content?.length}|${n.images?.length}|${n.people?.join()}|${n.tags?.join()}|${JSON.stringify(n.songs)}`
+    for (let i = 0; i < str.length; i++) h = (Math.imul(h, 31) + str.charCodeAt(i)) | 0
+  }
+  return h
+}
+
 // Scarica tutte le note e rimpiazza l'archivio. Con `silent` avvisa le pagine
 // solo se qualcosa è cambiato davvero. Restituisce l'elenco.
 export function refreshNotesStore({ silent = true } = {}) {
   if (isLocal) return Promise.resolve([])
   if (storeLoad) return storeLoad
-  const had = sameUser() ? JSON.stringify([...store.byId.values()]) : null
+  const had = sameUser() ? signature([...store.byId.values()]) : null
   storeLoad = pb
     .collection(COLLECTION)
     .getFullList({ sort: 'timeStart' })
@@ -72,7 +83,7 @@ export function refreshNotesStore({ silent = true } = {}) {
       setStore(list)
       persistStore()
       markOk()
-      if (silent && had !== null && had !== JSON.stringify(list)) emitCacheUpdate('notes:all')
+      if (silent && had !== null && had !== signature(list)) emitCacheUpdate('notes:all')
       return list
     })
     .finally(() => {
@@ -88,17 +99,28 @@ export function refreshNotesIfStale() {
   refreshNotesStore().catch(() => {})
 }
 
-// Archivio pronto? Altrimenti prova con la copia salvata sul dispositivo
-// (l'aggiornamento vero arriva poi da `refreshNotesStore`).
-async function readyStore() {
+// Archivio pronto? Se no, avvia IN BACKGROUND la lettura della copia salvata
+// sul dispositivo (una sola volta, può pesare con migliaia di note) e
+// risponde false: chi chiama intanto usa la richiesta per il solo intervallo,
+// come prima. Con `wait` aspetta invece la copia (Cerca, conteggi).
+let hydrating = null
+async function readyStore({ wait = false } = {}) {
   if (sameUser()) return true
-  const all = await cacheGet('notes:all')
-  if (!all?.value) return false
-  if (!sameUser()) {
-    setStore(all.value)
-    store.loadedAt = all.savedAt || 0
+  if (!hydrating) {
+    hydrating = cacheGet('notes:all')
+      .then((all) => {
+        if (all?.value && !sameUser()) {
+          setStore(all.value)
+          store.loadedAt = all.savedAt || 0
+        }
+      })
+      .finally(() => {
+        hydrating = null
+      })
   }
-  return true
+  if (!wait) return false
+  await hydrating
+  return sameUser()
 }
 
 function sortByTimeStart(list) {
@@ -157,7 +179,7 @@ export async function getNote(id) {
 // Conteggio di tutte le note mai scritte (nessun filtro sull'anno): una
 // pagina da 1 elemento basta, serve solo `totalItems`.
 export async function countAllNotes() {
-  if (!isLocal && (await readyStore())) return store.byId.size
+  if (!isLocal && (await readyStore({ wait: true }))) return store.byId.size
   return cachedRead('count', async () => {
     const res = await pb.collection(COLLECTION).getList(1, 1, { fields: 'id' })
     return res.totalItems
@@ -495,7 +517,7 @@ export async function listNotesFiltered({
   // si applicano in locale, senza richiesta al server; la sintassi `~` di
   // PocketBase equivale a una sottostringa senza maiuscole.
   let list
-  if (!isLocal && (await readyStore())) {
+  if (!isLocal && (await readyStore({ wait: true }))) {
     const placeQ = place && place.trim().toLowerCase()
     list = [...store.byId.values()]
       .filter(

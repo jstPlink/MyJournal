@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.84.4',
+    date: '2026-10-31 17:00',
+    changes: [
+      "Giorno e mese più veloci all'apertura: la copia di tutte le note si legge in background, lo scaricamento completo parte dopo la prima schermata e il confronto dei dati è più leggero.",
+    ],
+  },
+  {
     version: '0.84.3',
     date: '2026-10-31 15:00',
     changes: [
