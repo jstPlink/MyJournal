@@ -540,19 +540,6 @@ export default function WebNote() {
 
           <div className="ne-sub">
             <div className="ne-sub-head">
-              <span className="ne-sub-title">Mood</span>
-            </div>
-            <div className="mnote-mood-frame">
-              <MoodSlider
-                value={form.mood}
-                onChange={(mood) => set({ mood })}
-                className="mnote-mood"
-              />
-            </div>
-          </div>
-
-          <div className="ne-sub">
-            <div className="ne-sub-head">
               <span className="ne-sub-title">Aggiungi</span>
             </div>
             <div className="ne-addrow">
@@ -595,6 +582,18 @@ export default function WebNote() {
         {/* Colonna editor: foglio di scrittura + (sotto) persone/luogo/
             canzoni/foto aggiunte, con l'estetica della vista mese. */}
         <div className="flex flex-col">
+          <div className="ne-sub ne-mood-top">
+            <div className="ne-sub-head">
+              <span className="ne-sub-title">Mood</span>
+            </div>
+            <div className="mnote-mood-frame">
+              <MoodSlider
+                value={form.mood}
+                onChange={(mood) => set({ mood })}
+                className="mnote-mood"
+              />
+            </div>
+          </div>
         <div className="ne-sheet">
           <span className="ne-tape ne-tape-a" aria-hidden="true" />
           <span className="ne-tape ne-tape-b" aria-hidden="true" />

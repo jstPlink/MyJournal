@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.84.3',
+    date: '2026-10-31 15:00',
+    changes: [
+      "Nota (web): la scheda Mood sta sopra il foglio, nella colonna larga, così la barra è tre volte più lunga e più facile da regolare; la zona sensibile della barra è più alta.",
+    ],
+  },
+  {
     version: '0.84.2',
     date: '2026-10-31 12:00',
     changes: [

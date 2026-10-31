@@ -7553,6 +7553,18 @@ li:last-child > .st-row {
   height: 36px;
   border-radius: 9px;
 }
+/* web: la scheda Mood sta sopra il foglio (colonna larga) e la zona sensibile
+   della barra è più alta del righello, così il clic non va a vuoto. */
+.ne-mood-top {
+  margin-bottom: 14px;
+}
+.ne-mood-top .mnote-mood-frame {
+  margin: 10px 0 8px;
+}
+.ne-mood-top .mood-range {
+  height: 2.5rem;
+}
+
 .mnote-mood .mood-nums {
   display: block;
 }
