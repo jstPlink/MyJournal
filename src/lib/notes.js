@@ -1,4 +1,4 @@
-import { pb } from './pocketbase'
+import { pb, isLocal } from './pocketbase'
 import { addDaysKey, dayKey, dayRange, parseWall, timeInputValue, toPbTime } from './dates'
 import {
   enqueue,
@@ -7,7 +7,7 @@ import {
   queuedCount,
   isNetworkError,
 } from './offlineQueue'
-import { cachedRead, cacheGet } from './cache'
+import { cachedRead, cacheGet, cacheSet, emitCacheUpdate, markOk } from './cache'
 
 // Accesso alla collection `note` di PocketBase.
 // Campi: title, content (Markdown), mood (0–1), date, timeStart, timeEnd,
@@ -15,31 +15,117 @@ import { cachedRead, cacheGet } from './cache'
 
 const COLLECTION = 'note'
 
+// ---- archivio in memoria di tutte le note ----
+// Una sola grande richiesta (`refreshNotesStore`, all'apertura dell'app, da
+// prefetch.js) carica TUTTE le note; mese, giorno, andamento e statistiche
+// le leggono da qui senza interrogare il server. Dopo, il server si
+// richiama solo per: creazione/modifica/eliminazione di una nota (il record
+// restituito aggiorna l'archivio sul posto), pull-to-refresh, ritorno in
+// primo piano dopo `STALE_MS` e ritorno della rete.
+// In modalità «su questo dispositivo» i dati sono già locali: non serve.
+const STALE_MS = 2 * 60 * 1000
+let store = null // { userId, byId: Map, loadedAt }
+let storeLoad = null // richiesta in corso, condivisa
+
+const currentUserId = () => pb.authStore.record?.id || 'anon'
+const sameUser = () => store && store.userId === currentUserId()
+
+function setStore(list) {
+  store = {
+    userId: currentUserId(),
+    byId: new Map(list.map((n) => [n.id, n])),
+    loadedAt: Date.now(),
+  }
+}
+
+function persistStore() {
+  if (!store) return
+  const list = [...store.byId.values()]
+  cacheSet('notes:all', list)
+  cacheSet('count', list.length)
+}
+
+// Dopo create/update: il record restituito dal server entra nell'archivio.
+function storeUpsert(rec) {
+  if (isLocal || !rec?.id || !sameUser()) return
+  store.byId.set(rec.id, rec)
+  cacheSet(`note:${rec.id}`, rec)
+  persistStore()
+}
+
+function storeRemove(id) {
+  if (isLocal || !sameUser()) return
+  store.byId.delete(id)
+  persistStore()
+}
+
+// Scarica tutte le note e rimpiazza l'archivio. Con `silent` avvisa le pagine
+// solo se qualcosa è cambiato davvero. Restituisce l'elenco.
+export function refreshNotesStore({ silent = true } = {}) {
+  if (isLocal) return Promise.resolve([])
+  if (storeLoad) return storeLoad
+  const had = sameUser() ? JSON.stringify([...store.byId.values()]) : null
+  storeLoad = pb
+    .collection(COLLECTION)
+    .getFullList({ sort: 'timeStart' })
+    .then((list) => {
+      setStore(list)
+      persistStore()
+      markOk()
+      if (silent && had !== null && had !== JSON.stringify(list)) emitCacheUpdate('notes:all')
+      return list
+    })
+    .finally(() => {
+      storeLoad = null
+    })
+  return storeLoad
+}
+
+// Aggiorna l'archivio solo se è più vecchio di `STALE_MS` (ritorno in primo piano).
+export function refreshNotesIfStale() {
+  if (isLocal || !pb.authStore.isValid) return
+  if (sameUser() && Date.now() - store.loadedAt < STALE_MS) return
+  refreshNotesStore().catch(() => {})
+}
+
+// Archivio pronto? Altrimenti prova con la copia salvata sul dispositivo
+// (l'aggiornamento vero arriva poi da `refreshNotesStore`).
+async function readyStore() {
+  if (sameUser()) return true
+  const all = await cacheGet('notes:all')
+  if (!all?.value) return false
+  if (!sameUser()) {
+    setStore(all.value)
+    store.loadedAt = all.savedAt || 0
+  }
+  return true
+}
+
+function sortByTimeStart(list) {
+  return list.sort((a, b) => (a.timeStart < b.timeStart ? -1 : a.timeStart > b.timeStart ? 1 : 0))
+}
+
 // Elenco note con `date` nell'intervallo [start, end] (stringhe datetime PB).
-// Letto con cache (vedi src/lib/cache.js): con rete assente/lenta mostra i
-// dati salvati; se manca la cache esatta di questo intervallo lo ricava da
-// quella di tutte le note (riempita all'apertura, vedi prefetch.js).
+// Letto dall'archivio in memoria (vedi sopra); se non c'è ancora (primissimo
+// avvio, niente copia sul dispositivo) fa la richiesta per quell'intervallo
+// con cache (src/lib/cache.js) e mostra i dati salvati se la rete è lenta.
 export async function listNotesInRange({ start, end }, { fresh = false } = {}) {
+  if (!isLocal) {
+    // fresh (pull-to-refresh): riscarica tutto e aspetta la rete
+    if (fresh) await refreshNotesStore({ silent: false })
+    if (await readyStore()) {
+      return sortByTimeStart(
+        [...store.byId.values()].filter((n) => n.date >= start && n.date <= end),
+      )
+    }
+  }
   // La collection non ha i campi autodate `created`/`updated`: ordinare solo
   // per `timeStart` (poi eventualmente lato client).
-  return cachedRead(
-    `range:${start}|${end}`,
-    () =>
-      pb.collection(COLLECTION).getFullList({
-        filter: pb.filter('date >= {:start} && date <= {:end}', { start, end }),
-        sort: 'timeStart',
-      }),
-    {
-      // fresh (pull-to-refresh): aspetta la rete invece di servire la cache
-      softMs: fresh ? 30000 : undefined,
-      fallback: async () => {
-        const all = await cacheGet('notes:all')
-        if (!all) return undefined
-        return all.value
-          .filter((n) => n.date >= start && n.date <= end)
-          .sort((a, b) => (a.timeStart < b.timeStart ? -1 : a.timeStart > b.timeStart ? 1 : 0))
-      },
-    },
+  return cachedRead(`range:${start}|${end}`, () =>
+    pb.collection(COLLECTION).getFullList({
+      filter: pb.filter('date >= {:start} && date <= {:end}', { start, end }),
+      sort: 'timeStart',
+    }),
   )
 }
 
@@ -64,12 +150,14 @@ export async function listNotesForDay(date) {
 }
 
 export async function getNote(id) {
+  if (!isLocal && (await readyStore()) && store.byId.has(id)) return store.byId.get(id)
   return cachedRead(`note:${id}`, () => pb.collection(COLLECTION).getOne(id))
 }
 
 // Conteggio di tutte le note mai scritte (nessun filtro sull'anno): una
 // pagina da 1 elemento basta, serve solo `totalItems`.
 export async function countAllNotes() {
+  if (!isLocal && (await readyStore())) return store.byId.size
   return cachedRead('count', async () => {
     const res = await pb.collection(COLLECTION).getList(1, 1, { fields: 'id' })
     return res.totalItems
@@ -160,7 +248,7 @@ export async function createNote(
   data,
   { newFiles = [], peopleIds = [], tagIds = [], queue = true } = {},
 ) {
-  return runOrQueue(
+  const rec = await runOrQueue(
     { kind: 'create', data, newFiles, peopleIds, tagIds },
     () =>
       pb.collection(COLLECTION).create(
@@ -175,6 +263,8 @@ export async function createNote(
       ),
     queue,
   )
+  storeUpsert(rec)
+  return rec
 }
 
 export async function updateNote(
@@ -188,7 +278,7 @@ export async function updateNote(
     queue = true,
   } = {},
 ) {
-  return runOrQueue(
+  const rec = await runOrQueue(
     { kind: 'update', id, data, newFiles, removedImages, peopleIds, tagIds },
     () =>
       pb.collection(COLLECTION).update(
@@ -203,11 +293,15 @@ export async function updateNote(
       ),
     queue,
   )
+  storeUpsert(rec)
+  return rec
 }
 
 export async function deleteNote(id, { queue = true } = {}) {
-  return runOrQueue({ kind: 'delete', id }, () =>
+  const res = await runOrQueue({ kind: 'delete', id }, () =>
     pb.collection(COLLECTION).delete(id), queue)
+  storeRemove(id)
+  return res
 }
 
 // Riproduce la coda offline in ordine FIFO. Si ferma appena torna un errore
@@ -351,7 +445,7 @@ export async function listNotesWithPlace(placeName) {
 export async function reassignPlaceInNotes(toPlace, notes) {
   const value = toPlace?.name ? serializePlace(toPlace) : ''
   for (const n of notes) {
-    await pb.collection(COLLECTION).update(n.id, { place: value })
+    storeUpsert(await pb.collection(COLLECTION).update(n.id, { place: value }))
   }
 }
 
@@ -371,7 +465,7 @@ export async function reassignPersonInNotes(fromId, toId, notes) {
   for (const n of notes) {
     const next = (n.people || []).filter((id) => id !== fromId)
     if (toId && !next.includes(toId)) next.push(toId)
-    await pb.collection(COLLECTION).update(n.id, { people: next })
+    storeUpsert(await pb.collection(COLLECTION).update(n.id, { people: next }))
   }
 }
 
@@ -397,30 +491,48 @@ export async function listNotesFiltered({
   hasSongs,
   hasPlace,
 } = {}) {
-  const clauses = []
-  const params = {}
-  if (start) {
-    clauses.push('date >= {:start}')
-    params.start = start
+  // Con l'archivio in memoria (vedi sopra) i filtri su date, mood e luogo
+  // si applicano in locale, senza richiesta al server; la sintassi `~` di
+  // PocketBase equivale a una sottostringa senza maiuscole.
+  let list
+  if (!isLocal && (await readyStore())) {
+    const placeQ = place && place.trim().toLowerCase()
+    list = [...store.byId.values()]
+      .filter(
+        (n) =>
+          (!start || n.date >= start) &&
+          (!end || n.date <= end) &&
+          (moodMin == null || n.mood >= moodMin) &&
+          (moodMax == null || n.mood <= moodMax) &&
+          (!placeQ || String(n.place || '').toLowerCase().includes(placeQ)),
+      )
+      .sort((x, y) => (x.date < y.date ? -1 : x.date > y.date ? 1 : 0))
+  } else {
+    const clauses = []
+    const params = {}
+    if (start) {
+      clauses.push('date >= {:start}')
+      params.start = start
+    }
+    if (end) {
+      clauses.push('date <= {:end}')
+      params.end = end
+    }
+    if (moodMin != null) {
+      clauses.push('mood >= {:moodMin}')
+      params.moodMin = moodMin
+    }
+    if (moodMax != null) {
+      clauses.push('mood <= {:moodMax}')
+      params.moodMax = moodMax
+    }
+    if (place && place.trim()) {
+      clauses.push('place ~ {:place}')
+      params.place = place.trim()
+    }
+    const filter = clauses.length ? pb.filter(clauses.join(' && '), params) : ''
+    list = await pb.collection(COLLECTION).getFullList({ filter, sort: 'date' })
   }
-  if (end) {
-    clauses.push('date <= {:end}')
-    params.end = end
-  }
-  if (moodMin != null) {
-    clauses.push('mood >= {:moodMin}')
-    params.moodMin = moodMin
-  }
-  if (moodMax != null) {
-    clauses.push('mood <= {:moodMax}')
-    params.moodMax = moodMax
-  }
-  if (place && place.trim()) {
-    clauses.push('place ~ {:place}')
-    params.place = place.trim()
-  }
-  const filter = clauses.length ? pb.filter(clauses.join(' && '), params) : ''
-  let list = await pb.collection(COLLECTION).getFullList({ filter, sort: 'date' })
   if (personIds && personIds.length) {
     list = list.filter((n) => (n.people || []).some((id) => personIds.includes(id)))
   }

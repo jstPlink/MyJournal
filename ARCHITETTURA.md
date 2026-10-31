@@ -1,4 +1,4 @@
-# MyJournal – Architettura (v0.84.1)
+# MyJournal – Architettura (v0.84.2)
 
 Panoramica tecnica e guida per rispondere alle domande sul progetto. Per l'uso dell'app vedi [docs/GUIDA.md](docs/GUIDA.md); per la
 cronologia, `src/lib/changelog.js`; per il deploy, [deploy/README.md](deploy/README.md).
@@ -66,7 +66,7 @@ luoghi (`src/lib/leaflet.js`).
 | `navStack.js` | Pila di navigazione a livelli e registro dei pannelli aperti (vedi §13). |
 | `sort.js` | `sortByName`: ordine alfabetico italiano per tag e luoghi. |
 | `toast.js` | `toast('testo', ms)`: avviso mostrato da `Toaster`. |
-| `cache.js`, `prefetch.js`, `offlineQueue.js` | Lettura da cache IndexedDB con aggiornamento in background; precaricamento all'apertura; coda delle scritture offline (`flushQueue` in `notes.js`). |
+| `cache.js`, `prefetch.js`, `offlineQueue.js` | Lettura da cache IndexedDB con aggiornamento in background; precaricamento all'apertura; coda delle scritture offline (`flushQueue` in `notes.js`). **Note: archivio in memoria** in `notes.js` (`refreshNotesStore`): UNA richiesta con tutte le note all'apertura (da `prefetchAll`); `listNotesInRange`/`listNotesForDay`/`getNote`/`countAllNotes` leggono da lì senza rete. Il server si richiama solo dopo create/update/delete (il record restituito aggiorna l'archivio), con pull-to-refresh, al ritorno in primo piano se l'archivio ha più di 2 minuti (`refreshNotesIfStale`, in `StatusPills`) e al ritorno della rete; se i dati cambiano le pagine si ricaricano (`emitCacheUpdate`). |
 | `gemini.js` | REST diretta a Gemini con la chiave dell'utente (modello in `MODEL`). Pulizia testo, bozze, estrazione da screenshot, trascrizione vocale, retry su sovraccarico. |
 | `immich.js`, `spotify.js`, `mymap.js` | Integrazioni esterne (vedi §5). |
 | `integrationDocs.js` | Guide `.md` scaricabili per Immich, Spotify, Gemini, MyMap. |

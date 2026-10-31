@@ -119,6 +119,9 @@ export function subscribeCacheUpdates(fn) {
   updateListeners.add(fn)
   return () => updateListeners.delete(fn)
 }
+export function emitCacheUpdate(key) {
+  updateListeners.forEach((fn) => fn(key))
+}
 function emitUpdate(key) {
   updateListeners.forEach((fn) => fn(key))
 }

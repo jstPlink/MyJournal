@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.84.2',
+    date: '2026-10-31 12:00',
+    changes: [
+      "Caricamento più veloce: all'apertura l'app scarica tutte le note con una sola richiesta; calendario, giorno, Andamento, Statistiche e Cerca leggono da lì e il server si richiama solo dopo aver creato, modificato o eliminato una nota, con il pull-to-refresh o al ritorno nell'app dopo qualche minuto.",
+    ],
+  },
+  {
     version: '0.84.1',
     date: '2026-10-29 13:00',
     changes: [

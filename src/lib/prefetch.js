@@ -6,6 +6,7 @@
 import { pb, fileUrl, isLocal } from './pocketbase'
 import { cacheSet, markOk, markSlow, THUMBS_CACHE } from './cache'
 import { isNetworkError } from './offlineQueue'
+import { refreshNotesStore } from './notes'
 
 const THUMB_SIZE = '300x300'
 let running = false
@@ -46,18 +47,17 @@ export async function prefetchAll() {
   if (running || !pb.authStore.isValid) return
   running = true
   try {
+    // le note passano dall'archivio in memoria di notes.js (una sola richiesta)
     const [notes, people, tags, places] = await Promise.all([
-      pb.collection('note').getFullList({ sort: 'timeStart' }),
+      refreshNotesStore(),
       pb.collection('people').getFullList({ sort: 'name' }),
       pb.collection('tags').getFullList({ sort: 'name' }),
       pb.collection('places').getFullList({ sort: 'name' }),
     ])
     await Promise.all([
-      cacheSet('notes:all', notes),
       cacheSet('people', people),
       cacheSet('tags', tags),
       cacheSet('places', places),
-      cacheSet('count', notes.length),
       ...notes.map((n) => cacheSet(`note:${n.id}`, n)),
     ])
     markOk()

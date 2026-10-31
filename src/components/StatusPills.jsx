@@ -7,6 +7,7 @@ import RecapQueueTab from './RecapQueueTab'
 import { useAuth } from '../context/AuthContext'
 import { useConnection } from '../hooks/useConnection'
 import { prefetchAll } from '../lib/prefetch'
+import { refreshNotesIfStale } from '../lib/notes'
 
 function hhmm(ms) {
   const d = new Date(ms)
@@ -25,8 +26,14 @@ export default function StatusPills() {
     if (!isAuthed) return
     prefetchAll()
     const onOnline = () => prefetchAll()
+    // ritorno in primo piano: riscarica le note se l'archivio ha più di 2 minuti
+    const onVisible = () => document.visibilityState === 'visible' && refreshNotesIfStale()
     window.addEventListener('online', onOnline)
-    return () => window.removeEventListener('online', onOnline)
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      window.removeEventListener('online', onOnline)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
   }, [isAuthed])
 
   const offline = conn.status === 'offline'
