@@ -124,6 +124,16 @@ export default function Sidebar() {
           <span className="sb-item-wrap">
             <span className="sb-item-underlay" aria-hidden="true" />
             <NavLink
+              to="/giorno"
+              className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
+            >
+              <Icon name="sun" size={17} />
+              <span className="sb-item-label">Vista giorno</span>
+            </NavLink>
+          </span>
+          <span className="sb-item-wrap">
+            <span className="sb-item-underlay" aria-hidden="true" />
+            <NavLink
               to="/"
               end
               className={'sb-item' + (calendarActive ? ' active' : '')}

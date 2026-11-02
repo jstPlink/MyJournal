@@ -30,6 +30,7 @@ import StatsView from './pages/StatsView'
 import FilterView from './pages/FilterView'
 import WebLogin from './pages/web/WebLogin'
 import WebDiary from './pages/web/WebDiary'
+import WebDayBook from './pages/web/WebDayBook'
 import WebMonth from './pages/web/WebMonth'
 import WebDay from './pages/web/WebDay'
 import WebNote from './pages/web/WebNote'
@@ -56,10 +57,16 @@ function DesktopShell({ children }) {
       }
     >
       <Sidebar />
-      <main className={'min-w-0 flex-1 overflow-y-auto overflow-x-hidden' + (isDream ? ' dream-main' : '')}>
+      <main
+        className={
+          'min-w-0 flex-1 overflow-x-hidden ' +
+          ((pathname.startsWith('/diario') || pathname.startsWith('/giorno')) ? 'overflow-y-hidden' : 'overflow-y-auto') +
+          (isDream ? ' dream-main' : '')
+        }
+      >
         <div
           key={pathname}
-          className={'anim-page ' + (isDream ? '' : 'mx-auto max-w-[1180px] px-8 py-8 xl:px-12')}
+          className={'anim-page ' + (isDream ? '' : ((pathname.startsWith('/diario') || pathname.startsWith('/giorno')) ? 'mx-auto max-w-[1760px] px-4 py-8' : 'mx-auto max-w-[1180px] px-8 py-8 xl:px-12'))}
         >
           {children}
         </div>
@@ -153,6 +160,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <Screen mobile={DiaryView} desktop={WebDiary} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/giorno"
+              element={
+                <RequireAuth>
+                  <Screen mobile={DiaryView} desktop={WebDayBook} />
                 </RequireAuth>
               }
             />
