@@ -114,12 +114,22 @@ export default function Sidebar() {
           <span className="sb-item-wrap">
             <span className="sb-item-underlay" aria-hidden="true" />
             <NavLink
+              to="/diario"
+              className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
+            >
+              <Icon name="book" size={17} />
+              <span className="sb-item-label">Vista diario</span>
+            </NavLink>
+          </span>
+          <span className="sb-item-wrap">
+            <span className="sb-item-underlay" aria-hidden="true" />
+            <NavLink
               to="/"
               end
               className={'sb-item' + (calendarActive ? ' active' : '')}
             >
               <Icon name="calendar" size={17} />
-              <span className="sb-item-label">Calendario</span>
+              <span className="sb-item-label">Vista mese</span>
             </NavLink>
           </span>
           <span className="sb-item-wrap">
@@ -129,7 +139,7 @@ export default function Sidebar() {
               className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
             >
               <Icon name="chart" size={17} />
-              <span className="sb-item-label">Andamento</span>
+              <span className="sb-item-label">Vista anno</span>
             </NavLink>
           </span>
           <span className="sb-item-wrap">
@@ -139,7 +149,7 @@ export default function Sidebar() {
               className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
             >
               <Icon name="bar-chart" size={17} />
-              <span className="sb-item-label">Statistiche</span>
+              <span className="sb-item-label">Dati totali</span>
             </NavLink>
           </span>
         </nav>
@@ -153,16 +163,6 @@ export default function Sidebar() {
           <span className="sb-lens">
             <span>Cerca</span>
           </span>
-        </NavLink>
-
-        <NavLink
-          to="/importa"
-          title="Funzione provvisoria"
-          className={({ isActive }) => 'sb-import' + (isActive ? ' active' : '')}
-        >
-          <Icon name="alert-triangle" size={14} />
-          <b>Importa</b>
-          <span className="beta">beta</span>
         </NavLink>
 
         <button type="button" onClick={() => navigate('/profilo')} className="sb-id" title="Profilo">

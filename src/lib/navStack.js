@@ -17,7 +17,7 @@ const KEY = 'myjournal.navStack'
 
 function level(path) {
   const p = path.split('?')[0]
-  if (p === '/' || p === '/dati' || p === '/statistiche') return 0
+  if (p === '/' || p === '/dati' || p === '/statistiche' || p === '/diario') return 0
   if (p.startsWith('/note') || p.startsWith('/dream')) return 2
   return 1
 }

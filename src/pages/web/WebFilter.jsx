@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import DateStub from '../../components/DateStub'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
@@ -7,6 +8,7 @@ import {
   peopleUsageCounts,
   songsUsageList,
   plainText,
+  displayTitle,
 } from '../../lib/notes'
 import { listPeople, topByUsage } from '../../lib/people'
 import { listTags } from '../../lib/tags'
@@ -14,7 +16,7 @@ import { listPlaces } from '../../lib/places'
 import { moodColor, moodTextColor } from '../../lib/mood'
 import Icon from '../../components/Icon'
 import PersonAvatar from '../../components/PersonAvatar'
-import { dateRangeBounds, dayKey, dayMonthLabel, timeLabel } from '../../lib/dates'
+import { dateRangeBounds, dayKey, dayMonthLabel } from '../../lib/dates'
 import { listDreamsFiltered, dreamTitle } from '../../lib/dreams'
 
 const SORTS = [
@@ -613,8 +615,14 @@ export default function WebFilter() {
                         type="button"
                         onClick={() => navigate(`/note/${n.id}`)}
                         style={{ '--i': i }}
-                        className="anim-row wf-result"
+                        className="anim-row wf-result tk-row"
                       >
+                        <DateStub dateKey={dayKey(n.date)} />
+                        <span className="tk-text">
+                          <span className="tk-line">
+                            {n.title ? displayTitle(n.title) : <span className="italic">Senza titolo</span>}
+                          </span>
+                        </span>
                         <span
                           className="wf-result-badge"
                           style={{
@@ -623,17 +631,6 @@ export default function WebFilter() {
                           }}
                         >
                           {Math.round(Number(n.mood) * 100)}
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="wf-result-title title-2">
-                            {n.title || (
-                              <span className="italic text-ink-soft">Senza titolo</span>
-                            )}
-                          </span>
-                          <span className="wf-result-meta block">
-                            {dayMonthLabel(dayKey(n.date))} · {timeLabel(n.timeStart)}–
-                            {timeLabel(n.timeEnd)}
-                          </span>
                         </span>
                       </button>
                     </li>

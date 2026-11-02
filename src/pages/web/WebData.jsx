@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import YearMoodChart from '../../components/YearMoodChart'
 import Icon from '../../components/Icon'
+import PeriodRecapCard from '../../components/PeriodRecapCard'
+import StatsBody from '../../components/web/StatsBody'
+import { useAuth } from '../../context/AuthContext'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import { useNav } from '../../context/NavContext'
 import { listNotesInRange, describeError } from '../../lib/notes'
@@ -59,6 +62,8 @@ function MonthDayBars({ year, month, groups, onOpenDay }) {
 export default function WebData() {
   const navigate = useNavigate()
   const { cursor, setCursor } = useNav()
+  const { user } = useAuth()
+  const geminiApiKey = user?.geminiApiKey?.trim()
   const year = cursor.year
   const [notes, setNotes] = useState([])
   const [loading, setLoading] = useState(true)
@@ -122,7 +127,7 @@ export default function WebData() {
             subito il titolo. */}
         <header className="relative z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
           <h1 className="wd-page-title justify-self-start">
-            Andamento
+            Vista anno
             <span className="hl" aria-hidden="true" />
           </h1>
           <div ref={navRef} className="justify-self-center">
@@ -162,10 +167,20 @@ export default function WebData() {
         </p>
       )}
 
+      <PeriodRecapCard
+        period="year"
+        periodKey={String(year)}
+        notes={notes}
+        apiKey={geminiApiKey}
+        tab="Recap dell'anno"
+        hideTitle
+        className="mb-8"
+      />
+
       <div className="wd-card-wrap">
         <div className="wd-header">
           <Icon name="chart" size={19} />
-          <h2>Umore nell'anno</h2>
+          <h2>Andamento</h2>
         </div>
         <div className="wd-card">
           <div className="wd-intro">
@@ -199,7 +214,7 @@ export default function WebData() {
       <div className="wd-card-wrap alt">
         <div className="wd-header">
           <Icon name="calendar" size={19} />
-          <h2>Mese per mese</h2>
+          <h2>Panoramica</h2>
         </div>
         <div className="wd-card">
           <p className="wd-intro-solo">
@@ -257,6 +272,16 @@ export default function WebData() {
               </li>
             ))}
           </ul>
+        </div>
+      </div>
+
+      <div className="wd-card-wrap">
+        <div className="wd-header">
+          <Icon name="bar-chart" size={19} />
+          <h2>Statistiche</h2>
+        </div>
+        <div className="wd-card">
+          <StatsBody notes={notes} year={year} loading={loading} />
         </div>
       </div>
     </div>

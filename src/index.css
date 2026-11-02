@@ -9788,3 +9788,314 @@ li:last-child > .st-row {
   margin-top: 28px;
   padding-left: 6px;
 }
+
+/* Riga a biglietto con strappo (stile scelto per giorni/note nelle
+   statistiche e per i risultati di Cerca): tallone con anno serif su
+   fascia scura e giorno/mese centrati, titoli in elenco, mood in un
+   cartoncino quadrato ruotato. */
+.tk-row {
+  --tk-stub: 92px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  margin: 10px 0;
+  border: none;
+  border-radius: 6px;
+  background: color-mix(in srgb, #fff 55%, var(--color-cream));
+  filter: drop-shadow(1px 2px 0 rgba(43, 34, 24, 0.22));
+  transition: transform 0.15s ease;
+}
+.tk-row:hover,
+.tk-row:focus-visible {
+  background: color-mix(in srgb, #fff 55%, var(--color-cream));
+  transform: translateY(-1px);
+}
+li:last-child > .tk-row {
+  margin-bottom: 8px;
+}
+.tk-row::before,
+.tk-row::after {
+  content: '';
+  position: absolute;
+  left: var(--tk-stub);
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--color-cream);
+}
+.tk-row::before {
+  top: -6px;
+}
+.tk-row::after {
+  bottom: -6px;
+}
+.ds {
+  flex: none;
+  width: var(--tk-stub);
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 2px dashed #b9a885;
+  border-radius: 6px 0 0 6px;
+  text-align: center;
+}
+.ds-y {
+  font-style: normal;
+  padding: 5px 0;
+  background: #e6d7ae;
+  color: #5a4416;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+}
+.ds-c {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 2px;
+  line-height: 1.1;
+}
+.ds-d {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.45rem;
+  color: var(--color-ink);
+}
+.ds-m {
+  margin-top: 2px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+.tk-text {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tk-line {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  font-weight: 400;
+  color: var(--color-ink-soft);
+}
+.tk-row .st-row-badge,
+.tk-row .wf-result-badge {
+  position: relative;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  margin: 0 16px 0 0;
+  border-radius: 4px;
+  transform: rotate(-7deg);
+  font-size: 1rem;
+  box-shadow: 1px 3px 0 rgba(0, 0, 0, 0.25), inset 0 0 0 2px rgba(255, 255, 255, 0.55);
+}
+.tk-row .st-row-badge::after,
+.tk-row .wf-result-badge::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1.5px dashed currentColor;
+  opacity: 0.6;
+  border-radius: 2px;
+}
+@media (max-width: 480px) {
+  .tk-row {
+    --tk-stub: 78px;
+  }
+  .ds-y {
+    font-size: 0.95rem;
+  }
+  .ds-d {
+    font-size: 1.25rem;
+  }
+  .tk-text {
+    padding: 10px 10px;
+  }
+  .tk-row .st-row-badge,
+  .tk-row .wf-result-badge {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    font-size: 0.9rem;
+  }
+}
+
+/* tre tessere in una sola riga (Anno e Di sempre), anche su telefono */
+.st-tiles.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+@media (max-width: 480px) {
+  .st-tiles.three {
+    gap: 8px;
+  }
+  .st-tiles.three .st-tile {
+    padding: 11px 10px 10px;
+  }
+  .st-tiles.three .st-tile-label {
+    font-size: 0.56rem;
+    letter-spacing: 0;
+  }
+}
+
+/* icone di mese / settimana / giorno migliore e peggiore: verde i
+   positivi, rosso i negativi, con il contorno dello stesso colore */
+.st-mt-icon.tone-pos { background: #d3eccb; color: #2a7a33; border: 2px solid currentColor; }
+.st-mt-icon.tone-neg { background: #f8d6d0; color: #b2362a; border: 2px solid currentColor; }
+
+/* «su N» accanto al numero dei giorni scritti, sulla stessa riga */
+.st-tile-of {
+  margin-left: 8px;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+@media (max-width: 480px) {
+  .st-tile-of { margin-left: 6px; }
+  .st-tiles.three { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr) minmax(0, 0.95fr); }
+  .st-tiles.three .st-tile { padding-left: 8px; padding-right: 8px; }
+  .st-tiles.three .st-tile-label { white-space: nowrap; font-size: 0.5rem; gap: 3px; }
+}
+
+/* «In questo giorno»: un biglietto per anno, linea tratteggiata con un
+   pallino per anno al centro di ogni biglietto, note con elenco puntato. */
+.otd-tab {
+  margin-bottom: 10px;
+}
+.otd-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.otd-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 86px 18px minmax(0, 1fr) auto;
+  gap: 0 10px;
+  align-items: center;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: color-mix(in srgb, #fff 55%, var(--color-cream));
+  filter: drop-shadow(1px 2px 0 rgba(43, 34, 24, 0.18));
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: var(--cursor-pointer);
+  transition: transform 0.15s ease;
+}
+.otd-card:hover,
+.otd-card:focus-visible {
+  transform: translateY(-1px);
+}
+.otd-year {
+  text-align: right;
+  line-height: 1.1;
+}
+.otd-year b {
+  display: block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 1.35rem;
+  color: var(--color-ink);
+}
+.otd-year span {
+  font-size: 0.75rem;
+  color: #6b4e0b;
+}
+.otd-dot {
+  position: relative;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.otd-dot::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  bottom: -12px;
+  border-left: 2px dashed #a8956a;
+}
+.otd-list > .otd-card:first-child .otd-dot::before {
+  top: 50%;
+}
+.otd-list > .otd-card:last-child .otd-dot::before {
+  bottom: 50%;
+}
+.otd-list > .otd-card:only-child .otd-dot::before {
+  display: none;
+}
+.otd-dot i {
+  position: relative;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #f2b01e;
+  border: 2.5px solid #2b2218;
+}
+.otd-notes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.otd-notes li {
+  position: relative;
+  margin: 2px 0;
+  padding-left: 14px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+.otd-notes li::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8a6a1a;
+}
+.otd-mood {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  transform: rotate(-7deg);
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 1px 2px 0 rgba(0, 0, 0, 0.25), inset 0 0 0 2px rgba(255, 255, 255, 0.5);
+}
+@media (max-width: 480px) {
+  .otd-card {
+    grid-template-columns: 64px 16px minmax(0, 1fr) auto;
+    gap: 0 8px;
+    padding: 10px;
+  }
+  .otd-year b {
+    font-size: 1.15rem;
+  }
+  .otd-mood {
+    width: 32px;
+    height: 32px;
+  }
+}

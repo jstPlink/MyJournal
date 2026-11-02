@@ -60,6 +60,16 @@ export async function countDreamsInYear(year) {
   }
 }
 
+// Tutti i sogni segnati (pagina «Di sempre»).
+export async function countAllDreams() {
+  try {
+    const res = await pb.collection(COLLECTION).getList(1, 1, { fields: 'id' })
+    return res.totalItems
+  } catch {
+    return 0
+  }
+}
+
 // Ricerca: periodo (start/end già in formato PocketBase) e testo (titolo o descrizione).
 export function listDreamsFiltered({ start, end, text = '' } = {}) {
   const parts = []

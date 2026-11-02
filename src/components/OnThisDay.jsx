@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { pb } from '../lib/pocketbase'
 import { parseWall, dayMonthLabel } from '../lib/dates'
-import { plainText } from '../lib/notes'
+import { plainText, displayTitle } from '../lib/notes'
 import Icon from './Icon'
+import { dayMood, moodColor, moodTextColor } from '../lib/mood'
 
 const pad = (n) => String(n).padStart(2, '0')
 
@@ -24,7 +25,6 @@ export default function OnThisDay({ className = '' }) {
         // Il campo `date` è "YYYY-MM-DD 00:00:00.000Z": lo spazio finale evita
         // falsi positivi con la parte oraria.
         filter: pb.filter('date ~ {:md}', { md: `-${mm}-${dd} ` }),
-        fields: 'id,title,content,date',
         sort: '-date',
       })
       .then((list) => {
@@ -53,44 +53,49 @@ export default function OnThisDay({ className = '' }) {
 
   if (!groups || groups.length === 0) return null
 
+  const thisYear = new Date().getFullYear()
+  const today = dayMonthLabel(`${thisYear}-${pad(new Date().getMonth() + 1)}-${pad(new Date().getDate())}`)
+
   return (
-    <div
-      className={'anim-unfurl rounded-2xl border border-line bg-cream p-3 ' + className}
-    >
-      <p className="mb-1.5 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide text-ink-soft">
-        <Icon name="calendar" size={13} className="shrink-0" />
-        In questo giorno
-      </p>
-      <div className="space-y-1">
+    <div className={'anim-unfurl otd ' + className}>
+      <span className="st-label otd-tab">
+        <Icon name="calendar" size={12} />
+        In questo giorno · {today.toLowerCase()}
+      </span>
+      <div className="otd-list">
         {groups.map((g) => {
-          const n = g.notes[0]
-          const preview =
-            n.title?.trim() ||
-            plainText(n.content).slice(0, 70) ||
-            `${g.notes.length} not${g.notes.length === 1 ? 'a' : 'e'}`
+          const ago = thisYear - g.year
+          const mood = dayMood(g.notes)
+          const lines = g.notes.map(
+            (n) => (n.title?.trim() ? displayTitle(n.title.trim()) : plainText(n.content).slice(0, 70) || 'Senza titolo'),
+          )
           return (
             <button
               key={g.year}
               type="button"
               onClick={() => navigate(`/day/${g.key}`)}
-              className="flex w-full items-center gap-2 rounded-xl px-2 py-1.5 text-left transition hover:bg-tag active:bg-tag"
+              className="otd-card"
             >
-              <span className="shrink-0 text-sm font-bold tabular-nums text-ink">
-                {g.year}
+              <span className="otd-year">
+                <b>{g.year}</b>
+                <span>
+                  {ago} {ago === 1 ? 'anno' : 'anni'} fa
+                </span>
               </span>
-              <span className="min-w-0 flex-1 truncate text-sm text-ink-soft">
-                {preview}
-                {g.notes.length > 1 && (
-                  <span className="ml-1 text-xs">
-                    +{g.notes.length - 1}
-                  </span>
-                )}
+              <span className="otd-dot">
+                <i />
               </span>
-              <Icon
-                name="chevron-right"
-                size={14}
-                className="shrink-0 text-ink-soft"
-              />
+              <ul className="otd-notes">
+                {lines.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
+              <span
+                className="otd-mood"
+                style={{ backgroundColor: moodColor(mood), color: moodTextColor(mood) }}
+              >
+                {Math.round(mood * 100)}
+              </span>
             </button>
           )
         })}

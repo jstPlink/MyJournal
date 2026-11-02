@@ -151,6 +151,36 @@ export async function listNotesInRange({ start, end }, { fresh = false } = {}) {
   )
 }
 
+// Tutte le note, ma solo i campi che servono alle statistiche: `content`
+// (fino a 200 000 caratteri), immagini, canzoni... restano sul server, così
+// anche migliaia di note viaggiano in pochi pacchetti. Pagine da 1000 (il
+// massimo di PocketBase) e cache dedicata; con la cache già piena la pagina
+// mostra subito i dati salvati e si aggiorna in background.
+// Se l'archivio in memoria (sopra) è disponibile si legge da lì, senza rete.
+const STATS_FIELDS = 'id,title,date,timeStart,timeEnd,mood,people,tags,place'
+export async function listAllNotesLight({ fresh = false } = {}) {
+  if (!isLocal) {
+    if (fresh) await refreshNotesStore({ silent: false })
+    if (await readyStore({ wait: true })) return sortByTimeStart([...store.byId.values()])
+  }
+  return cachedRead(
+    'notes:statsLight',
+    () =>
+      pb.collection(COLLECTION).getFullList({
+        batch: 1000,
+        fields: STATS_FIELDS,
+        sort: 'timeStart',
+      }),
+    {
+      softMs: fresh ? 30000 : undefined,
+      fallback: async () => {
+        const all = await cacheGet('notes:all')
+        return all?.value
+      },
+    },
+  )
+}
+
 // Una nota "a cavallo della notte" (fine prima dell'inizio, es. 22:00 → 03:00)
 // appartiene a due giorni: quello in cui inizia e quello in cui finisce.
 export function crossesMidnight(n) {
@@ -184,6 +214,15 @@ export async function countAllNotes() {
     const res = await pb.collection(COLLECTION).getList(1, 1, { fields: 'id' })
     return res.totalItems
   })
+}
+
+// Titolo per le righe di statistiche e ricerca: i titoli sono salvati in
+// maiuscolo, qui si mostrano con le iniziali maiuscole ("COLAZIONE CON GIULIA"
+// → "Colazione Con Giulia"). Solo visualizzazione, la nota non cambia.
+export function displayTitle(title) {
+  return (title || '')
+    .toLowerCase()
+    .replace(/(^|[\s\-'’(])(\p{L})/gu, (_, sep, ch) => sep + ch.toUpperCase())
 }
 
 // Il luogo è salvato come JSON { name, lat, lon } dentro il campo testo

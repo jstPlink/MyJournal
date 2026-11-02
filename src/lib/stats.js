@@ -32,7 +32,7 @@ function mondayKey(dKey) {
 }
 
 // Statistiche aggregate sulle note di un anno.
-export function computeYearStats(yearNotes, { allPeople = [], allTags = [] } = {}) {
+export function computeYearStats(yearNotes, { allPeople = [], allTags = [], peopleLimit = 10 } = {}) {
   const byDay = groupByDay(yearNotes)
   const dayEntries = [...byDay.entries()].map(([key, notes]) => ({
     key,
@@ -129,6 +129,16 @@ export function computeYearStats(yearNotes, { allPeople = [], allTags = [] } = {
     name,
     count: monthNoteCount[i],
   }))
+  // Note per anno (serve alla pagina «Di sempre», dove le note abbracciano
+  // più anni): dal più recente.
+  const yearCounts = new Map()
+  for (const n of yearNotes) {
+    const p = parseWall(n.date)
+    if (p) yearCounts.set(p.y, (yearCounts.get(p.y) || 0) + 1)
+  }
+  const notesByYear = [...yearCounts.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([y, count]) => ({ year: y, name: String(y), count }))
   let bestMonth = null
   let worstMonth = null
   for (let i = 0; i < 12; i += 1) {
@@ -171,7 +181,7 @@ export function computeYearStats(yearNotes, { allPeople = [], allTags = [] } = {
   const peopleById = new Map(allPeople.map((p) => [p.id, p]))
   const topPeople = [...personCount.entries()]
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
+    .slice(0, peopleLimit)
     .map(([id, count]) => ({
       id,
       count,
@@ -194,6 +204,7 @@ export function computeYearStats(yearNotes, { allPeople = [], allTags = [] } = {
     bestWeekday,
     worstWeekday,
     notesByMonth,
+    notesByYear,
     bestMonth,
     worstMonth,
     topPeople,

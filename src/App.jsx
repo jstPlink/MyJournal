@@ -25,9 +25,11 @@ import NoteView from './pages/NoteView'
 import DreamView from './pages/DreamView'
 import Profile from './pages/Profile'
 import DataView from './pages/DataView'
+import DiaryView from './pages/DiaryView'
 import StatsView from './pages/StatsView'
 import FilterView from './pages/FilterView'
 import WebLogin from './pages/web/WebLogin'
+import WebDiary from './pages/web/WebDiary'
 import WebMonth from './pages/web/WebMonth'
 import WebDay from './pages/web/WebDay'
 import WebNote from './pages/web/WebNote'
@@ -85,7 +87,7 @@ function WebOnlyNotice() {
     <div className="flex min-h-dvh flex-col items-center justify-center gap-3 bg-sand p-8 text-center">
       <p className="text-lg font-bold text-ink">Disponibile solo da web</p>
       <p className="max-w-xs text-sm text-ink-soft">
-        L'importazione da immagine si usa dalla versione desktop/web di MyJournal.
+        Questa schermata si usa dalla versione desktop/web di MyJournal.
       </p>
       <a
         href="/"
@@ -143,6 +145,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <Screen mobile={DataView} desktop={WebData} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/diario"
+              element={
+                <RequireAuth>
+                  <Screen mobile={DiaryView} desktop={WebDiary} />
                 </RequireAuth>
               }
             />

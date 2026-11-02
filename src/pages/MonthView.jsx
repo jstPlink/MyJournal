@@ -189,7 +189,7 @@ export default function MonthView() {
           </p>
         )}
 
-        <OnThisDay className="mx-3 mb-1 mt-3" />
+        <OnThisDay className="mx-3 mb-6 mt-3" />
 
         <PeriodRecapCard
           period="month"

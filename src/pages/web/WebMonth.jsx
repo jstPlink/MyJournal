@@ -179,7 +179,7 @@ export default function WebMonth() {
         </p>
       )}
 
-      <OnThisDay className="mb-5 max-w-md" />
+      <OnThisDay className="mx-auto mb-5 w-[78%]" />
 
       <PeriodRecapCard
         period="month"

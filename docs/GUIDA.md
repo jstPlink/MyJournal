@@ -26,18 +26,19 @@ passaggio è automatico in base alla larghezza della finestra.
 
 | Schermata | Percorso | Cosa fa |
 |---|---|---|
-| **Calendario** (mese) | `/` | Un foglio per ogni giorno con note: umore medio, titoli, persone, luogo, canzone, foto. Le persone sono targhette di colori diversi (uno per persona); se in un giorno sono più di 4 se ne vedono 3 e una targhetta «+x persone» per le altre. Si cambia mese con le frecce o scorrendo; l'app apre sul mese corrente. In cima "In questo giorno" (note degli anni passati) e il recap del mese. |
+| **Vista diario** | `/diario` | Pagina vuota per ora (l'estetica arriva dopo). Prima scheda in alto a sinistra, sia sul web sia sul telefono. |
+| **Vista mese** | `/` | Un foglio per ogni giorno con note: umore medio, titoli, persone, luogo, canzone, foto. Le persone sono targhette di colori diversi (uno per persona); se in un giorno sono più di 4 se ne vedono 3 e una targhetta «+x persone» per le altre. Si cambia mese con le frecce o scorrendo; l'app apre sul mese corrente. In cima "In questo giorno" (una targhetta con un biglietto per ogni anno passato: anno e «N anni fa», titoli delle note del giorno con un pallino, quadratino del mood) e il recap del mese. |
 | **Giorno** | `/day/AAAA-MM-GG` | Le note del giorno su una timeline di 24 ore (altezza del blocco = durata; l'anteprima del testo di ogni nota rispetta gli a capo, le righe vuote, gli spazi e gli elenchi come sono scritti nella nota); un giorno senza note mostra comunque la timeline, vuota, e il blocco «Recap del giorno». I titoli lunghi vanno su due righe (nell'editor della nota il titolo va a capo da solo). Recap del giorno in cima. |
 | **Nota** | `/note/new?date=…` e `/note/:id` | Editor: data, orari, mood, titolo, testo, e i pulsanti per immagini, persone, tag, canzoni, luogo. Salva (verde) o elimina (rosso). |
 | **Sogno** | `/dream/new?date=…` e `/dream/:id` | Pagina celeste per scrivere un sogno: giorno e orario (00:00 se non sai quando) come due pendagli appesi, **nitidezza** con una barra di puntini da sfocati a nitidi, titolo e descrizione su un foglio tondo con le Z che salgono. Da telefono c'è un pallino con il microfono, fisso in basso al centro, per dettare; da web no. Si apre dalla voce «Sogno» di «Nuova nota» (o dal pulsante con la luna nella barra laterale del web). |
-| **Andamento** | `/dati` | Grafico dell'umore nell'anno e mese per mese; da web ogni barretta apre quel giorno. |
-| **Statistiche** | `/statistiche` | Persone più presenti, giorni/settimane/mesi migliori e peggiori, note migliori e peggiori, tag e luogo più usati, note per mese, recap dell'anno. Ogni voce cliccabile apre le note corrispondenti. |
+| **Vista anno** | `/dati` | Recap dell'anno in alto, poi «Andamento» (grafico dell'umore nell'anno) e «Panoramica» (mese per mese; da web ogni barretta apre quel giorno) e in fondo il blocco «Statistiche» dell'anno: note totali, giorni scritti, sogni, mese e settimana migliori e peggiori, persone più presenti (12), note per mese, giorni e note migliori e peggiori. |
+| **Dati totali** | `/statistiche` | Le stesse statistiche su tutto il diario: note totali, giorni scritti sul totale dei giorni di calendario dalla prima nota («10 su 4324»), sogni, mese/settimana/giorno della settimana più felici e più tristi, persone più presenti (10), note per anno (ultimi 10), giorni e note migliori e peggiori. Legge solo i campi leggeri delle note, così è veloce anche con migliaia di note. Ogni voce cliccabile apre le note corrispondenti. |
 | **Cerca** | `/filtri` | Filtri per periodo, mood, testo, luogo, persone, tag, canzoni; ordinamento e numero massimo di risultati. |
-| **Importa** (solo web) | `/importa` | Migrazione di note da uno screenshot (Gemini) o da un foglio di calcolo esportato (TSV/CSV). |
+| **Importa** (solo web, senza pulsante: si apre scrivendo l'indirizzo) | `/importa` | Migrazione di note da uno screenshot (Gemini) o da un foglio di calcolo esportato (TSV/CSV). |
 | **Impostazioni** | `/profilo` | Aspetto, dati utente, integrazioni, uso offline, novità, archivio e account. |
 | **Mood Lab** (nascosto) | `/mood-lab` | Banco di prova della formula del mood; vedi §5. |
 
-**Indietro.** Il tasto/gesto «indietro» di Android e le frecce dell'app risalgono a livelli: nota → giorno (o Cerca/Impostazioni) → schermata principale (Calendario, Andamento o Statistiche); prima si chiude l'eventuale pannello aperto. Cambiare giorno con le frecce non aggiunge livelli. Dalla schermata principale il tasto di Android esce dall'app.
+**Indietro.** Il tasto/gesto «indietro» di Android e le frecce dell'app risalgono a livelli: nota → giorno (o Cerca/Impostazioni) → schermata principale (Vista diario, mese, anno o Dati totali); prima si chiude l'eventuale pannello aperto. Cambiare giorno con le frecce non aggiunge livelli. Dalla schermata principale il tasto di Android esce dall'app.
 
 ## 4. Scrivere una nota
 
@@ -166,7 +167,7 @@ Oltre alla PWA esiste un'app Android (file **APK**) con lo stesso account e gli 
   del giorno" arriva anche ad app chiusa e senza rete, e toccandola si apre la scelta Gemini / a mano. Sono salvati sul dispositivo.
 - **Vibrazione:** un tocco leggero sui pulsanti d'azione e sui tasti «indietro» (non su schede, filtri e selezioni).
 - **Linguette sul bordo destro:** toccandole si aprono (o si chiudono) con un piccolo scatto e un suono, se i suoni sono accesi.
-- **Vibrazione:** anche cambiando scheda di vista (Calendario / Andamento / Statistiche); dal widget un tic leggero appena l'app si apre dal tasto toccato.
+- **Vibrazione:** anche cambiando scheda di vista (Vista diario / mese / anno / Dati totali); dal widget un tic leggero appena l'app si apre dal tasto toccato.
 - **Aggiorna tirando:** nella vista mese (telefono) tira verso il basso per rileggere le note dal server.
 - Dentro l'app non c'è service worker: l'interfaccia è nell'APK e si aggiorna installando un nuovo APK; i dati arrivano sempre dal
   server che hai scelto (o dal dispositivo, in modalità locale).
@@ -193,3 +194,5 @@ Oltre alla PWA esiste un'app Android (file **APK**) con lo stesso account e gli 
 
 - **Calendario, persone:** le targhette dei nomi hanno colori diversi (una tonalità per persona); se in un giorno le persone sono più di 4 se ne vedono 3 e una targhetta «+x persone» per le altre. Le targhette non finiscono più sopra il cartoncino del mood, nemmeno con titoli lunghi.
 - **Calendario (web):** l'etichetta del mood e le foto non sono più tagliate ai lati nelle pagine con il bordo strappato; i titoli delle note sono più piccoli del 10%.
+
+- **Righe a biglietto:** giorni e note migliori/peggiori (Anno, Dati totali) e risultati di Cerca sono biglietti con strappo: tallone con anno serif su fascia sabbia e giorno/mese, titoli con le iniziali maiuscole (solo in queste righe) e mood in un cartoncino quadrato ruotato.

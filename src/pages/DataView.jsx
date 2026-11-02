@@ -8,6 +8,9 @@ import ViewTabs from '../components/ViewTabs'
 import YearPill from '../components/YearPill'
 import YearMoodChart from '../components/YearMoodChart'
 import Icon from '../components/Icon'
+import PeriodRecapCard from '../components/PeriodRecapCard'
+import StatsBody from '../components/StatsBody'
+import { useAuth } from '../context/AuthContext'
 import { useNav } from '../context/NavContext'
 import { listNotesInRange, describeError } from '../lib/notes'
 import { yearWeeklyMood, moodColor, moodTextColor } from '../lib/mood'
@@ -51,6 +54,8 @@ function WeekBars({ groups }) {
 export default function DataView() {
   const navigate = useNavigate()
   const { cursor, setCursor } = useNav()
+  const { user } = useAuth()
+  const geminiApiKey = user?.geminiApiKey?.trim()
   const year = cursor.year
   const [notes, setNotes] = useState([])
   const [loading, setLoading] = useState(true)
@@ -101,10 +106,20 @@ export default function DataView() {
           <p className="py-10 text-center text-ink-soft">Carico…</p>
         ) : (
           <>
+            <PeriodRecapCard
+              period="year"
+              periodKey={String(year)}
+              notes={notes}
+              apiKey={geminiApiKey}
+              tab="Recap dell'anno"
+              hideTitle
+              className="mb-5"
+            />
+
             <div className="wd-card-wrap">
               <div className="wd-header">
                 <Icon name="chart" size={17} />
-                <h2>Umore nell'anno</h2>
+                <h2>Andamento</h2>
               </div>
               <div className="wd-card">
                 <div className="wd-legend">
@@ -121,7 +136,7 @@ export default function DataView() {
             <div className="wd-card-wrap alt">
               <div className="wd-header">
                 <Icon name="calendar" size={17} />
-                <h2>Mese per mese</h2>
+                <h2>Panoramica</h2>
               </div>
               <div className="wd-card">
                 <p className="wd-intro-solo">
@@ -162,6 +177,16 @@ export default function DataView() {
                     </li>
                   ))}
                 </ul>
+              </div>
+            </div>
+
+            <div className="wd-card-wrap alt">
+              <div className="wd-header">
+                <Icon name="bar-chart" size={17} />
+                <h2>Statistiche</h2>
+              </div>
+              <div className="wd-card">
+                <StatsBody notes={notes} year={year} loading={loading} />
               </div>
             </div>
           </>

@@ -9,6 +9,18 @@
 
 export const CHANGELOG = [
   {
+    version: '0.85.0',
+    date: '2026-11-02 18:00',
+    changes: [
+      "Le schede principali si chiamano Vista diario, Vista mese, Vista anno e Dati totali. Vista diario è nuova (per ora vuota), sia sul web sia sul telefono.",
+      "Vista anno: in alto il recap dell'anno, poi Andamento e Panoramica, in fondo il blocco Statistiche dell'anno (note, giorni scritti, sogni, mesi e settimane migliori e peggiori, 12 persone, note per mese, giorni e note migliori e peggiori).",
+      "Dati totali: statistiche su tutto il diario, con i giorni scritti sul totale dei giorni di calendario e le note per anno (ultimi 10). Si apre veloce anche con molte note.",
+      "Giorni e note migliori e peggiori e risultati di Cerca sono biglietti con strappo: anno ben leggibile, titoli delle note del giorno e mood in un cartoncino quadrato ruotato.",
+      "In questo giorno: una targhetta con un biglietto per ogni anno passato, linea con pallini, anno con «N anni fa» e note puntate; sul web larga come il recap del mese.",
+      "Icone di mesi, settimane e giorni migliori e peggiori verdi e rosse, con contorno. Tolto il pulsante Importa dalla barra laterale web.",
+    ],
+  },
+  {
     version: '0.84.4',
     date: '2026-10-31 17:00',
     changes: [
