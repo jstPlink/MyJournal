@@ -471,7 +471,9 @@ function paginate(days, hts, cap) {
 // foto). Le pagine si sfogliano
 // a coppie, come un libro aperto, senza scorrere: se le note di un giorno non
 // stanno in una pagina, il giorno continua sulla successiva.
-export default function WebDiary() {
+// `phone`: sul telefono la stessa pagina web, ma si vede una pagina alla volta
+// (metà sinistra o destra del libro) e l'intestazione è quella dell'app.
+export default function WebDiary({ phone = false }) {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { cursor, setCursor } = useNav()
@@ -483,6 +485,7 @@ export default function WebDiary() {
   const [openYear, setOpenYear] = useState(false)
   const [openMonth, setOpenMonth] = useState(false)
   const [spread, setSpread] = useState(0)
+  const [half, setHalf] = useState(0) // telefono: 0 = pagina sinistra, 1 = destra
   const [heights, setHeights] = useState(() => new Map())
   const [cap, setCap] = useState(0)
   const navRef = useRef(null)
@@ -624,6 +627,7 @@ export default function WebDiary() {
       }
     }
     setSpread(Math.floor(target / 2))
+    setHalf(pending.current === 'end' ? 1 : target % 2)
   }, [loading, cap, pages, keys, cursor.year, cursor.month])
 
   const cur = Math.min(spread, spreadCount - 1)
@@ -655,6 +659,20 @@ export default function WebDiary() {
     [flip, cur, spreadCount, setCursor],
   )
 
+  // telefono: si sfoglia una pagina alla volta; a fine coppia si gira davvero
+  const step = useCallback(
+    (n) => {
+      if (!phone) return go(n)
+      if (n > 0 && half === 0) setHalf(1)
+      else if (n < 0 && half === 1) setHalf(0)
+      else {
+        go(n)
+        setHalf(n > 0 ? 0 : 1)
+      }
+    },
+    [phone, half, go],
+  )
+
   // arrivati nel mese precedente, si resta sull'ultima coppia di pagine anche
   // mentre le misure si assestano
   useEffect(() => {
@@ -664,12 +682,12 @@ export default function WebDiary() {
   useEffect(() => {
     const onKey = (e) => {
       if (e.target.closest?.('input, textarea, [contenteditable]')) return
-      if (e.key === 'ArrowLeft') go(-1)
-      else if (e.key === 'ArrowRight') go(1)
+      if (e.key === 'ArrowLeft') step(-1)
+      else if (e.key === 'ArrowRight') step(1)
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [go])
+  }, [step])
 
   const ctx = {
     peopleById,
@@ -687,7 +705,8 @@ export default function WebDiary() {
   }
 
   return (
-    <div className="dg-wrap">
+    <div className={'dg-wrap' + (phone ? ` phone h${half}` : '')}>
+      {!phone && (
       <div className="dg-banner sticky top-0 z-10 mb-[50px] mt-[40px] w-full bg-cream">
         <span className="header-quadretti bleed-month" aria-hidden="true" />
         <header className="relative z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
@@ -753,6 +772,7 @@ export default function WebDiary() {
           <span className="justify-self-end text-sm text-ink-soft">{loading && 'Aggiorno…'}</span>
         </header>
       </div>
+      )}
 
       {error && (
         <p className="mb-4 rounded-2xl bg-delete/15 px-4 py-3 text-sm text-delete-dark">{error}</p>
@@ -783,7 +803,7 @@ export default function WebDiary() {
           type="button"
           className="dg-flip l"
           aria-label="Pagine precedenti"
-          onClick={() => go(-1)}
+          onClick={() => step(-1)}
         >
           ‹
         </button>
@@ -791,7 +811,7 @@ export default function WebDiary() {
           type="button"
           className="dg-flip r"
           aria-label="Pagine successive"
-          onClick={() => go(1)}
+          onClick={() => step(1)}
         >
           ›
         </button>

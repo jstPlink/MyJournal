@@ -4753,7 +4753,7 @@ li:last-child > .wd-month-row {
   color: #4a3f2c;
   font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.86rem;
   transition: color 0.2s ease;
 }
 .mtab.active {
@@ -11141,12 +11141,21 @@ li:last-child > .tk-row {
 .dg-recap-block .dg-recap-page .prc-card { margin-top: 0; }
 .dg-recap-block .prc-head { margin-top: 26px; }
 
-/* Diario (telefono): la pagina web com'è, ridotta in scala per entrare nello schermo */
+/* Diario (telefono): la pagina web com'è, in scala, una pagina alla volta */
 .md-webdiary { position: relative; overflow: hidden; }
-.md-webdiary .md-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; width: 1260px; height: 1080px; padding: 0 16px; box-sizing: border-box; }
-.md-webdiary .dg-wrap { height: 1080px; }
-.md-webdiary .dg-banner { max-width: calc((1080px - 230px) * 1.4142); }
-.md-webdiary .dg-book { max-width: none; }
+.md-webdiary .md-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; width: 1202px; height: 866px; }
+.md-webdiary .dg-wrap { height: 866px; }
+.md-webdiary .dg-book { max-width: none; transition: transform 0.35s ease; }
+.dg-wrap.phone.h1 .dg-book { transform: translateX(-50%); }
+.dg-wrap.phone .dg-flip { width: 60px; height: 140px; margin-top: -70px; font-size: 3rem; z-index: 8; }
+.dg-wrap.phone.h0 .dg-flip.l { left: 0; }
+.dg-wrap.phone.h0 .dg-flip.r { left: 50%; right: auto; margin-left: -60px; border-radius: 8px 0 0 8px; }
+.dg-wrap.phone.h1 .dg-flip.l { left: 50%; border-radius: 0 8px 8px 0; }
+.dg-wrap.phone.h1 .dg-flip.r { right: 0; }
 
 /* pulsanti Statistiche e Diario ai lati del «+» */
 .mnav-footer-side.left { justify-content: space-between; }
+
+/* con i pulsanti Statistiche e Diario: cinque cerchi equidistanti */
+.mnav-footer.five { display: flex; justify-content: space-between; }
+.mnav-footer.five .mnav-footer-side { display: contents; }

@@ -122,7 +122,7 @@ export default function Footer({ items = [], onPrimary, primaryIcon = 'plus', pr
   }
 
   return (
-    <div className="mnav-footer">
+    <div className={'mnav-footer' + (viewNav ? ' five' : '')}>
       <div className="mnav-footer-side left">{left.map(renderCircle)}</div>
       <button
         type="button"

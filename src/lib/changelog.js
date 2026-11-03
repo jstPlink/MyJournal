@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.87.2',
+    date: '2026-11-03 19:30',
+    changes: [
+      "Telefono: i cinque pulsanti in basso sono equidistanti e le scritte Giorno, Mese e Anno sono un po' più grandi.",
+      "Diario (telefono): una pagina alla volta, con frecce ai lati per sfogliare, e l'intestazione con mese e anno uguale al resto dell'app.",
+    ],
+  },
+  {
     version: '0.87.1',
     date: '2026-11-03 18:30',
     changes: [
