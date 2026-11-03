@@ -224,6 +224,7 @@ export default function MonthView() {
       <MobileBottomBar>
         <ViewTabs active="month" />
         <Footer
+          viewNav
           items={[
             {
               icon: 'settings',

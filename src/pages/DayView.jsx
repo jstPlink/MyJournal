@@ -185,6 +185,7 @@ export default function DayView() {
       <MobileBottomBar>
         <ViewTabs active="day" />
         <Footer
+          viewNav
           items={[
             {
               icon: 'settings',

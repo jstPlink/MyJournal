@@ -5,16 +5,14 @@ const TABS = [
   { key: 'day', path: '/', label: 'Giorno' },
   { key: 'month', path: '/mese', label: 'Mese' },
   { key: 'data', path: '/dati', label: 'Anno' },
-  { key: 'stats', path: '/statistiche', label: 'Stat' },
-  { key: 'diary', path: '/diario', label: 'Diario' },
 ]
 
-// Selettore di vista (Giorno / Mese / Anno / Stat / Diario): un'unica
+// Selettore di vista (Giorno / Mese / Anno): un'unica
 // striscia di cartoncino bianco — una targhetta rettangolare in metallo
 // dorato inquadra l'opzione attiva e scivola sopra quella scelta.
 export default function ViewTabs({ active }) {
   const navigate = useNavigate()
-  const activeIndex = Math.max(0, TABS.findIndex((t) => t.key === active))
+  const activeIndex = TABS.findIndex((t) => t.key === active) // -1: pagina fuori dalle schede (Statistiche, Diario)
 
   function go(path) {
     haptic()
@@ -25,7 +23,11 @@ export default function ViewTabs({ active }) {
     <div className="mtabs">
       <div
         className="mtab-plaque"
-        style={{ left: `${activeIndex * (100 / TABS.length)}%`, width: `calc(${100 / TABS.length}% - 6px)` }}
+        style={{
+          left: `${Math.max(0, activeIndex) * (100 / TABS.length)}%`,
+          width: `calc(${100 / TABS.length}% - 6px)`,
+          ...(activeIndex < 0 ? { display: 'none' } : null),
+        }}
         aria-hidden="true"
       />
       {TABS.map((tab) => (

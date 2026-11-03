@@ -351,42 +351,6 @@ function DayPage({ page, side, number, ctx }) {
   )
 }
 
-// Telefono: il giorno è un foglio unico che si allunga quanto serve (niente
-// pagine affiancate né impaginazione), con le stesse note, recap e mood.
-export function DayFlowPage({ dKey, notes, ctx }) {
-  const p = parseWall(dKey)
-  const sorted = useMemo(
-    () => [...notes].sort((a, b) => String(a.timeStart).localeCompare(String(b.timeStart))),
-    [notes],
-  )
-  const mood = dayMood(sorted)
-  return (
-    <section className={`dg-page l dg-flow${isWeekend(dKey) ? ' wknd' : ''}`}>
-      <span className="dg-margin" aria-hidden="true" />
-      <div className="dg-band">
-        <button type="button" className="dg-day" onClick={() => ctx.onOpen(`/day/${dKey}`)} title="Apri il giorno">
-          <b>{p.d}</b>
-          <span>{weekdayLong(dKey)}</span>
-        </button>
-      </div>
-      <div className="dg-scroll">
-        <DayRecap dKey={dKey} notes={sorted} apiKey={ctx.geminiApiKey} />
-        {sorted.map((n) => (
-          <NoteBlock key={n.id} n={n} {...ctx} />
-        ))}
-      </div>
-      {mood != null && (
-        <span className="dg-torn" style={{ '--nm': moodColor(mood) }} title="Mood del giorno">
-          <span className="dg-torn-card">
-            <span className="dg-torn-cap">mood</span>
-            <b>{Math.round(mood * 100)}</b>
-          </span>
-        </span>
-      )}
-    </section>
-  )
-}
-
 // Distribuisce le note nelle pagine: ogni giorno parte da una pagina nuova e
 // una nota intera non si spezza — se non ci sta nello spazio rimasto passa
 // alla pagina successiva. Solo una nota più alta di una pagina intera viene

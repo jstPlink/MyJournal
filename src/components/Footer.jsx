@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Icon from './Icon'
 import { useAuth } from '../context/AuthContext'
 import { fileUrl } from '../lib/pocketbase'
@@ -84,10 +85,24 @@ function SearchCircle({ onClick, title, active }) {
 // non passate non occupano spazio (nessun placeholder). "settings" e
 // "search" hanno un materiale dedicato (tessera/lente); le altre restano
 // un ritaglio di carta generico.
-export default function Footer({ items = [], onPrimary, primaryIcon = 'plus', primaryTitle }) {
-  const visible = items.filter(Boolean)
-  const left = visible.filter((it) => it.icon !== 'settings')
-  const right = visible.filter((it) => it.icon === 'settings')
+export default function Footer({ items = [], onPrimary, primaryIcon = 'plus', primaryTitle, viewNav = false }) {
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  // viewNav: Statistiche a sinistra e Diario a destra del pulsante «nuova nota»
+  const visible = [
+    ...items.filter(Boolean),
+    ...(viewNav
+      ? [
+          { icon: 'bar-chart', title: 'Statistiche', active: pathname === '/statistiche', onClick: () => navigate('/statistiche') },
+          { icon: 'book', title: 'Diario', side: 'right', active: pathname === '/diario', onClick: () => navigate('/diario') },
+        ]
+      : []),
+  ]
+  const left = visible.filter((it) => it.icon !== 'settings' && it.side !== 'right')
+  const right = [
+    ...visible.filter((it) => it.side === 'right'),
+    ...visible.filter((it) => it.icon === 'settings'),
+  ]
   const [popPrimary, setPopPrimary] = useState(false)
 
   function renderCircle(it, i) {

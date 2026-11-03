@@ -11141,18 +11141,12 @@ li:last-child > .tk-row {
 .dg-recap-block .dg-recap-page .prc-card { margin-top: 0; }
 .dg-recap-block .prc-head { margin-top: 26px; }
 
-/* Anno (telefono): ogni mese ha la riga mese + punteggio e sotto i cartoncini dei giorni */
-.md-month { display: flex; flex-direction: column; gap: 6px; padding: 8px 2px; }
-.md-month-head { display: flex; align-items: center; justify-content: space-between; background: none; border: 0; padding: 0; color: inherit; text-align: left; }
-.md-tiles { flex-wrap: wrap; gap: 3px; padding: 2px; }
-.md-tiles .wd-day-tile { width: 21px; height: 21px; font-size: 0.6rem; }
+/* Diario (telefono): la pagina web com'è, ridotta in scala per entrare nello schermo */
+.md-webdiary { position: relative; overflow: hidden; }
+.md-webdiary .md-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; width: 1260px; height: 1080px; padding: 0 16px; box-sizing: border-box; }
+.md-webdiary .dg-wrap { height: 1080px; }
+.md-webdiary .dg-banner { max-width: calc((1080px - 230px) * 1.4142); }
+.md-webdiary .dg-book { max-width: none; }
 
-/* Diario (telefono): un foglio a righe per giorno, alto quanto serve */
-.md-diary .dg-page.dg-flow { height: auto; overflow: visible; margin: 0 10px 26px; border-radius: 8px; box-shadow: 0 6px 12px -6px rgba(40, 28, 8, 0.45); }
-.md-diary .dg-flow .dg-margin { left: 26px; }
-.md-diary .dg-flow .dg-band { position: relative; height: 72px; padding: 0 12px 10px 36px; }
-.md-diary .dg-flow .dg-day b { font-size: 2.6rem; }
-.md-diary .dg-flow .dg-day span { font-size: 1rem; }
-.md-diary .dg-flow .dg-scroll { position: relative; inset: auto; top: auto; overflow: visible; padding: 1px 14px 18px 36px; }
-.md-diary .dg-flow .dg-torn { zoom: 0.72; top: 8px; right: 12px; }
-.md-diary .dg-flow .dg-aside { zoom: 0.62; }
+/* pulsanti Statistiche e Diario ai lati del «+» */
+.mnav-footer-side.left { justify-content: space-between; }

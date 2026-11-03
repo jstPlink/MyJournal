@@ -40,7 +40,7 @@ export default function StatsView() {
       <MobileTopBar>
         <h1
           className="text-center text-ink"
-          style={{ fontFamily: "'MyJournal Marker', 'Caveat', cursive", fontSize: '1.7rem' }}
+          style={{ fontFamily: "'MyJournal Pen', 'Permanent Marker', cursive", fontSize: '1.5rem' }}
         >
           Statistiche
         </h1>
@@ -70,6 +70,7 @@ export default function StatsView() {
       <MobileBottomBar>
         <ViewTabs active="stats" />
         <Footer
+          viewNav
           items={[
             {
               icon: 'settings',

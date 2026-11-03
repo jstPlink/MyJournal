@@ -9,6 +9,15 @@
 
 export const CHANGELOG = [
   {
+    version: '0.87.1',
+    date: '2026-11-03 18:30',
+    changes: [
+      "Telefono: Statistiche e Diario sono due pulsanti ai lati del «+» e le schede in basso restano Giorno, Mese e Anno.",
+      "Vista anno (telefono): grafico dell'andamento più basso e Panoramica di nuovo a tacchette. Il titolo Statistiche usa il carattere dei foglietti.",
+      "Diario (telefono): è la stessa pagina del web, rimpicciolita per entrare nello schermo.",
+    ],
+  },
+  {
     version: '0.87.0',
     date: '2026-11-03 17:00',
     changes: [
