@@ -32,7 +32,7 @@ export default function WebStats() {
         <span className="header-quadretti bleed-day" aria-hidden="true" />
         <header className="relative z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
           <h1 className="wd-page-title justify-self-start">
-            Dati totali
+            Statistiche
             <span className="hl" aria-hidden="true" />
           </h1>
           <span aria-hidden="true" />

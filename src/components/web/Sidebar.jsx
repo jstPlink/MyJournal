@@ -26,9 +26,9 @@ export default function Sidebar() {
   // nell'editor nota (/note/...), pagine raggiunte da lì e senza una voce
   // propria nella barra laterale.
   const calendarActive =
-    location.pathname === '/' ||
-    location.pathname.startsWith('/day/') ||
-    location.pathname.startsWith('/note')
+    location.pathname === '/mese' || location.pathname.startsWith('/note')
+  // la pagina iniziale è la vista giorno (oggi); anche i singoli giorni la accendono
+  const dayActive = location.pathname === '/' || location.pathname.startsWith('/day/')
 
   // "Nuova nota" prende la data del giorno che si sta guardando: quella in
   // vista giorno (/day/:date), altrimenti oggi (vista mese e tutte le altre
@@ -114,29 +114,19 @@ export default function Sidebar() {
           <span className="sb-item-wrap">
             <span className="sb-item-underlay" aria-hidden="true" />
             <NavLink
-              to="/diario"
-              className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
+              to="/"
+              end
+              className={() => 'sb-item' + (dayActive ? ' active' : '')}
             >
-              <Icon name="book" size={17} />
-              <span className="sb-item-label">Vista diario</span>
-            </NavLink>
-          </span>
-          <span className="sb-item-wrap">
-            <span className="sb-item-underlay" aria-hidden="true" />
-            <NavLink
-              to="/giorno"
-              className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
-            >
-              <Icon name="sun" size={17} />
+              <Icon name="note" size={17} />
               <span className="sb-item-label">Vista giorno</span>
             </NavLink>
           </span>
           <span className="sb-item-wrap">
             <span className="sb-item-underlay" aria-hidden="true" />
             <NavLink
-              to="/"
-              end
-              className={'sb-item' + (calendarActive ? ' active' : '')}
+              to="/mese"
+              className={() => 'sb-item' + (calendarActive ? ' active' : '')}
             >
               <Icon name="calendar" size={17} />
               <span className="sb-item-label">Vista mese</span>
@@ -148,7 +138,7 @@ export default function Sidebar() {
               to="/dati"
               className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
             >
-              <Icon name="chart" size={17} />
+              <Icon name="timeline" size={17} />
               <span className="sb-item-label">Vista anno</span>
             </NavLink>
           </span>
@@ -159,7 +149,17 @@ export default function Sidebar() {
               className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
             >
               <Icon name="bar-chart" size={17} />
-              <span className="sb-item-label">Dati totali</span>
+              <span className="sb-item-label">Statistiche</span>
+            </NavLink>
+          </span>
+          <span className="sb-item-wrap">
+            <span className="sb-item-underlay" aria-hidden="true" />
+            <NavLink
+              to="/diario"
+              className={({ isActive }) => 'sb-item' + (isActive ? ' active' : '')}
+            >
+              <Icon name="book" size={17} />
+              <span className="sb-item-label">Diario</span>
             </NavLink>
           </span>
         </nav>

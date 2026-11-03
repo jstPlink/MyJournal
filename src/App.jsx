@@ -30,7 +30,6 @@ import StatsView from './pages/StatsView'
 import FilterView from './pages/FilterView'
 import WebLogin from './pages/web/WebLogin'
 import WebDiary from './pages/web/WebDiary'
-import WebDayBook from './pages/web/WebDayBook'
 import WebMonth from './pages/web/WebMonth'
 import WebDay from './pages/web/WebDay'
 import WebNote from './pages/web/WebNote'
@@ -44,29 +43,23 @@ import MoodLab from './pages/MoodLab'
 // Shell desktop: barra laterale fissa + area contenuti scrollabile.
 function DesktopShell({ children }) {
   const { pathname } = useLocation()
-  // Nota: sfondo un filo più scuro del cream standard — altrimenti si
-  // confonde col foglio della nota (stesso tono).
-  const isNotePage = pathname.startsWith('/note')
   // la pagina del sogno ha un suo cielo celeste: occupa tutta l'area, senza la carta a righe dietro
   const isDream = pathname.startsWith('/dream')
   return (
     <div
-      className={
-        'app-paper flex h-dvh w-full overflow-hidden text-ink ' +
-        (isNotePage ? 'webnote-bg' : 'bg-cream')
-      }
+      className="app-paper flex h-dvh w-full overflow-hidden text-ink bg-cream"
     >
       <Sidebar />
       <main
         className={
           'min-w-0 flex-1 overflow-x-hidden ' +
-          ((pathname.startsWith('/diario') || pathname.startsWith('/giorno')) ? 'overflow-y-hidden' : 'overflow-y-auto') +
+          (pathname.startsWith('/diario') ? 'overflow-y-hidden' : 'overflow-y-auto') +
           (isDream ? ' dream-main' : '')
         }
       >
         <div
           key={pathname}
-          className={'anim-page ' + (isDream ? '' : ((pathname.startsWith('/diario') || pathname.startsWith('/giorno')) ? 'mx-auto max-w-[1760px] px-4 py-8' : 'mx-auto max-w-[1180px] px-8 py-8 xl:px-12'))}
+          className={'anim-page ' + (isDream ? '' : (pathname.startsWith('/diario') ? 'mx-auto max-w-[1760px] px-4 py-8' : 'mx-auto max-w-[1180px] px-8 py-8 xl:px-12'))}
         >
           {children}
         </div>
@@ -127,6 +120,14 @@ export default function App() {
               path="/"
               element={
                 <RequireAuth>
+                  <Screen mobile={MonthView} desktop={WebDay} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/mese"
+              element={
+                <RequireAuth>
                   <Screen mobile={MonthView} desktop={WebMonth} />
                 </RequireAuth>
               }
@@ -163,14 +164,7 @@ export default function App() {
                 </RequireAuth>
               }
             />
-            <Route
-              path="/giorno"
-              element={
-                <RequireAuth>
-                  <Screen mobile={DiaryView} desktop={WebDayBook} />
-                </RequireAuth>
-              }
-            />
+            <Route path="/giorno" element={<Navigate to="/" replace />} />
             <Route
               path="/statistiche"
               element={

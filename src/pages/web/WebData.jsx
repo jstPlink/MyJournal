@@ -23,7 +23,7 @@ const CHART_LINE_COLORS = { day: '#a9906e', week: '#5ea9d6', month: '#e0655e' }
 function MonthDayBars({ year, month, groups, onOpenDay }) {
   return (
     <div className="wd-day-bars">
-      <div className="wd-day-bars-track">
+      <div className="wd-day-tiles">
         {groups.map((g, i) => {
           const day = i + 1
           const label = `${day} ${MONTHS_IT[month]}`
@@ -35,25 +35,13 @@ function MonthDayBars({ year, month, groups, onOpenDay }) {
               aria-label={label}
               disabled={!g.count}
               onClick={() => onOpenDay(dayKey(new Date(year, month, day)))}
-              className="wd-day-bar"
+              className={'wd-day-tile' + (g.mood == null ? ' empty' : '')}
+              style={g.mood == null ? undefined : { '--tc': moodColor(g.mood) }}
             >
-              <i
-                style={
-                  g.mood == null
-                    ? { height: '10%', backgroundColor: 'var(--color-line)' }
-                    : { height: `${Math.max(10, g.mood * 100)}%`, backgroundColor: moodColor(g.mood) }
-                }
-              />
+              <span>{day}</span>
             </button>
           )
         })}
-      </div>
-      <div className="wd-day-bars-ticks">
-        {groups.map((g, i) => (
-          <span key={i} style={{ left: `${((i + 0.5) / groups.length) * 100}%` }}>
-            {i + 1}
-          </span>
-        ))}
       </div>
     </div>
   )
@@ -127,7 +115,7 @@ export default function WebData() {
             subito il titolo. */}
         <header className="relative z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
           <h1 className="wd-page-title justify-self-start">
-            Vista anno
+            Anno
             <span className="hl" aria-hidden="true" />
           </h1>
           <div ref={navRef} className="justify-self-center">
@@ -167,15 +155,21 @@ export default function WebData() {
         </p>
       )}
 
-      <PeriodRecapCard
-        period="year"
-        periodKey={String(year)}
-        notes={notes}
-        apiKey={geminiApiKey}
-        tab="Recap dell'anno"
-        hideTitle
-        className="mb-8"
-      />
+      <div className="wd-card-wrap dg-recap-block">
+        <div className="wd-header">
+          <Icon name="sparkles" size={19} />
+          <h2>Recap dell'anno</h2>
+        </div>
+        <div className="dg-recap dg-recap-page">
+          <PeriodRecapCard
+            period="year"
+            periodKey={String(year)}
+            notes={notes}
+            apiKey={geminiApiKey}
+            hideTitle
+          />
+        </div>
+      </div>
 
       <div className="wd-card-wrap">
         <div className="wd-header">
@@ -229,7 +223,7 @@ export default function WebData() {
                     type="button"
                     onClick={() => {
                       setCursor({ year, month: m.month })
-                      navigate('/')
+                      navigate('/mese')
                     }}
                     title={`Apri ${MONTHS_IT[m.month]}`}
                     className="wd-month-tag-btn"
@@ -246,7 +240,7 @@ export default function WebData() {
                     type="button"
                     onClick={() => {
                       setCursor({ year, month: m.month })
-                      navigate('/')
+                      navigate('/mese')
                     }}
                     title={`Apri ${MONTHS_IT[m.month]}`}
                     className="wd-month-score-btn"

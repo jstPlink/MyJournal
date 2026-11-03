@@ -138,6 +138,40 @@ function NoteRow({ note, onClick, style }) {
 }
 
 
+// Elenco che mostra le prime `visible` righe; le altre stanno in un riquadro
+// che si apre e si chiude con un'animazione (pulsante «Mostra altri» / «Comprimi»).
+function Fold({ items, visible, render, tag: Tag = 'ul', className, wrap }) {
+  const [open, setOpen] = useState(false)
+  const extra = items.length - visible
+  const body = (
+    <>
+      <Tag className={wrap ? undefined : className}>{items.slice(0, visible).map((it, i) => render(it, i))}</Tag>
+      {extra > 0 && (
+        <>
+          <div className={'cx' + (open ? ' open' : '')}>
+            <div className="cx-in" inert={!open}>
+              <Tag className={wrap ? undefined : className}>
+                {items.slice(visible).map((it, i) => render(it, i + visible))}
+              </Tag>
+            </div>
+          </div>
+          <button
+            type="button"
+            className={'st-more' + (open ? ' open' : '')}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? 'Comprimi' : `Mostra altri ${extra}`}
+            <Icon name="chevron-right" size={12} />
+          </button>
+        </>
+      )}
+    </>
+  )
+  // `wrap`: il riquadro (sfondo, bordo) avvolge elenco e pulsante insieme
+  return wrap ? <div className={wrap}>{body}</div> : body
+}
+
 // Tutte le statistiche calcolate su `notes`: per un anno (`year`, pagina
 // Anno) o su tutto il diario (`year` nullo, pagina «Di sempre»). Le note
 // arrivano dal chiamante; persone, tag e sogni li carica il componente.
@@ -346,8 +380,7 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                 <Icon name="user" size={12} />
                 Persone più presenti
               </span>
-              <ol className="st-people">
-                {stats.topPeople.map((p, i) => (
+              <Fold tag="ol" wrap="st-people" items={stats.topPeople} visible={5} render={(p, i) => (
                   <li key={p.id} className="st-person-row">
                     <span className="st-rank">{i + 1}</span>
                     <PersonAvatar
@@ -361,8 +394,8 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                       {p.count} {p.count === 1 ? 'nota' : 'note'}
                     </span>
                   </li>
-                ))}
-              </ol>
+                
+)} />
             </section>
           ) : (
             <span aria-hidden="true" />
@@ -375,8 +408,7 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                 {year ? 'Note per mese' : 'Note per anno'}
               </span>
               <div className="st-rows st-months">
-                <ul>
-                  {(year ? stats.notesByMonth : stats.notesByYear.slice(0, 10)).map((m, i) => (
+                <Fold tag="ul" items={(year ? stats.notesByMonth : stats.notesByYear.slice(0, 10))} visible={5} render={(m, i) => (
                     <li key={m.month ?? m.year}>
                       <MonthRow
                         month={m}
@@ -386,8 +418,8 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                         }
                       />
                     </li>
-                  ))}
-                </ul>
+                  
+)} />
               </div>
             </section>
           )}
@@ -403,8 +435,7 @@ export default function StatsBody({ notes, year = null, loading = false }) {
               Giorni migliori
             </span>
             <div className="st-rows">
-              <ul>
-                {stats.topDays.map((d, i) => (
+              <Fold tag="ul" items={stats.topDays} visible={3} render={(d, i) => (
                   <li key={d.key}>
                     <DayRow
                       day={d}
@@ -412,8 +443,8 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                       onClick={() => navigate(`/day/${d.key}`)}
                     />
                   </li>
-                ))}
-              </ul>
+                
+)} />
             </div>
           </section>
         )}
@@ -425,8 +456,7 @@ export default function StatsBody({ notes, year = null, loading = false }) {
               Giorni più difficili
             </span>
             <div className="st-rows">
-              <ul>
-                {stats.bottomDays.map((d, i) => (
+              <Fold tag="ul" items={stats.bottomDays} visible={3} render={(d, i) => (
                   <li key={d.key}>
                     <DayRow
                       day={d}
@@ -434,8 +464,8 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                       onClick={() => navigate(`/day/${d.key}`)}
                     />
                   </li>
-                ))}
-              </ul>
+                
+)} />
             </div>
           </section>
         )}
@@ -449,8 +479,7 @@ export default function StatsBody({ notes, year = null, loading = false }) {
               Note migliori
             </span>
             <div className="st-rows">
-              <ul>
-                {stats.topNotes.map((n, i) => (
+              <Fold tag="ul" items={stats.topNotes} visible={3} render={(n, i) => (
                   <li key={n.id}>
                     <NoteRow
                       note={n}
@@ -458,8 +487,8 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                       onClick={() => navigate(`/note/${n.id}`)}
                     />
                   </li>
-                ))}
-              </ul>
+                
+)} />
             </div>
           </section>
         )}
@@ -471,8 +500,7 @@ export default function StatsBody({ notes, year = null, loading = false }) {
               Note peggiori
             </span>
             <div className="st-rows">
-              <ul>
-                {stats.bottomNotes.map((n, i) => (
+              <Fold tag="ul" items={stats.bottomNotes} visible={3} render={(n, i) => (
                   <li key={n.id}>
                     <NoteRow
                       note={n}
@@ -480,8 +508,8 @@ export default function StatsBody({ notes, year = null, loading = false }) {
                       onClick={() => navigate(`/note/${n.id}`)}
                     />
                   </li>
-                ))}
-              </ul>
+                
+)} />
             </div>
           </section>
         )}

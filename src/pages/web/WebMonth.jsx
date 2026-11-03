@@ -8,6 +8,7 @@ import { dreamDaysInRange } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
 import OnThisDay from '../../components/OnThisDay'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
+import Icon from '../../components/Icon'
 import MonthPages from './MonthPages'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import { MONTHS_IT, addMonths, calendarGrid } from '../../lib/dates'
@@ -113,8 +114,12 @@ export default function WebMonth() {
     <div>
       <div className="sticky top-0 z-10 mb-[50px] mt-[40px] w-full bg-cream">
         <span className="header-quadretti bleed-month" aria-hidden="true" />
-        <header className="relative z-[1] mx-auto flex w-3/5 flex-wrap items-center justify-between gap-4">
-        <div ref={navRef} className="flex flex-wrap items-center gap-3">
+        <header className="relative z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
+        <h1 className="wd-page-title justify-self-start">
+          Mese
+          <span className="hl" aria-hidden="true" />
+        </h1>
+        <div ref={navRef} className="flex flex-wrap items-center gap-3 justify-self-center">
           <ClockNav
             label={cursor.year}
             ariaLabel="Scegli anno"
@@ -169,7 +174,7 @@ export default function WebMonth() {
             }
           />
         </div>
-        {loading && <span className="text-sm text-ink-soft">Aggiorno…</span>}
+        <span className="justify-self-end text-sm text-ink-soft">{loading && 'Aggiorno…'}</span>
         </header>
       </div>
 
@@ -179,19 +184,24 @@ export default function WebMonth() {
         </p>
       )}
 
-      <OnThisDay className="mx-auto mb-5 w-[78%]" />
+      <OnThisDay foglietto className="mx-auto mb-10 w-[78%]" />
 
-      <PeriodRecapCard
-        period="month"
-        periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
-        notes={notes}
-        label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
-        apiKey={user?.geminiApiKey?.trim()}
-        tab="Recap del mese"
-        tabInside
-        hideTitle
-        className="mx-auto mb-5 w-[78%]"
-      />
+      <div className="wd-card-wrap dg-recap-block mx-auto w-[78%]">
+        <div className="wd-header">
+          <Icon name="sparkles" size={19} />
+          <h2>Recap del mese</h2>
+        </div>
+        <div className="dg-recap dg-recap-page">
+          <PeriodRecapCard
+            period="month"
+            periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
+            notes={notes}
+            label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
+            apiKey={user?.geminiApiKey?.trim()}
+            hideTitle
+          />
+        </div>
+      </div>
 
       <MonthPages
         grid={grid}

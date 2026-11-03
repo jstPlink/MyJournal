@@ -52,6 +52,21 @@ const PATHS = {
       <line x1="3" y1="10" x2="21" y2="10" />
     </>
   ),
+  note: (
+    <>
+      <path d="M13 20l7-7" />
+      <path d="M13 20v-6a1 1 0 0 1 1-1h6v-7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7" />
+    </>
+  ),
+  timeline: (
+    <>
+      <path d="M4 16l6-7 5 5 5-6" />
+      <circle cx="15" cy="14" r="1" />
+      <circle cx="10" cy="9" r="1" />
+      <circle cx="4" cy="16" r="1" />
+      <circle cx="20" cy="8" r="1" />
+    </>
+  ),
   search: (
     <>
       <circle cx="11" cy="11" r="8" />

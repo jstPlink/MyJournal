@@ -93,10 +93,16 @@ function placeOf(note) {
 // Colonna «da album» a destra del testo (il testo le scorre attorno): foto
 // a polaroid sovrapposte e storte, sotto il biglietto del luogo e il disco
 // della canzone affiancati.
-function NoteAside({ note }) {
+function NoteAside({ note, asideMax }) {
   const { name, map } = placeOf(note)
   const song = (note.songs || [])[0] || null
-  const imgs = (note.images || []).slice(0, 3).map((fn) => fileUrl(note, fn, { thumb: '300x300' }))
+  // quante polaroid ci stanno in una pagina insieme a luogo e canzone: la
+  // colonna non deve mai superare l'altezza utile del foglio
+  const hasMedia = Boolean(name || song)
+  const maxPhotos = asideMax ? Math.max(1, Math.floor((asideMax - (hasMedia ? 170 : 0) - 30) / 208)) : 3
+  const imgs = (note.images || [])
+    .slice(0, Math.min(3, maxPhotos))
+    .map((fn) => fileUrl(note, fn, { thumb: '300x300' }))
   if (!name && !song && !imgs.length) return null
   return (
     <span className="dg-aside">
@@ -179,7 +185,7 @@ function NoteTapes({ note, peopleById, tagsById, immichUrl, immichApiKey }) {
 // Una nota: titolo, testo (che scorre attorno a foto/luogo/canzone) e
 // targhette. `part` (solo per le note più alte di una pagina intera): quale
 // pezzo mostrare {from, to, title, tapes}.
-function NoteBlock({ n, part, peopleById, tagsById, immichUrl, immichApiKey, onOpen }) {
+function NoteBlock({ n, part, asideMax, peopleById, tagsById, immichUrl, immichApiKey, onOpen }) {
   const ref = useRef(null)
   useSnap(ref, [part?.from, part?.to, part?.skip, part?.endRow])
   const lines = useMemo(() => parseLines(n.content), [n.content])
@@ -221,7 +227,7 @@ function NoteBlock({ n, part, peopleById, tagsById, immichUrl, immichApiKey, onO
             )}
           </h3>
         )}
-        {showAside && <NoteAside note={n} />}
+        {showAside && <NoteAside note={n} asideMax={asideMax} />}
         <div className="dg-body">
           {shown.map((l, i) => {
             const k = (part ? part.from : 0) + i
@@ -460,95 +466,12 @@ function paginate(days, hts, cap) {
   return pages
 }
 
-// Variante «un giorno = una pagina»: tutte le note del giorno stanno sulla
-// stessa pagina. Se non ci stanno intere, si accorciano i testi (con «…») e si
-// stringono gli spazi, come la vista giorno comprime le 24 ore.
-function paginateFit(days, hts, cap) {
-  const pages = []
-  for (const d of days) {
-    const sorted = [...d.notes].sort((a, b) => String(a.timeStart).localeCompare(String(b.timeStart)))
-    const rh = hts.get(`d:${d.key}`)?.total || 0
-    const avail = cap - rh
-    const ms = sorted.map((n) => hts.get(n.id) || { total: ROW * 4, title: ROW, lines: [], tapes: 0, aside: 0 })
-    const page = { dKey: d.key, items: [], cont: false, mood: dayMood(sorted), recap: rh > 0, dayNotes: sorted }
-    pages.push(page)
-    const natural = ms.reduce((sum, m) => sum + m.total, 0) - GAP
-    if (natural <= avail) {
-      sorted.forEach((n) => page.items.push({ n, part: null }))
-      continue
-    }
-    // si prova con spazi sempre più piccoli e poi senza targhette
-    let gap = GAP
-    let tapesOn = true
-    let R = 0
-    const rowsFor = () => {
-      // le targhette occupano righe intere (più lo spazio fra le due file)
-      const tp = (m) => (tapesOn && m.tapes ? Math.ceil((m.tapes + 16) / ROW) * ROW : 0)
-      const fixed = ms.reduce((sum, m) => sum + m.title + tp(m), 0) + gap * (ms.length - 1)
-      return Math.floor((avail - fixed) / ROW)
-    }
-    for (const g of [GAP, ROW, 0]) {
-      gap = g
-      R = rowsFor()
-      if (R >= ms.length * 2) break
-    }
-    if (R < ms.length * 2) {
-      tapesOn = false
-      R = rowsFor()
-    }
-    R = Math.max(R, ms.length)
-    // ripartizione equa delle righe: chi ne chiede poche ne usa meno, il
-    // resto va agli altri
-    const rowsOf = ms.map((m) => m.lines.map((h) => Math.max(1, Math.round(h / ROW))))
-    const need = rowsOf.map((r) => r.reduce((a, b) => a + b, 0))
-    const give = need.map(() => 0)
-    const order = need.map((_, i) => i).sort((a, b) => need[a] - need[b])
-    let budget = R
-    order.forEach((idx, k) => {
-      const share = Math.max(1, Math.floor(budget / (order.length - k)))
-      give[idx] = Math.min(need[idx], share)
-      budget -= give[idx]
-    })
-    sorted.forEach((n, k) => {
-      const nl = rowsOf[k].length
-      let left = give[k]
-      let to = -1
-      let endRow = 0
-      for (let i = 0; i < nl && left > 0; i++) {
-        const r = Math.min(rowsOf[k][i], left)
-        to = i
-        endRow = r
-        left -= r
-        if (r < rowsOf[k][i]) break
-      }
-      const cut = give[k] < need[k]
-      page.items.push({
-        n,
-        part: {
-          from: 0,
-          skip: 0,
-          to,
-          endRow,
-          rows: rowsOf[k],
-          title: true,
-          tapes: tapesOn,
-          last: true,
-          noAside: true,
-          gap: k === sorted.length - 1 ? 0 : gap,
-          ellipsis: cut,
-        },
-      })
-    })
-  }
-  return pages
-}
-
 // «Vista diario»: ogni giorno del mese con note comincia su una pagina di
 // diario nuova (titoli e testo delle note, persone, tag, luoghi, musica,
 // foto). Le pagine si sfogliano
 // a coppie, come un libro aperto, senza scorrere: se le note di un giorno non
 // stanno in una pagina, il giorno continua sulla successiva.
-export default function WebDiary({ fit = false }) {
+export default function WebDiary() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { cursor, setCursor } = useNav()
@@ -681,10 +604,7 @@ export default function WebDiary({ fit = false }) {
     return () => ro.disconnect()
   }, [allNotes, peopleById, tagsById])
 
-  const pages = useMemo(
-    () => (fit ? paginateFit(days, heights, cap) : paginate(days, heights, cap)),
-    [fit, days, heights, cap],
-  )
+  const pages = useMemo(() => paginate(days, heights, cap), [days, heights, cap])
   const spreadCount = Math.max(1, Math.ceil(pages.length / 2))
 
   // all'apertura (mese corrente) si parte dalla pagina del giorno di oggi, o
@@ -758,6 +678,7 @@ export default function WebDiary({ fit = false }) {
     immichApiKey: user?.immichApiKey?.trim(),
     onOpen: navigate,
     geminiApiKey: user?.geminiApiKey?.trim(),
+    asideMax: cap > 0 ? cap - ROW * 2 : 0,
   }
 
   const renderPage = (idx) => {
@@ -767,10 +688,14 @@ export default function WebDiary({ fit = false }) {
 
   return (
     <div className="dg-wrap">
-      <div className="sticky top-0 z-10 mb-[50px] mt-[40px] w-full bg-cream">
+      <div className="dg-banner sticky top-0 z-10 mb-[50px] mt-[40px] w-full bg-cream">
         <span className="header-quadretti bleed-month" aria-hidden="true" />
-        <header className="relative z-[1] mx-auto flex w-3/5 flex-wrap items-center justify-center gap-4">
-          <div ref={navRef} className="flex flex-wrap items-center gap-3">
+        <header className="relative z-[1] grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-4">
+          <h1 className="wd-page-title justify-self-start">
+            Diario
+            <span className="hl" aria-hidden="true" />
+          </h1>
+          <div ref={navRef} className="flex flex-wrap items-center gap-3 justify-self-center">
             <ClockNav
               label={cursor.year}
               ariaLabel="Scegli anno"
@@ -825,7 +750,7 @@ export default function WebDiary({ fit = false }) {
               }
             />
           </div>
-          {loading && <span className="text-sm text-ink-soft">Aggiorno…</span>}
+          <span className="justify-self-end text-sm text-ink-soft">{loading && 'Aggiorno…'}</span>
         </header>
       </div>
 

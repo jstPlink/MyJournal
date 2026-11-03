@@ -9,6 +9,17 @@
 
 export const CHANGELOG = [
   {
+    version: '0.86.0',
+    date: '2026-11-03 15:00',
+    changes: [
+      "Web: le schede sono Vista giorno (pagina iniziale), Vista mese, Vista anno, Statistiche e Diario, con titoli e selettori di giorno, mese e anno in cima a ogni pagina.",
+      "Diario a libro aperto: una pagina A4 per giorno, note spezzate tra le pagine, foto, persone, tag, luogo e canzone, sfoglia con animazione.",
+      "Modifica nota (web): fogli A4 impilati come nel diario, con scelta di dimensione e stile del carattere.",
+      "Recap del giorno, del mese e dell'anno sono cartoncini con foglietto; In questo giorno ha il foglietto nella vista mese. Elenchi di Statistiche comprimibili e giorni dell'anno come cartoncini quadrati.",
+      "Nuove icone per Vista giorno e Vista anno.",
+    ],
+  },
+  {
     version: '0.85.0',
     date: '2026-11-02 18:00',
     changes: [

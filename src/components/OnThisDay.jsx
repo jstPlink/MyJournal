@@ -10,7 +10,7 @@ const pad = (n) => String(n).padStart(2, '0')
 
 // "In questo giorno": note scritte nella stessa data (mese-giorno) degli anni
 // precedenti. Non renderizza nulla se non ce ne sono.
-export default function OnThisDay({ className = '' }) {
+export default function OnThisDay({ className = '', foglietto = false }) {
   const navigate = useNavigate()
   const [groups, setGroups] = useState(null)
 
@@ -57,11 +57,18 @@ export default function OnThisDay({ className = '' }) {
   const today = dayMonthLabel(`${thisYear}-${pad(new Date().getMonth() + 1)}-${pad(new Date().getDate())}`)
 
   return (
-    <div className={'anim-unfurl otd ' + className}>
-      <span className="st-label otd-tab">
-        <Icon name="calendar" size={12} />
-        In questo giorno · {today.toLowerCase()}
-      </span>
+    <div className={'anim-unfurl otd ' + (foglietto ? 'wd-card-wrap otd-fg ' : '') + className}>
+      {foglietto ? (
+        <div className="wd-header">
+          <Icon name="calendar" size={19} />
+          <h2>In questo giorno · {today.toLowerCase()}</h2>
+        </div>
+      ) : (
+        <span className="st-label otd-tab">
+          <Icon name="calendar" size={12} />
+          In questo giorno · {today.toLowerCase()}
+        </span>
+      )}
       <div className="otd-list">
         {groups.map((g) => {
           const ago = thisYear - g.year

@@ -7128,7 +7128,8 @@ li:last-child > .st-row {
   flex: 1;
   text-align: left;
 }
-.ne-addtag.filled {
+.ne-addtag.filled,
+.nb-tools button.on {
   transform: rotate(-1.5deg);
   background-color: #d3b88f;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='220' viewBox='0 0 140 220'%3E%3Cg fill='none' stroke='%238f5a2c' stroke-linecap='round'%3E%3Cpath d='M4 0 Q8 25 2 48 T6 96 T1 145 T5 220' stroke-width='0.9' opacity='0.22'/%3E%3Cpath d='M13 0 Q9 22 15 46 T10 94 T16 142 T9 220' stroke-width='1.2' opacity='0.26'/%3E%3Cpath d='M23 0 Q28 28 20 52 T26 100 T19 148 T25 220' stroke-width='0.8' opacity='0.18'/%3E%3Cpath d='M32 0 Q27 20 34 44 T28 92 T35 140 T27 220' stroke-width='1.1' opacity='0.24'/%3E%3Cpath d='M42 0 Q47 26 40 50 T46 98 T39 146 T45 220' stroke-width='0.9' opacity='0.2'/%3E%3C/g%3E%3C/svg%3E"),
@@ -7144,7 +7145,8 @@ li:last-child > .st-row {
    dell'incisione che riceve luce) + ombra scura sopra (il fondo
    dell'incavo, in ombra) */
 .ne-addtag.filled .label,
-.ne-addtag.filled .count {
+.ne-addtag.filled .count,
+.nb-tools button.on {
   text-shadow: 0 1px 0 rgba(255, 245, 225, 0.5), 0 -1px 1px rgba(40, 24, 8, 0.45);
 }
 .ne-addtag.filled svg {
@@ -10956,3 +10958,185 @@ li:last-child > .tk-row {
 
 /* orario e titolo di nuovo su un solo cartoncino, allineato a sinistra */
 .dg-tcenter { text-align: left; }
+
+/* righe dei fogli del diario più chiare (-15%) */
+.dg-scroll { background-image: repeating-linear-gradient(transparent 0 26px, #e0d4b5 26px 27px); }
+
+/* ---- Nota: fogli A4 del diario uno sotto l'altro, testo continuo ---- */
+.nb-wrap { min-width: 0; }
+.nb-tools { display: flex; gap: 18px; justify-content: center; align-items: center; margin-bottom: 12px; }
+.nb-tools-group { display: inline-flex; gap: 6px; }
+.nb-tools button {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1.5px dashed var(--color-line);
+  background: var(--color-tag);
+  color: var(--color-ink);
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+.nb-stack { position: relative; margin: 0 auto; }
+.nb-page { position: absolute; left: 0; filter: drop-shadow(0 10px 14px rgba(40, 28, 8, 0.32)); }
+.nb-flow {
+  position: absolute;
+  z-index: 3;
+  font-family: var(--nb-ff);
+  font-size: var(--nb-fs);
+}
+/* spaziatore (altezza del testo di un foglio) + blocco pieno: il testo salta
+   la zona vuota fra un foglio e l'altro */
+.nb-sp { float: left; clear: left; width: 0; margin-right: 0; pointer-events: none; }
+.nb-zone { float: left; clear: left; width: 100%; pointer-events: none; }
+.nb-aside {
+  float: right;
+  clear: none;
+  overflow: hidden;
+  shape-outside: inset(54px 0 0 0);
+  transform: translateY(54px);
+  margin: 0 0 0 14px;
+}
+.nb-titlerow { position: relative; display: block; padding-bottom: 27px; }
+.nb-tcard {
+  display: inline-block;
+  width: calc(100% - 20px);
+  padding: 0 11px;
+  vertical-align: top;
+  white-space: nowrap;
+}
+.nb-tcard .dg-time,
+.nb-tcard .dg-dash { display: inline-block; vertical-align: top; line-height: 27px; margin-right: 8px; }
+.nb-title-in,
+.nb-title-in.uppercase {
+  display: inline-block;
+  vertical-align: top;
+  width: calc(100% - 96px);
+  resize: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: 0;
+  outline: none;
+  line-height: 27px;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
+  font-size: 1.2rem;
+  color: var(--color-ink);
+  text-transform: none;
+}
+.nb-title-in::placeholder { color: color-mix(in srgb, var(--color-ink-soft) 80%, transparent); }
+.nb-editor-box { position: relative; }
+.nb-editor {
+  font-family: var(--nb-ff);
+  font-size: var(--nb-fs);
+  line-height: 27px;
+  color: var(--color-ink);
+  min-height: 27px;
+}
+.nb-editor p, .nb-editor div { margin: 0; }
+.nb-editor ul, .nb-editor ol { margin: 0; padding-left: 22px; }
+.nb-tapes { position: relative; padding-top: 27px; }
+.nb-x {
+  margin-left: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(40, 28, 8, 0.35);
+  color: #fff;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  vertical-align: middle;
+}
+/* titolo fino al bollino del mood */
+.nb-titlerow .dg-nmood { top: -13px; right: -4px; }
+
+/* barra del titolo: si ferma prima del bollino del mood; strumenti carattere nella colonna di sinistra */
+.nb-tcard { width: calc(100% - 66px); }
+.nb-tools { flex-direction: column; align-items: stretch; gap: 8px; margin: 0; }
+.nb-tools-group { display: flex; gap: 6px; }
+.nb-tools-group button { flex: 1; }
+
+/* titolo +20% (diario e pagina nota) */
+.dg-title { font-size: 1.44rem; }
+.dg-tcard .dg-time { font-size: 1.2rem; }
+.nb-title-in, .nb-title-in.uppercase { font-size: 1.44rem; width: calc(100% - 112px); }
+
+/* strumenti carattere: dimensione sopra, stile sotto */
+.nb-tools { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.nb-tools-group { display: flex; gap: 6px; }
+
+/* francobollo del luogo: sfondo chiaro e contorno molto più tenue */
+.dg-stampwrap .dn-place { background: #e6e4de; }
+.dg-stampwrap {
+  filter: drop-shadow(1.5px 0 0 #bdb39d) drop-shadow(-1.5px 0 0 #bdb39d) drop-shadow(0 1.5px 0 #bdb39d)
+    drop-shadow(0 -1.5px 0 #bdb39d) drop-shadow(2px 4px 4px rgba(20, 12, 4, 0.22));
+}
+
+/* elenchi che si aprono e si chiudono con animazione */
+.cx {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.4s ease, opacity 0.3s ease;
+}
+.cx.open { grid-template-rows: 1fr; opacity: 1; }
+.cx-in { overflow: hidden; min-height: 0; }
+@media (prefers-reduced-motion: reduce) { .cx { transition: none; } }
+
+/* riassunti nelle viste giorno, mese e anno: cartoncino come nel diario */
+.dg-recap-page { display: block; }
+.dg-recap-page .prc-card { margin: 12px 0 0; width: 100%; }
+
+/* giorni dell'anno: cartoncini quadrati di dimensione fissa */
+.wd-day-tiles { display: flex; gap: 4px; flex-wrap: nowrap; align-items: center; padding: 3px 2px; }
+.wd-day-tile {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--tc, #cfc7ae) 72%, #f6efdc);
+  box-shadow: 1px 2px 3px rgba(40, 28, 8, 0.3), inset 0 0 0 1.5px rgba(255, 255, 255, 0.45);
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: rgba(40, 28, 8, 0.55);
+  cursor: var(--cursor-pointer);
+  transition: transform 0.12s ease;
+}
+.wd-day-tile.empty {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--color-line-soft);
+  color: var(--color-ink-soft);
+  opacity: 0.7;
+}
+.wd-day-tile:disabled { cursor: default; }
+.wd-day-tile:not(:disabled):hover { transform: translateY(-2px) rotate(-3deg); }
+
+/* recap con intestazione a foglietto (anno e mese): più aria attorno al blocco */
+.dg-recap-block { margin-bottom: 48px; }
+.dg-recap-block .dg-recap-page .prc-card { margin-top: 30px; }
+.dg-recap-block .prc-head { margin-top: 6px; }
+
+/* foglietto del recap a ridosso del cartoncino */
+.dg-recap-block { margin-bottom: 40px; }
+.dg-recap-block .dg-recap-page .prc-card { margin-top: 16px; }
+
+/* numeri dei giorni nella panoramica: più leggibili */
+.wd-day-tile { font-size: 0.64rem; font-weight: 800; color: rgba(30, 20, 6, 0.85); }
+.wd-day-tile.empty { color: var(--color-ink-soft); font-weight: 700; }
+
+/* banner del diario largo quanto il libro (come le altre pagine) */
+.dg-banner { max-width: calc((100dvh - 230px) * 1.4142); margin-left: auto; margin-right: auto; }
+@media (max-width: 1200px) { .dg-banner { max-width: 100%; } }
+
+/* foglietto del recap addossato al cartoncino (come i pannelli dell'andamento) */
+.dg-recap-block .dg-recap-page .prc-card { margin-top: 0; }
+.dg-recap-block .prc-head { margin-top: 26px; }

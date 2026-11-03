@@ -4,7 +4,7 @@ import { useGoBack } from '../../hooks/useBack'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getConnection } from '../../lib/cache'
 import MoodSlider from '../../components/MoodSlider'
-import RichText from '../../components/RichText'
+import NoteBook, { NoteFontTools, useNoteFontPrefs } from '../../components/web/NoteBook'
 import Dialog from '../../components/Dialog'
 import AddImagesSheet from '../../components/AddImagesSheet'
 import ImmichPicker from '../../components/ImmichPicker'
@@ -45,7 +45,6 @@ import {
 } from '../../lib/dates'
 import { haptic } from '../../lib/haptics'
 import ImageLightbox from '../../components/ImageLightbox'
-import TitleInput from '../../components/TitleInput'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -111,6 +110,7 @@ export default function WebNote() {
   const goBack = useGoBack()
   const location = useLocation()
   const [search] = useSearchParams()
+  const [fontPrefs, setFontPref] = useNoteFontPrefs()
   const { user } = useAuth()
   const isNew = !id
 
@@ -415,7 +415,6 @@ export default function WebNote() {
   const noImages = existingImages.length === 0 && previews.length === 0
   const hasMedia =
     !noImages ||
-    selectedPeople.length > 0 ||
     selectedTags.length > 0 ||
     form.songs.length > 0 ||
     Boolean(form.place)
@@ -577,6 +576,12 @@ export default function WebNote() {
               />
             </div>
           </div>
+          <div className="ne-sub">
+            <div className="ne-sub-head">
+              <span className="ne-sub-title">Carattere</span>
+            </div>
+            <NoteFontTools prefs={fontPrefs} setPref={setFontPref} />
+          </div>
         </div>
 
         {/* Colonna editor: foglio di scrittura + (sotto) persone/luogo/
@@ -594,23 +599,23 @@ export default function WebNote() {
               />
             </div>
           </div>
-        <div className="ne-sheet">
-          <span className="ne-tape ne-tape-a" aria-hidden="true" />
-          <span className="ne-tape ne-tape-b" aria-hidden="true" />
-          <TitleInput
-            placeholder="Titolo della nota"
-            value={form.title}
-            onChange={(title) => set({ title })}
-            className="ne-title"
-          />
-          <RichText
-            ref={editorRef}
-            value={form.content}
-            onChange={(html) => set({ content: html })}
-            placeholder="Scrivi qui la nota…"
-            className="ne-body"
-          />
-        </div>
+        <NoteBook
+          form={form}
+          set={set}
+          editorRef={editorRef}
+          seed={id || 'new'}
+          prefs={fontPrefs}
+          imageUrls={[
+            ...existingImages.map((fn) => (record ? fileUrl(record, fn, { thumb: '300x300' }) : '')),
+            ...previews.map((p) => p.url),
+          ]}
+          people={selectedPeople}
+          tags={selectedTags}
+          onRemovePerson={togglePerson}
+          onRemoveTag={toggleTag}
+          immichUrl={immichUrl}
+          immichApiKey={immichApiKey}
+        />
 
         {hasMedia && (
           <div className="ne-media">
@@ -672,36 +677,6 @@ export default function WebNote() {
                         className="ne-media-x"
                       >
                         <Icon name="x" size={11} />
-                      </button>
-                    </span>
-                  ))}
-                </span>
-              </span>
-            )}
-
-            {selectedPeople.length > 0 && (
-              <span className="ne-media-col">
-                <span className="mp-tapes">
-                  {selectedPeople.map((person) => (
-                    <span
-                      key={person.id}
-                      className="mp-tape ne-media-tape"
-                      style={{ '--tape-c': personTapeColor(person) }}
-                    >
-                      <PersonAvatar
-                        person={person}
-                        immichUrl={immichUrl}
-                        immichApiKey={immichApiKey}
-                        size={19}
-                      />
-                      <span className="mp-tape-name">{person.name}</span>
-                      <button
-                        type="button"
-                        title="Rimuovi"
-                        onClick={() => togglePerson(person.id)}
-                        className="ne-media-x static"
-                      >
-                        <Icon name="x" size={10} />
                       </button>
                     </span>
                   ))}
