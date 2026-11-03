@@ -9,45 +9,42 @@ import YearPill from '../components/YearPill'
 import YearMoodChart from '../components/YearMoodChart'
 import Icon from '../components/Icon'
 import PeriodRecapCard from '../components/PeriodRecapCard'
-import StatsBody from '../components/StatsBody'
+import StatsBody from '../components/web/StatsBody'
 import { useAuth } from '../context/AuthContext'
 import { useNav } from '../context/NavContext'
 import { listNotesInRange, describeError } from '../lib/notes'
 import { yearWeeklyMood, moodColor, moodTextColor } from '../lib/mood'
-import { MONTHS_IT, todayKey } from '../lib/dates'
+import { MONTHS_IT, dayKey, todayKey } from '../lib/dates'
 
 // Colori delle 3 linee del grafico nella skin "Pagine" — stessi della
 // vista web (WebData.jsx): grafite per il giorno, penna blu per la
 // settimana, evidenziatore corallo per il mese.
 const CHART_LINE_COLORS = { day: '#a9906e', week: '#5ea9d6', month: '#e0655e' }
 
-// Una barretta per ogni giorno del mese, coi numeri dei giorni multipli di 5
-// sotto (5, 10, 15…) — tutti i numeri come da web non ci stanno in una
-// colonna così stretta.
-function WeekBars({ groups }) {
+// Un cartoncino quadrato per ogni giorno del mese, colorato col mood: tocca
+// per aprire quel giorno (stessi cartoncini della vista web).
+function MonthTiles({ year, month, groups, onOpenDay }) {
   return (
-    <span className="wd-month-bars-wrap">
-      <span className="wd-month-bars">
-        {groups.map((g, i) =>
-          g.mood == null ? (
-            <i key={i} style={{ height: '10%', backgroundColor: 'var(--color-line)' }} />
-          ) : (
-            <i key={i} style={{ height: `${Math.max(10, g.mood * 100)}%`, backgroundColor: moodColor(g.mood) }} />
-          ),
-        )}
-      </span>
-      <span className="wd-month-bars-ticks">
-        {groups.map((g, i) => {
-          const day = i + 1
-          if (day % 5 !== 0) return null
-          return (
-            <span key={day} style={{ left: `${((i + 0.5) / groups.length) * 100}%` }}>
-              {day}
-            </span>
-          )
-        })}
-      </span>
-    </span>
+    <div className="wd-day-tiles md-tiles">
+      {groups.map((g, i) => {
+        const day = i + 1
+        const label = `${day} ${MONTHS_IT[month]}`
+        return (
+          <button
+            key={day}
+            type="button"
+            title={label}
+            aria-label={label}
+            disabled={!g.count}
+            onClick={() => onOpenDay(dayKey(new Date(year, month, day)))}
+            className={'wd-day-tile' + (g.mood == null ? ' empty' : '')}
+            style={g.mood == null ? undefined : { '--tc': moodColor(g.mood) }}
+          >
+            <span>{day}</span>
+          </button>
+        )
+      })}
+    </div>
   )
 }
 
@@ -111,9 +108,7 @@ export default function DataView() {
               periodKey={String(year)}
               notes={notes}
               apiKey={geminiApiKey}
-              tab="Recap dell'anno"
-              hideTitle
-              className="mb-5"
+              foglietto="Recap dell'anno"
             />
 
             <div className="wd-card-wrap">
@@ -145,35 +140,40 @@ export default function DataView() {
                 <ul>
                   {data.monthly.map((m) => (
                     <li key={m.month}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCursor({ year, month: m.month })
-                          navigate('/')
-                        }}
-                        className="wd-month-row"
-                      >
-                        <span className="wd-month-tag">
-                          {MONTHS_IT[m.month].slice(0, 3)}
-                        </span>
-                        <WeekBars groups={m.groups} />
-                        <span
-                          className="wd-month-score"
-                          style={
-                            m.mood == null
-                              ? {
-                                  color: 'var(--color-ink-soft)',
-                                  border: '1px solid var(--color-line)',
-                                }
-                              : {
-                                  backgroundColor: moodColor(m.mood),
-                                  color: moodTextColor(m.mood),
-                                }
-                          }
+                      <div className="md-month">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCursor({ year, month: m.month })
+                            navigate('/mese')
+                          }}
+                          className="md-month-head"
                         >
-                          {m.mood == null ? '—' : Math.round(m.mood * 100)}
-                        </span>
-                      </button>
+                          <span className="wd-month-tag">{MONTHS_IT[m.month]}</span>
+                          <span
+                            className="wd-month-score"
+                            style={
+                              m.mood == null
+                                ? {
+                                    color: 'var(--color-ink-soft)',
+                                    border: '1px solid var(--color-line)',
+                                  }
+                                : {
+                                    backgroundColor: moodColor(m.mood),
+                                    color: moodTextColor(m.mood),
+                                  }
+                            }
+                          >
+                            {m.mood == null ? '—' : Math.round(m.mood * 100)}
+                          </span>
+                        </button>
+                        <MonthTiles
+                          year={year}
+                          month={m.month}
+                          groups={m.groups}
+                          onOpenDay={(key) => navigate(`/day/${key}`)}
+                        />
+                      </div>
                     </li>
                   ))}
                 </ul>

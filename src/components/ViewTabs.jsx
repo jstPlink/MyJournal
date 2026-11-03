@@ -2,13 +2,14 @@ import { useNavigate } from 'react-router-dom'
 import { haptic } from '../lib/haptics'
 
 const TABS = [
-  { key: 'diary', path: '/diario', label: 'Vista diario' },
-  { key: 'calendar', path: '/', label: 'Vista mese' },
-  { key: 'data', path: '/dati', label: 'Vista anno' },
-  { key: 'stats', path: '/statistiche', label: 'Dati totali' },
+  { key: 'day', path: '/', label: 'Giorno' },
+  { key: 'month', path: '/mese', label: 'Mese' },
+  { key: 'data', path: '/dati', label: 'Anno' },
+  { key: 'stats', path: '/statistiche', label: 'Stat' },
+  { key: 'diary', path: '/diario', label: 'Diario' },
 ]
 
-// Selettore di vista (Diario / Mese / Anno / Dati totali): un'unica
+// Selettore di vista (Giorno / Mese / Anno / Stat / Diario): un'unica
 // striscia di cartoncino bianco — una targhetta rettangolare in metallo
 // dorato inquadra l'opzione attiva e scivola sopra quella scelta.
 export default function ViewTabs({ active }) {

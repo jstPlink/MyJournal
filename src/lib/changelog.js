@@ -9,6 +9,16 @@
 
 export const CHANGELOG = [
   {
+    version: '0.87.0',
+    date: '2026-11-03 17:00',
+    changes: [
+      "Telefono: le schede in basso sono Giorno, Mese, Anno, Stat e Diario. La pagina iniziale è la vista del giorno di oggi; il mese ha la sua scheda.",
+      "Diario sul telefono: un foglio a righe per ogni giorno del mese, con recap, note, foto, persone, tag, luogo, canzone e mood.",
+      "Recap del giorno, del mese e dell'anno con il foglietto a quadretti; In questo giorno a foglietto nella vista mese.",
+      "Vista anno: i giorni sono cartoncini quadrati colorati col mood. Statistiche: gli elenchi si comprimono e si aprono con animazione.",
+    ],
+  },
+  {
     version: '0.86.0',
     date: '2026-11-03 15:00',
     changes: [

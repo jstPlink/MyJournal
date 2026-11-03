@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useCacheRefresh } from '../hooks/useConnection'
-import { useGoBack } from '../hooks/useBack'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import PhoneShell from '../components/PhoneShell'
 import MobileTopBar from '../components/MobileTopBar'
 import MobileBottomBar from '../components/MobileBottomBar'
 import Footer from '../components/Footer'
 import YearPill from '../components/YearPill'
-import Icon from '../components/Icon'
+import ViewTabs from '../components/ViewTabs'
 import NewNoteWithGeminiSheet from '../components/NewNoteWithGeminiSheet'
 import NewNoteChoiceSheet from '../components/NewNoteChoiceSheet'
 import PeriodRecapCard from '../components/PeriodRecapCard'
@@ -17,8 +16,7 @@ import { listNotesForDay, describeError } from '../lib/notes'
 import { listDreamsForDay } from '../lib/dreams'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
-import { addDaysKey, dayMonthLabel, parseWall } from '../lib/dates'
-import { haptic } from '../lib/haptics'
+import { addDaysKey, dayMonthLabel, parseWall, todayKey } from '../lib/dates'
 import { noteInstructionsOf } from '../lib/aiInstructions'
 
 const SWIPE_THRESHOLD = 55 // px, swipe orizzontale per cambiare giorno
@@ -34,9 +32,11 @@ function startMinutes(value) {
 }
 
 export default function DayView() {
-  const { date } = useParams()
+  const params = useParams()
+  // senza data nell'indirizzo (pagina iniziale) è oggi
+  const date = params.date || todayKey()
   const navigate = useNavigate()
-  const goBack = useGoBack()
+  const location = useLocation()
   const { user } = useAuth()
   const [notes, setNotes] = useState([])
   const [dreams, setDreams] = useState([])
@@ -50,6 +50,14 @@ export default function DayView() {
     () => new Map(people.map((p) => [p.id, p])),
     [people],
   )
+
+  // Aperta dal widget "Nuova nota": mostra subito la scelta Gemini / a mano.
+  const widgetNewNote = location.state?.newNote
+  useEffect(() => {
+    if (!widgetNewNote) return
+    setNoteChoiceOpen(true)
+    navigate(location.pathname, { replace: true, state: null })
+  }, [widgetNewNote, navigate, location.pathname])
 
   const tagsById = useMemo(() => new Map(tags.map((t) => [t.id, t])), [tags])
 
@@ -120,18 +128,6 @@ export default function DayView() {
   return (
     <PhoneShell>
       <MobileTopBar className="mtop-day">
-        <button
-          type="button"
-          className="mchev"
-          onClick={() => {
-            haptic()
-            goBack()
-          }}
-          title="Indietro"
-          aria-label="Indietro"
-        >
-          <Icon name="chevron-left" size={21} strokeWidth={2.8} />
-        </button>
         <div className="flex flex-1 justify-center">
           <YearPill
             skin="clock"
@@ -148,11 +144,9 @@ export default function DayView() {
         periodKey={date}
         notes={notes.filter((n) => !n.carriedFromPrevious)}
         apiKey={user?.geminiApiKey?.trim()}
-        tab="Recap del giorno"
-        tabInside
-        hideTitle
+        foglietto="Recap del giorno"
         alwaysShow
-        className="mx-2 mt-2"
+        className="mx-2 mt-2 !mb-4"
       />
 
       <main
@@ -189,7 +183,20 @@ export default function DayView() {
       </main>
 
       <MobileBottomBar>
+        <ViewTabs active="day" />
         <Footer
+          items={[
+            {
+              icon: 'settings',
+              title: 'Opzioni',
+              onClick: () => navigate('/profilo'),
+            },
+            {
+              icon: 'search',
+              title: 'Filtri',
+              onClick: () => navigate('/filtri'),
+            },
+          ]}
           primaryIcon="plus"
           primaryTitle="Nuova nota in questo giorno"
           onPrimary={() => setNoteChoiceOpen(true)}

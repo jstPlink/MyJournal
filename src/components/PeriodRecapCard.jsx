@@ -31,6 +31,7 @@ export default function PeriodRecapCard({
   tabInside = false, // la targhetta sta dentro la card, all'altezza del tasto Genera/Rigenera
   alwaysShow = false, // mostra la card anche senza note né recap (vista giorno)
   hideTitle = false, // il titolo sta già nella targhetta: dentro la card resta solo il tasto
+  foglietto = '', // titolo del foglietto a quadretti sopra il cartoncino (come sul web); sparisce con la card
   className = '',
 }) {
   const [text, setText] = useState(undefined) // undefined = in caricamento, null = non generato
@@ -76,15 +77,15 @@ export default function PeriodRecapCard({
   }
 
   const card = (
-    <section className={'prc-card ' + (tab && !tabInside ? '' : className)}>
-      <div className={'prc-head' + (hideTitle && !(tab && tabInside) ? ' prc-head-end' : '')}>
+    <section className={'prc-card ' + (tab && !tabInside ? '' : foglietto ? '' : className)}>
+      <div className={'prc-head' + ((hideTitle || foglietto) && !(tab && tabInside) ? ' prc-head-end' : '')}>
         {tab && tabInside ? (
           <span className="st-label prc-tab-in">
             <Icon name="sparkles" size={12} />
             {tab}
           </span>
         ) : (
-          !hideTitle && (
+          !hideTitle && !foglietto && (
           <p className="prc-title">
             <Icon name="sparkles" size={14} className="shrink-0" />
             {title || TITLES[period]}
@@ -109,6 +110,17 @@ export default function PeriodRecapCard({
       {error && <p className="prc-error">{error}</p>}
     </section>
   )
+  if (foglietto) {
+    return (
+      <div className={'wd-card-wrap dg-recap-block ' + className}>
+        <div className="wd-header">
+          <Icon name="sparkles" size={17} />
+          <h2>{foglietto}</h2>
+        </div>
+        <div className="dg-recap dg-recap-page">{card}</div>
+      </div>
+    )
+  }
   if (!tab || tabInside) return card
   return (
     <div className={className}>

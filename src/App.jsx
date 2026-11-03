@@ -120,7 +120,7 @@ export default function App() {
               path="/"
               element={
                 <RequireAuth>
-                  <Screen mobile={MonthView} desktop={WebDay} />
+                  <Screen mobile={DayView} desktop={WebDay} />
                 </RequireAuth>
               }
             />

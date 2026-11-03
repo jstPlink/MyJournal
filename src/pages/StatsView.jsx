@@ -6,7 +6,7 @@ import MobileBottomBar from '../components/MobileBottomBar'
 import Footer from '../components/Footer'
 import ViewTabs from '../components/ViewTabs'
 import Skeleton from '../components/Skeleton'
-import StatsBody from '../components/StatsBody'
+import StatsBody from '../components/web/StatsBody'
 import { listAllNotesLight, describeError } from '../lib/notes'
 import { todayKey } from '../lib/dates'
 
@@ -42,7 +42,7 @@ export default function StatsView() {
           className="text-center text-ink"
           style={{ fontFamily: "'MyJournal Marker', 'Caveat', cursive", fontSize: '1.7rem' }}
         >
-          Dati totali
+          Statistiche
         </h1>
       </MobileTopBar>
 

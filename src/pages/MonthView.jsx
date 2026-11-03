@@ -45,7 +45,7 @@ export default function MonthView() {
   useEffect(() => {
     if (!widgetNewNote) return
     setNoteChoiceOpen(true)
-    navigate('/', { replace: true, state: null })
+    navigate('/mese', { replace: true, state: null })
   }, [widgetNewNote, navigate])
 
   const loadLists = useCallback(() => {
@@ -189,7 +189,7 @@ export default function MonthView() {
           </p>
         )}
 
-        <OnThisDay className="mx-3 mb-6 mt-3" />
+        <OnThisDay foglietto className="mx-3 mb-6 mt-3" />
 
         <PeriodRecapCard
           period="month"
@@ -197,9 +197,7 @@ export default function MonthView() {
           notes={notes}
           label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
           apiKey={user?.geminiApiKey?.trim()}
-          tab="Recap del mese"
-          tabInside
-          hideTitle
+          foglietto="Recap del mese"
           className="mx-3 mb-1"
         />
 
@@ -224,7 +222,7 @@ export default function MonthView() {
       </main>
 
       <MobileBottomBar>
-        <ViewTabs active="calendar" />
+        <ViewTabs active="month" />
         <Footer
           items={[
             {
