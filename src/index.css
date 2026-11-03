@@ -11159,3 +11159,10 @@ li:last-child > .tk-row {
 /* con i pulsanti Statistiche e Diario: cinque cerchi equidistanti */
 .mnav-footer.five { display: flex; justify-content: space-between; }
 .mnav-footer.five .mnav-footer-side { display: contents; }
+
+/* «In questo giorno» con anni nascosti: la linea tratteggiata continua fra i due gruppi */
+.otd-list.has-more > .otd-card:last-child .otd-dot::before { bottom: -12px; }
+.otd-list.otd-rest { padding-top: 12px; }
+.otd-list.otd-rest > .otd-card:first-child .otd-dot::before { top: -12px; }
+
+.dg-wrap.phone { touch-action: pan-y; user-select: none; }

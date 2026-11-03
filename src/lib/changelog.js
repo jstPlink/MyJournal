@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.87.3',
+    date: '2026-11-03 20:30',
+    changes: [
+      "In questo giorno: si vedono gli ultimi 3 anni con note, gli altri sono sotto un pulsante «Mostra altri» che li apre e li chiude.",
+      "Diario (telefono): si sfoglia con lo swipe, senza pulsanti.",
+    ],
+  },
+  {
     version: '0.87.2',
     date: '2026-11-03 19:30',
     changes: [

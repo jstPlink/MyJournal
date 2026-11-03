@@ -13,6 +13,7 @@ const pad = (n) => String(n).padStart(2, '0')
 export default function OnThisDay({ className = '', foglietto = false }) {
   const navigate = useNavigate()
   const [groups, setGroups] = useState(null)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const now = new Date()
@@ -56,21 +57,10 @@ export default function OnThisDay({ className = '', foglietto = false }) {
   const thisYear = new Date().getFullYear()
   const today = dayMonthLabel(`${thisYear}-${pad(new Date().getMonth() + 1)}-${pad(new Date().getDate())}`)
 
-  return (
-    <div className={'anim-unfurl otd ' + (foglietto ? 'wd-card-wrap otd-fg ' : '') + className}>
-      {foglietto ? (
-        <div className="wd-header">
-          <Icon name="calendar" size={19} />
-          <h2>In questo giorno · {today.toLowerCase()}</h2>
-        </div>
-      ) : (
-        <span className="st-label otd-tab">
-          <Icon name="calendar" size={12} />
-          In questo giorno · {today.toLowerCase()}
-        </span>
-      )}
-      <div className="otd-list">
-        {groups.map((g) => {
+  // gli ultimi 3 anni con note (anche non consecutivi); gli altri stanno sotto un pulsante
+  const head = groups.slice(0, 3)
+  const rest = groups.slice(3)
+  const renderCard = (g) => {
           const ago = thisYear - g.year
           const mood = dayMood(g.notes)
           const lines = g.notes.map(
@@ -105,8 +95,42 @@ export default function OnThisDay({ className = '', foglietto = false }) {
               </span>
             </button>
           )
-        })}
+        }
+
+  return (
+    <div className={'anim-unfurl otd ' + (foglietto ? 'wd-card-wrap otd-fg ' : '') + className}>
+      {foglietto ? (
+        <div className="wd-header">
+          <Icon name="calendar" size={19} />
+          <h2>In questo giorno · {today.toLowerCase()}</h2>
+        </div>
+      ) : (
+        <span className="st-label otd-tab">
+          <Icon name="calendar" size={12} />
+          In questo giorno · {today.toLowerCase()}
+        </span>
+      )}
+      <div className={'otd-list' + (rest.length ? ' has-more' : '')}>
+        {head.map(renderCard)}
       </div>
+      {rest.length > 0 && (
+        <>
+          <div className={'cx' + (open ? ' open' : '')}>
+            <div className="cx-in" inert={!open}>
+              <div className="otd-list otd-rest">{rest.map(renderCard)}</div>
+            </div>
+          </div>
+          <button
+            type="button"
+            className={'st-more' + (open ? ' open' : '')}
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? 'Comprimi' : `Mostra altri ${rest.length}`}
+            <Icon name="chevron-right" size={12} />
+          </button>
+        </>
+      )}
     </div>
   )
 }

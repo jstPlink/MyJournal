@@ -673,6 +673,22 @@ export default function WebDiary({ phone = false }) {
     [phone, half, go],
   )
 
+  // telefono: swipe orizzontale per cambiare pagina (sinistra = avanti)
+  const swipeStart = useRef(null)
+  const swipe = {
+    down: (e) => {
+      swipeStart.current = { x: e.clientX, y: e.clientY }
+    },
+    up: (e) => {
+      const s0 = swipeStart.current
+      swipeStart.current = null
+      if (!s0) return
+      const dx = e.clientX - s0.x
+      const dy = e.clientY - s0.y
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1)
+    },
+  }
+
   // arrivati nel mese precedente, si resta sull'ultima coppia di pagine anche
   // mentre le misure si assestano
   useEffect(() => {
@@ -705,7 +721,10 @@ export default function WebDiary({ phone = false }) {
   }
 
   return (
-    <div className={'dg-wrap' + (phone ? ` phone h${half}` : '')}>
+    <div
+      className={'dg-wrap' + (phone ? ` phone h${half}` : '')}
+      {...(phone ? { onPointerDown: swipe.down, onPointerUp: swipe.up } : null)}
+    >
       {!phone && (
       <div className="dg-banner sticky top-0 z-10 mb-[50px] mt-[40px] w-full bg-cream">
         <span className="header-quadretti bleed-month" aria-hidden="true" />
@@ -799,6 +818,8 @@ export default function WebDiary({ phone = false }) {
             {renderPage(cur * 2 + 1)}
           </>
         )}
+        {!phone && (
+          <>
         <button
           type="button"
           className="dg-flip l"
@@ -815,6 +836,8 @@ export default function WebDiary({ phone = false }) {
         >
           ›
         </button>
+          </>
+        )}
       </div>
 
       </div>
