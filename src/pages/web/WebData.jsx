@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import YearMoodChart from '../../components/YearMoodChart'
 import Icon from '../../components/Icon'
+import { yellowOf } from '../../lib/pagesSkin'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
 import StatsBody from '../../components/web/StatsBody'
 import { useAuth } from '../../context/AuthContext'
@@ -155,7 +156,7 @@ export default function WebData() {
         </p>
       )}
 
-      <div className="wd-card-wrap dg-recap-block">
+      <div className="wd-card-wrap dg-recap-block" style={{ '--ycol': yellowOf(String(year)) }}>
         <div className="wd-header">
           <Icon name="sparkles" size={19} />
           <h2>Recap dell'anno</h2>

@@ -3,6 +3,7 @@ import { useCacheRefresh } from '../../hooks/useConnection'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import Icon from '../../components/Icon'
+import { yellowOf } from '../../lib/pagesSkin'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import DayPages from './DayPages'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
@@ -233,7 +234,7 @@ export default function WebDay() {
         </p>
       )}
 
-      <div className="wd-card-wrap dg-recap-block mx-auto w-[78%] shrink-0">
+      <div className="wd-card-wrap dg-recap-block mx-auto w-[78%] shrink-0" style={{ '--ycol': yellowOf(date) }}>
         <div className="wd-header">
           <Icon name="sparkles" size={19} />
           <h2>Recap del giorno</h2>

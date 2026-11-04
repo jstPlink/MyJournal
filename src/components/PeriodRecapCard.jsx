@@ -10,6 +10,7 @@ import {
   regenerateYearRecap,
 } from '../lib/recaps'
 import { describeGeminiError } from '../lib/gemini'
+import { yellowOf } from '../lib/pagesSkin'
 
 const TITLES = { day: 'Recap del giorno', month: 'Recap del mese', year: "Recap dell'anno" }
 
@@ -112,7 +113,7 @@ export default function PeriodRecapCard({
   )
   if (foglietto) {
     return (
-      <div className={'wd-card-wrap dg-recap-block ' + className}>
+      <div className={'wd-card-wrap dg-recap-block ' + className} style={{ '--ycol': yellowOf(periodKey) }}>
         <div className="wd-header">
           <Icon name="sparkles" size={17} />
           <h2>{foglietto}</h2>

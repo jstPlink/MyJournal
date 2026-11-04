@@ -76,3 +76,16 @@ export async function regenerateYearRecap(apiKey, year, notes, onRetry) {
   await saveRecap('year', String(year), text)
   return text
 }
+
+// Riassunti dei giorni di un anno intero (chiave AAAA-MM-GG -> testo), con una sola richiesta:
+// serve all'export del Diario con l'estetica a schermo.
+export async function listDayRecapsInYear(year) {
+  try {
+    const list = await pb.collection(COLLECTION).getFullList({
+      filter: pb.filter('period = "day" && key >= {:a} && key <= {:b}', { a: `${year}-01-01`, b: `${year}-12-31` }),
+    })
+    return new Map(list.filter((r) => r.text).map((r) => [r.key, r.text]))
+  } catch {
+    return new Map()
+  }
+}

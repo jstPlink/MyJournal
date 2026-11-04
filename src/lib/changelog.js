@@ -9,6 +9,16 @@
 
 export const CHANGELOG = [
   {
+    version: '0.88.0',
+    date: '2026-11-04 18:00',
+    changes: [
+      "Diario: ogni mese si apre con due pagine a tema stagione (riassunto, foto, canzoni, persone, tag, giorno per giorno) e gennaio con due pagine dell'anno in stile editoriale, con indice dei mesi e statistiche. Carta ruvida, cornici continue da un foglio all'altro, numerazione delle pagine sull'intero anno.",
+      "Diario: i sogni compaiono tra le note, in una nuvola a due livelli con adesivi; titoli delle note su foglietto a quadretti, nastri e inclinazioni diversi per ogni cartoncino; pagina destra con giorno e numero in basso a destra.",
+      "Diario: il tasto «Scarica» nella barra in cartone esporta l'anno in PDF come lo vedi a schermo (con la stessa scala), in PDF di solo testo o in Markdown; i pulsanti dell'editor non finiscono nell'export.",
+      "Recap con foglietto a quadretti, cartoncino giallo strappato e linea di taglio con forbici; icone nuove per Vista giorno e Vista anno.",
+    ],
+  },
+  {
     version: '0.87.3',
     date: '2026-11-03 20:30',
     changes: [
