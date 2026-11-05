@@ -23,7 +23,7 @@ const SCHEMAS = {
   note: {
     files: ['images'],
     multi: ['images', 'people', 'tags'],
-    json: ['songs'],
+    json: ['songs', 'font'],
     number: ['mood'],
     date: ['date', 'timeStart', 'timeEnd'],
   },

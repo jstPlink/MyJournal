@@ -9,6 +9,16 @@
 
 export const CHANGELOG = [
   {
+    version: '0.89.0',
+    date: '2026-11-05 12:00',
+    changes: [
+      "Vista giorno: tavola di legno con le ore segnate, righe delle note con mood e titolo allineati in alto a sinistra e targhette e foto centrate; nuvoletta del sogno con colori invertiti; titolo più piccolo sul telefono.",
+      "Titoli delle note: carattere casuale fra tre (Kalam, Caveat, Gochi), stabile per nota e con la stessa grandezza apparente, in tutte le viste; nella vista mese senza foglietto a quadretti e più piccoli sul telefono.",
+      "Pagine Anno e Statistiche: contenitori grandi in legno e liste e blocchi «In evidenza» in carta chiara con la stessa texture.",
+      "Carattere e dimensione della nota scelti nell'editor web e salvati con la nota (serve la migration sul server).",
+    ],
+  },
+  {
     version: '0.88.0',
     date: '2026-11-04 18:00',
     changes: [

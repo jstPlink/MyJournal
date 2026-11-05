@@ -34,6 +34,7 @@ import {
   peopleUsageCounts,
 } from '../lib/notes'
 import { personTapeColor, tilt } from '../lib/pagesSkin'
+import { titleFontVars } from '../lib/noteFont'
 import { fileUrl } from '../lib/pocketbase'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
@@ -549,12 +550,14 @@ export default function NoteView() {
         <div className="ne-sheet mt-4 flex min-h-[35dvh] flex-none flex-col">
           <span className="ne-tape ne-tape-a" aria-hidden="true" />
           <span className="ne-tape ne-tape-b" aria-hidden="true" />
-          <TitleInput
-            placeholder="Titolo della nota"
-            value={form.title}
-            onChange={(title) => set({ title })}
-            className="ne-title shrink-0"
-          />
+          <span className="dg-tcard ne-tcard shrink-0" style={titleFontVars(effectiveId || 'new')}>
+            <TitleInput
+              placeholder="Titolo della nota"
+              value={form.title}
+              onChange={(title) => set({ title })}
+              className="ne-title"
+            />
+          </span>
           <RichText
             ref={editorRef}
             value={form.content}

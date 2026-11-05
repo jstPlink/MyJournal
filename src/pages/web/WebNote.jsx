@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams, useSearchParams } from 'react-rout
 import { getConnection } from '../../lib/cache'
 import MoodSlider from '../../components/MoodSlider'
 import NoteBook, { NoteFontTools, useNoteFontPrefs } from '../../components/web/NoteBook'
+import { sanitizeFont } from '../../lib/noteFont'
 import Dialog from '../../components/Dialog'
 import AddImagesSheet from '../../components/AddImagesSheet'
 import ImmichPicker from '../../components/ImmichPicker'
@@ -79,6 +80,7 @@ const emptyForm = (dKey) => ({
   dateKey: dKey,
   timeStart: '09:00',
   timeEnd: '10:00',
+  font: null,
 })
 
 const formFromRecord = (rec) => ({
@@ -90,6 +92,8 @@ const formFromRecord = (rec) => ({
   dateKey: dayKey(rec.date),
   timeStart: timeInputValue(rec.timeStart) || '09:00',
   timeEnd: timeInputValue(rec.timeEnd) || '10:00',
+  // senza carattere salvato la nota si vede (anche nel Diario) con quello standard
+  font: sanitizeFont(rec.font) || { ff: 0, fs: 1 },
 })
 
 const snapshot = (f) =>
@@ -102,6 +106,7 @@ const snapshot = (f) =>
     dateKey: f.dateKey,
     timeStart: f.timeStart,
     timeEnd: f.timeEnd,
+    font: f.font,
   })
 
 export default function WebNote() {
@@ -231,6 +236,13 @@ export default function WebNote() {
   }, [])
 
   const set = (patch) => setForm((f) => ({ ...f, ...patch }))
+  // carattere della nota: quello salvato con lei, altrimenti l'ultimo scelto
+  // (che resta anche come predefinito per le note nuove)
+  const effFont = form.font || fontPrefs
+  const pickFont = (patch) => {
+    set({ font: { ...effFont, ...patch } })
+    setFontPref(patch)
+  }
 
   const previews = useMemo(
     () => newFiles.map((file) => ({ file, url: URL.createObjectURL(file) })),
@@ -318,8 +330,8 @@ export default function WebNote() {
     const imageCount = existingImages.length + newFiles.length
     try {
       const rec = creating
-        ? await createNote(form, { newFiles, peopleIds, tagIds })
-        : await updateNote(effectiveId, form, { newFiles, removedImages, peopleIds, tagIds })
+        ? await createNote({ ...form, font: effFont }, { newFiles, peopleIds, tagIds })
+        : await updateNote(effectiveId, { ...form, font: effFont }, { newFiles, removedImages, peopleIds, tagIds })
 
       if (creating) {
         discardDraft()
@@ -580,7 +592,7 @@ export default function WebNote() {
             <div className="ne-sub-head">
               <span className="ne-sub-title">Carattere</span>
             </div>
-            <NoteFontTools prefs={fontPrefs} setPref={setFontPref} />
+            <NoteFontTools prefs={effFont} setPref={pickFont} />
           </div>
         </div>
 
@@ -604,7 +616,7 @@ export default function WebNote() {
           set={set}
           editorRef={editorRef}
           seed={id || 'new'}
-          prefs={fontPrefs}
+          prefs={effFont}
           imageUrls={[
             ...existingImages.map((fn) => (record ? fileUrl(record, fn, { thumb: '300x300' }) : '')),
             ...previews.map((p) => p.url),

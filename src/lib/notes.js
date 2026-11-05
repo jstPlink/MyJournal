@@ -269,6 +269,8 @@ function commonFields(data, opts) {
   fd.append('mood', String(data.mood ?? 0))
   fd.append('place', serializePlace(data.place))
   fd.append('songs', JSON.stringify(data.songs ?? []))
+  // carattere della nota (migration 1758000024); se manca non si tocca quello salvato
+  if (data.font) fd.append('font', JSON.stringify(data.font))
   fd.append('timeStart', toPbTime(data.timeStart))
   fd.append('timeEnd', toPbTime(data.timeEnd))
   const imagesField = appendImages ? 'images+' : 'images'

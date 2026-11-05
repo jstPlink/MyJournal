@@ -11061,9 +11061,9 @@ li:last-child > .tk-row {
 .nb-tools-group button { flex: 1; }
 
 /* titolo +20% (diario e pagina nota) */
-.dg-title { font-size: 1.44rem; }
+.dg-title { font-size: 1.2rem; }
 .dg-tcard .dg-time { font-size: 1.2rem; }
-.nb-title-in, .nb-title-in.uppercase { font-size: 1.44rem; width: calc(100% - 112px); }
+.nb-title-in, .nb-title-in.uppercase { font-size: 1.2rem; width: calc(100% - 112px); }
 
 /* strumenti carattere: dimensione sopra, stile sotto */
 .nb-tools { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
@@ -11120,15 +11120,6 @@ li:last-child > .tk-row {
 .wd-day-tile:disabled { cursor: default; }
 .wd-day-tile:not(:disabled):hover { transform: translateY(-2px) rotate(-3deg); }
 
-/* recap con intestazione a foglietto (anno e mese): più aria attorno al blocco */
-.dg-recap-block { margin-bottom: 48px; }
-.dg-recap-block .dg-recap-page .prc-card { margin-top: 30px; }
-.dg-recap-block .prc-head { margin-top: 6px; }
-
-/* foglietto del recap a ridosso del cartoncino */
-.dg-recap-block { margin-bottom: 40px; }
-.dg-recap-block .dg-recap-page .prc-card { margin-top: 16px; }
-
 /* numeri dei giorni nella panoramica: più leggibili */
 .wd-day-tile { font-size: 0.64rem; font-weight: 800; color: rgba(30, 20, 6, 0.85); }
 .wd-day-tile.empty { color: var(--color-ink-soft); font-weight: 700; }
@@ -11136,10 +11127,6 @@ li:last-child > .tk-row {
 /* banner del diario largo quanto il libro (come le altre pagine) */
 .dg-banner { max-width: calc((100dvh - 230px) * 1.4142); margin-left: auto; margin-right: auto; }
 @media (max-width: 1200px) { .dg-banner { max-width: 100%; } }
-
-/* foglietto del recap addossato al cartoncino (come i pannelli dell'andamento) */
-.dg-recap-block .dg-recap-page .prc-card { margin-top: 0; }
-.dg-recap-block .prc-head { margin-top: 26px; }
 
 /* Diario (telefono): la pagina web com'è, in scala, una pagina alla volta */
 .md-webdiary { position: relative; overflow: hidden; }
@@ -11166,13 +11153,6 @@ li:last-child > .tk-row {
 .otd-list.otd-rest > .otd-card:first-child .otd-dot::before { top: -12px; }
 
 .dg-wrap.phone { touch-action: pan-y; user-select: none; }
-
-/* telefono: il foglietto del recap sta sul bordo del cartoncino; il tasto Genera/Rigenera
-   passa in alto a destra così non resta una riga vuota dove prima c'era la targhetta */
-@media (max-width: 480px) {
-  .dg-recap-block .dg-recap-page .prc-card { padding-top: 34px; }
-  .dg-recap-block .prc-head { position: absolute; top: 6px; right: 10px; margin: 0; }
-}
 
 /* Diario: i sogni — il testo sta in un cartoncino a nuvola a due livelli (onde grandi
    più scure dietro, piccole più chiare davanti, sopra e sotto), con grana di carta e
@@ -11279,7 +11259,7 @@ li:last-child > .tk-row {
 /* titolo della nota: testo più chiaro; numero del mood nello stesso carattere e della stessa
    dimensione del titolo (1.44rem) */
 .dg-tcard .dg-title-text { color: #564a36; }
-.dg-nmood-in b { font-family: 'MyJournal Pen', 'Permanent Marker', cursive; font-size: 1.44rem; }
+.dg-nmood-in b { font-family: 'MyJournal Pen', 'Permanent Marker', cursive; font-size: 1.2rem; }
 
 /* pagina di apertura del mese: titolo serif, anno a mano e riassunto sul cartoncino */
 .dg-cover-title {
@@ -11335,7 +11315,6 @@ li:last-child > .tk-row {
 /* copertina del mese: foglietto a quadretti come nelle schede, nastro spostato a destra */
 .dg-cover-recap.dg-recap-block { margin-bottom: 0; }
 .dg-cover-recap .prc-card::before { left: auto; right: 44px; transform: rotate(-3deg); }
-.dg-cover-recap .prc-head { margin-top: 0; }
 
 /* copertina: anno a destra del mese, sulla stessa riga; tag sull'ultima riga */
 .dg-cover-head { display: flex; align-items: baseline; gap: 22px; height: 81px; margin-bottom: 27px; }
@@ -11369,34 +11348,12 @@ li:last-child > .tk-row {
 .dn-pola::before { z-index: 3; }
 .dn-pola .dn-ph { position: relative; z-index: 1; }
 
-/* riassunto del giorno: la targhetta è il foglietto a quadretti come il titolo delle note */
-.dg-recap .prc-tab-in {
-  margin-bottom: 0;
-  padding: 3px 12px;
-  border: 0;
-  border-radius: 3px;
-  text-transform: none;
-  letter-spacing: 0;
-  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
-  font-size: 1.05rem;
-  color: #564a36;
-  background-color: #e6dcc3;
-  background-image: repeating-linear-gradient(90deg, rgba(92, 78, 52, 0.18) 0 1px, transparent 1px 17px),
-    repeating-linear-gradient(0deg, rgba(92, 78, 52, 0.18) 0 1px, transparent 1px 17px), var(--sb-grain, none);
-  background-size: 17px 17px, 17px 17px, 150px 150px;
-  background-blend-mode: normal, normal, multiply;
-  box-shadow: 1px 2px 4px rgba(40, 28, 8, 0.28);
-  outline: 1px solid #c6b995;
-  outline-offset: -1px;
-}
-
 /* numero del mood nota più leggibile: cartoncino più chiaro, cifre scure con alone */
 .dg-nmood-in { background: color-mix(in srgb, var(--nm, #c9b98c) 48%, #fff8e6); }
 .dg-nmood-in b {
   color: #1a1208;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85), 0 0 5px rgba(255, 255, 255, 0.8);
 }
-.dg-recap .prc-tab-in { white-space: nowrap; }
 
 /* pagina dell'anno, seconda pagina: sezioni con foglietto, mesi come cartoncini */
 .dg-cover-sec { margin-bottom: 44px; }
@@ -11595,4 +11552,451 @@ li:last-child > .tk-row {
   .dgp-root, .dgp-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   /* pulsanti funzionali all'editor: mai nell'export */
   .dgp-root .prc-btn, .dgp-root .dgy-gen, .dgp-root .dg-flip { display: none !important; }
+}
+
+/* Riassunto del giorno/mese/anno: UN solo aspetto in tutta l'app (vista giorno,
+   mese, anno, telefono, Diario). Cartoncino giallo strappato; il titolo sta
+   dentro, con una linea tratteggiata sotto (niente foglietto a quadretti
+   sopra, che sul telefono occupava troppo spazio). */
+.dg-recap .prc-head,
+.dg-recap-block .prc-head {
+  position: static;
+  border-bottom: 1.5px dashed rgba(120, 102, 70, 0.55);
+}
+.dg-recap .prc-title { font-size: 0.98rem; color: #564a36; }
+.dg-recap .prc-title svg { color: #857555; }
+
+/* Riassunto (giorno, mese, anno; web, telefono, Diario): stile compatto UNICO,
+   senza varianti per dispositivo. Poco spazio sprecato e decoro in basso
+   (bordo strappato, tratteggio e forbici) schiacciato in verticale. */
+.dg-recap-block { margin-bottom: 10px; }
+.dg-recap-block .dg-recap-page .prc-card { margin-top: 8px; padding: 13px 14px 24px; }
+.dg-recap .prc-head,
+.dg-recap-block .prc-head { margin: 0 0 5px; padding-bottom: 3px; }
+.dg-recap .prc-card {
+  clip-path: polygon(-4% -30px, 104% -30px, 104% calc(100% - 7px), 100% calc(100% - 7px), 95% calc(100% - 4px), 90% calc(100% - 7px), 85% calc(100% - 2px), 80% calc(100% - 6px), 75% calc(100% - 4px), 70% calc(100% - 7px), 65% calc(100% - 2px), 60% calc(100% - 6px), 55% calc(100% - 3px), 50% calc(100% - 7px), 45% calc(100% - 3px), 40% calc(100% - 6px), 35% calc(100% - 2px), 30% calc(100% - 6px), 25% calc(100% - 4px), 20% calc(100% - 7px), 15% calc(100% - 2px), 10% calc(100% - 6px), 5% calc(100% - 4px), 0% calc(100% - 6px), -4% calc(100% - 4px));
+}
+.dg-recap .prc-card::after {
+  left: 10px;
+  right: 10px;
+  bottom: 9px;
+  height: 11px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23857555' stroke-width='1.7' stroke-linecap='round'%3E%3Ccircle cx='18' cy='6' r='3'/%3E%3Ccircle cx='18' cy='18' r='3'/%3E%3Cpath d='M15.9 7.9L4 19M15.9 16.1L4 5'/%3E%3C/svg%3E") right center / 13px 13px no-repeat,
+    repeating-linear-gradient(90deg, rgba(120, 102, 70, 0.5) 0 10px, transparent 10px 15px) left center / calc(100% - 18px) 1.5px no-repeat;
+}
+
+/* nota con carattere salvato (editor): le righe seguono lo stile del contenitore */
+.dg-custom-font .dg-line { font-family: inherit; font-size: inherit; }
+
+/* Targhetta del titolo: UN solo stile in tutta l'app, quello del Diario
+   (.dg-tcard: foglietto a quadretti, contorno e ombra, carattere a pennarello).
+   Qui si adattano solo la disposizione e la grandezza nei vari punti. */
+.dg-tcard { color: #564a36; font-family: 'MyJournal Pen', 'Permanent Marker', cursive; }
+/* pagina nota (web): stesso riquadro del Diario, con i 2px verticali della targhetta */
+.nb-tcard { padding: 2px 11px; margin: -2px 0; }
+/* vista giorno */
+.dn-title.dg-tcard { display: block; width: fit-content; max-width: 100%; padding: 2px 11px; border-radius: 3px; color: var(--color-ink); }
+/* vista mese: i titoli del giorno sono targhette una sotto l'altra */
+.mp-notes .mp-n.dg-tcard {
+  margin: 0;
+  padding: 2px 11px;
+  width: fit-content;
+  max-width: 100%;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
+  font-weight: 400;
+  color: var(--color-ink);
+}
+.mp-n.dg-tcard::before { content: none; }
+/* pagina nota (telefono) */
+.ne-tcard { display: block; width: fit-content; max-width: 100%; padding: 2px 11px; margin-bottom: 10px; }
+.ne-tcard .ne-title { font-size: 1.44rem; margin: 0; }
+
+/* colore del titolo uguale al Diario (#564a36, un po' più chiaro dell'inchiostro)
+   in tutte le targhette; il suggerimento («Titolo della nota») è più chiaro così
+   non si confonde col titolo scritto */
+.dg-tcard .nb-title-in,
+.dg-tcard .ne-title,
+.dn-title.dg-tcard,
+.dn-title.dg-tcard .dn-title-text,
+.mp-notes .mp-n.dg-tcard { color: #564a36; }
+.dg-tcard .nb-title-in::placeholder,
+.dg-tcard .ne-title::placeholder { color: rgba(122, 113, 96, 0.5); }
+
+/* ===== Vista giorno: tavola di pino con venature disegnate, ore segnate e, sopra,
+   le note come righe di carta uguali a quelle della vista mese ===== */
+.day-sheet {
+  padding: 26px 22px 30px 78px;
+  border-radius: 5px;
+  box-shadow: 0 -4px 10px -6px rgba(20, 12, 4, 0.25), 0 16px 28px -14px rgba(20, 12, 4, 0.5);
+}
+.day-sheet::before {
+  border: 6px solid #bba583;
+  border-radius: 5px;
+  background-color: #e7dabd;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='430' height='110'%3E%3Cpath d='M-10 22 C 90 15, 160 30, 260 20 S 380 28, 440 19' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M-10 47 C 90 40, 160 55, 260 45 S 380 53, 440 44' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M-10 71 C 90 64, 160 79, 260 69 S 380 77, 440 68' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M-10 90 C 90 83, 160 98, 260 88 S 380 96, 440 87' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cellipse cx='300' cy='58' rx='13' ry='5' fill='none' stroke='%239c8458' stroke-opacity='.14' stroke-width='1.4'/%3E%3C/svg%3E"), repeating-linear-gradient(0deg, rgba(255, 255, 255, 0) 0 118px, rgba(125, 100, 62, 0.15) 118px 120px);
+  background-size: 430px 110px, auto;
+  background-repeat: repeat;
+  background-blend-mode: normal;
+  box-shadow: inset 0 2px 10px rgba(110, 70, 20, 0.28);
+  filter: none;
+}
+/* ore segnate sulla tavola: etichetta di carta con puntina e linea tratteggiata */
+.day-rail .hr {
+  right: 2px;
+  padding: 1px 7px 2px;
+  border-radius: 2px;
+  background: #fbf6e6;
+  color: #4a3a22;
+  font-size: 0.86rem;
+  box-shadow: 1px 2px 3px rgba(40, 22, 6, 0.3);
+  transform: translateY(-0.5em) rotate(-1.5deg);
+}
+.day-rail .hr::after {
+  right: -9px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #e98a7c, #b3352a 70%);
+  box-shadow: 1px 1px 2px rgba(20, 10, 4, 0.55);
+}
+.day-rail .tickline {
+  left: 64px;
+  width: calc(100cqw + 14px);
+  height: 0;
+  background: none;
+  border-top: 1.5px dashed rgba(110, 70, 20, 0.4);
+}
+.day-sheet { container-type: inline-size; }
+.dp-empty { color: #5a4630; }
+.dp-empty-btn { color: #3a2a14; }
+
+/* riga della nota: la stessa carta della vista mese, senza cartoncino colorato,
+   senza linea rossa del margine né linguetta del mood, testo vicino al bordo */
+.day-outer { overflow-x: clip; }
+.dr-wrap { position: absolute; left: 0; right: 0; }
+.dr-wrap .mp-page,
+.dr-wrap .mp-page.has-photo,
+.dr-wrap .mp-page.has-tapes,
+.dr-wrap .mp-page.has-photo.two-photo {
+  height: 100%;
+  min-height: 0;
+  margin-top: 0;
+  padding: 7px 14px 7px 14px;
+  overflow: visible;
+}
+.dr-wrap .mp-page::before {
+  background-image: var(--mp-nature, none), var(--mp-doodle), var(--mp-grain, none), var(--mp-fiber, none),
+    repeating-linear-gradient(transparent 0 25px, var(--paper-rule) 25px 26px);
+  background-size: var(--s1, 100% auto), var(--s2, 68% auto), 160px 160px, 260px 260px, auto;
+  background-position: var(--p1, left top), var(--p2, right top), var(--p3, 0 0), var(--p4, 0 0), 0 0;
+  background-repeat: no-repeat, no-repeat, repeat, repeat, repeat;
+  background-blend-mode: multiply, multiply, soft-light, soft-light, normal;
+}
+.dr-wrap .mp-notes-row { display: contents; }
+.dr-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 52%;
+  height: 100%;
+  min-width: 0;
+}
+.dr-title { align-self: flex-start; flex: none; max-width: 100%; font-size: 1.02rem; line-height: 1.25; padding: 2px 11px; }
+.dr-desc {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  margin: 6px 0 0;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-size: 0.9rem;
+  line-height: 20px;
+  color: rgba(58, 46, 28, 0.78);
+  -webkit-mask: linear-gradient(#000 calc(100% - 22px), transparent);
+  mask: linear-gradient(#000 calc(100% - 22px), transparent);
+}
+.dr-wrap .mp-side { top: 50%; transform: translateY(-50%); align-items: center; }
+.dr-wrap .mp-polas { top: 50%; transform: translateY(-50%); align-items: center; }
+
+/* telefono: tavola stretta, etichetta dell'ora a filo del bordo, niente puntine */
+@media (max-width: 1023px) {
+  .day-sheet { padding: 12px 8px 12px 50px; }
+  .day-rail { left: -46px; width: 42px; }
+  .day-rail .hr { right: 0; font-size: 0.74rem; padding: 1px 4px 2px; }
+  .day-rail .hr::after { display: none; }
+  .day-rail .tickline { left: 46px; width: 100cqw; }
+  .dr-body { flex: 1 1 auto; width: auto; }
+  .dr-wrap .mp-notes-row { display: flex; align-items: stretch; gap: 8px; height: 100%; }
+}
+
+/* vista giorno: niente puntine rosse (anche sul web), titolo colorato col mood
+   della nota con il bollino accanto, righe senza aggiunte con testo a tutta larghezza */
+.day-rail .hr::after { display: none; }
+.dr-head { display: flex; align-items: flex-start; gap: 8px; flex: none; max-width: 100%; }
+.dr-head .dr-title { flex: 0 1 auto; min-width: 0; }
+.dr-mood {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--nm, #c9b98c) 82%, #fff8e6);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.45), 1px 2px 3px rgba(40, 28, 8, 0.35);
+  transform: rotate(4deg);
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1;
+  color: #1a1208;
+}
+.dr-mood::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 18px;
+  height: 7px;
+  transform: translateX(-50%) rotate(-4deg);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 1px 2px rgba(20, 12, 4, 0.3);
+}
+.dr-wrap .mp-page.dr-plain .dr-body { width: 100%; }
+
+/* senza foto il testo si allunga fino alle targhette, spostate a destra */
+.dr-wrap .mp-page.dr-nophoto .mp-side { left: auto; right: 14px; width: 150px; }
+.dr-wrap .mp-page.dr-nophoto .dr-body { width: calc(100% - 172px); }
+.dr-wrap .mp-page.dr-plain .dr-body { width: 100%; }
+
+/* cartellino del mood a SINISTRA del titolo (Diario e pagina nota); nel titolo
+   non c'è più l'orario */
+.dg-title { padding-right: 0; padding-left: 62px; }
+.dg-nmood { right: auto; left: 0; }
+.nb-titlerow .dg-nmood { top: -13px; left: -4px; right: auto; }
+.nb-tcard { margin-left: 62px; width: calc(100% - 66px); }
+.nb-title-in, .nb-title-in.uppercase { width: 100%; }
+
+/* riassunto: cartoncino con grana e fibre di carta */
+.dg-recap .prc-card {
+  /* velo del colore del foglietto sopra la grana: la texture si vede un po' meno */
+  background-image: linear-gradient(color-mix(in srgb, var(--ycol, #efe0b5) 42%, transparent), color-mix(in srgb, var(--ycol, #efe0b5) 42%, transparent)),
+    var(--dp-grain, none), var(--dp-fiber, none);
+  background-size: auto, 120px 120px, 240px 240px;
+  background-blend-mode: normal, soft-light, multiply;
+}
+/* telefono: le targhette stanno nella colonna compatta, il testo prende il resto */
+@media (max-width: 480px) {
+  .dr-wrap .mp-page.dr-nophoto .dr-body,
+  .dr-wrap .mp-page.dr-plain .dr-body { width: auto; }
+}
+
+/* telefono: il foglietto in due parti. Sopra mood e titolo, al centro; sotto la
+   descrizione, i contatori riassuntivi di persone e tag e la foto */
+@media (max-width: 480px) {
+  .dr-wrap .mp-notes-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 8px;
+    row-gap: 4px;
+    align-items: start;
+    height: 100%;
+  }
+  .dr-body { display: contents; }
+  .dr-head, .dr-desc { position: relative; z-index: 1; }
+  .dr-head { grid-column: 1 / -1; grid-row: 1; justify-self: stretch; max-width: none; align-items: center; justify-content: center; }
+  .dr-head .dr-title { max-width: calc(100% - 48px); }
+  .dr-head .dr-title { text-align: left; }
+  .dr-desc { grid-column: 1; grid-row: 2; margin: 0; align-self: stretch; }
+  .dr-wrap .mp-side-mobile { grid-column: 2; grid-row: 2; align-self: center; }
+  .dr-wrap .mp-pola-mobile { grid-column: 3; grid-row: 2; align-self: center; }
+}
+
+/* cartellino del mood e foglietto del titolo centrati nella riga (il testo del titolo resta a sinistra) */
+.dr-head { align-self: flex-start; align-items: center; justify-content: flex-start; }
+@media (max-width: 480px) { .dr-head { align-self: auto; justify-content: center; } }
+
+/* web: cartellino del mood, titolo e descrizione formano un blocco centrato
+   nell'altezza della riga (a sinistra in orizzontale) */
+@media (min-width: 481px) {
+  .dr-body { justify-content: center; }
+  .dr-desc { flex: 0 1 auto; }
+}
+
+/* tutto il contenuto della riga allineato in alto (web e telefono); nella barra
+   del titolo mood e titolo restano centrati fra loro sull'asse verticale */
+@media (min-width: 481px) {
+  .dr-body { justify-content: flex-start; }
+  .dr-desc { flex: 1 1 0; }
+}
+.dr-wrap .mp-side { top: 8px; transform: none; align-items: flex-start; }
+.dr-wrap .mp-polas { top: 8px; transform: none; align-items: flex-start; }
+.dr-head { align-items: center; }
+@media (max-width: 480px) {
+  .dr-wrap .mp-side-mobile,
+  .dr-wrap .mp-pola-mobile { align-self: start; }
+}
+
+/* web: a sinistra titolo/mood in alto e sotto la descrizione; a destra foto,
+   tag e persone centrati sull'asse verticale della riga */
+@media (min-width: 481px) {
+  .dr-wrap .mp-side { top: 50%; transform: translateY(-50%); align-items: center; }
+  .dr-wrap .mp-polas { top: 50%; transform: translateY(-50%); align-items: center; }
+}
+
+/* web: titolo e cartellino del mood a metà altezza della riga (a sinistra),
+   la descrizione nello spazio sotto */
+@media (min-width: 481px) {
+  .dr-body {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr);
+    justify-content: stretch;
+  }
+  .dr-head { grid-row: 2; align-self: center; }
+  .dr-desc { grid-row: 3; align-self: start; margin-top: 4px; }
+}
+
+/* web: mood e titolo ancorati in alto a sinistra (centrati fra loro sull'asse verticale), descrizione sotto; targhette e foto a destra centrate sull'asse verticale della riga */
+/* web: STESSA struttura del telefono. Sopra il blocco mood + titolo (centrato,
+   con il testo del titolo a sinistra); sotto a sinistra la descrizione e a
+   destra targhette e foto, tutte allineate in alto */
+@media (min-width: 481px) {
+  .dr-wrap .mp-page,
+  .dr-wrap .mp-page.has-photo,
+  .dr-wrap .mp-page.has-tapes,
+  .dr-wrap .mp-page.has-photo.two-photo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 6px;
+    align-items: start;
+    padding: 8px 18px 8px 16px;
+  }
+  .dr-wrap .mp-notes-row,
+  .dr-body { display: contents; }
+  .dr-head {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: stretch;
+    align-self: start;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: none;
+    position: relative;
+    z-index: 1;
+  }
+  .dr-head .dr-title { max-width: calc(100% - 48px); text-align: left; }
+  .dr-desc { grid-column: 1; grid-row: 2; align-self: stretch; flex: none; margin: 0; position: relative; z-index: 1; }
+  .dr-wrap .mp-side,
+  .dr-wrap .mp-page.dr-nophoto .mp-side {
+    position: static;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    left: auto;
+    right: auto;
+    top: auto;
+    width: auto;
+    max-width: 190px;
+    transform: none;
+  }
+  .dr-wrap .mp-polas {
+    position: static;
+    grid-column: 3;
+    grid-row: 1 / -1;
+    align-self: center;
+    transform: none;
+    zoom: 0.62;
+  }
+}
+
+/* mood e titolo sullo stesso asse orizzontale: il titolo non resta più in alto (era align-self: flex-start) */
+.dr-head .dr-title { align-self: center; }
+
+/* ===== Pagina Anno: i tre contenitori grandi hanno lo stile a bacheca in legno
+   (tavola di pino con cornice chiara) della vista giorno ===== */
+.wd-card {
+  border: 6px solid #bba583;
+  border-radius: 5px;
+  background-color: #e7dabd;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='430' height='110'%3E%3Cpath d='M-10 22 C 90 15, 160 30, 260 20 S 380 28, 440 19' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M-10 47 C 90 40, 160 55, 260 45 S 380 53, 440 44' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M-10 71 C 90 64, 160 79, 260 69 S 380 77, 440 68' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cpath d='M-10 90 C 90 83, 160 98, 260 88 S 380 96, 440 87' fill='none' stroke='%239c8458' stroke-opacity='.15' stroke-width='1.6' stroke-linecap='round'/%3E%3Cellipse cx='300' cy='58' rx='13' ry='5' fill='none' stroke='%239c8458' stroke-opacity='.14' stroke-width='1.4'/%3E%3C/svg%3E"), repeating-linear-gradient(0deg, rgba(255, 255, 255, 0) 0 118px, rgba(125, 100, 62, 0.15) 118px 120px);
+  background-size: 430px 110px, auto;
+  background-repeat: repeat;
+  background-blend-mode: normal;
+  box-shadow: inset 0 2px 10px rgba(110, 70, 20, 0.28), 0 16px 28px -14px rgba(20, 12, 4, 0.5);
+}
+/* contenitori chiari (persone, liste, In evidenza): stesso colore e stessa texture di carta */
+.st-minitile {
+  background-color: var(--color-cream);
+  background-image: var(--sb-grain);
+  background-size: 260px 260px;
+  background-blend-mode: multiply;
+}
+
+/* vista giorno: nuvoletta del sogno e nuvoletta piccola a colori invertiti (corpo azzurro, scritta e luna chiare, contorno chiaro) */
+.dd-shape,
+.dd-shape i,
+.dd-dot .db-shape i { background: #7aa7d0; }
+.dd-cloud,
+.dd-dot .dream-badge { color: #fff; }
+.dd-cloud .dd-t,
+.dd-dot .db-moon { text-shadow: 0 1px 2px rgba(31, 63, 99, 0.45); }
+.dd-shape,
+.dd-dot .db-shape {
+  filter: drop-shadow(var(--dream-outline) 0 0 #bcd8ee) drop-shadow(calc(var(--dream-outline) * -1) 0 0 #bcd8ee)
+    drop-shadow(0 var(--dream-outline) 0 #bcd8ee) drop-shadow(0 calc(var(--dream-outline) * -1) 0 #bcd8ee)
+    drop-shadow(0 2px 4px rgba(30, 60, 100, 0.25));
+}
+.day-dream:hover .dd-shape {
+  filter: drop-shadow(var(--dream-outline) 0 0 #e3f1fb) drop-shadow(calc(var(--dream-outline) * -1) 0 0 #e3f1fb)
+    drop-shadow(0 var(--dream-outline) 0 #e3f1fb) drop-shadow(0 calc(var(--dream-outline) * -1) 0 #e3f1fb)
+    drop-shadow(0 4px 7px rgba(30, 60, 100, 0.35));
+}
+
+/* telefono, vista giorno: titolo della nota un po' più piccolo per lasciare più spazio al testo */
+@media (max-width: 480px) {
+  .dr-title { font-size: 0.92rem; line-height: 1.2; padding: 1px 9px; }
+}
+
+/* ===== Titoli: carattere casuale fra tre (Kalam, Caveat, Gochi), stabile per nota.
+   `--tf` e `--tk` arrivano da titleFontVars() (lib/noteFont.js) ===== */
+.dg-tcard,
+.dg-tcard .nb-title-in,
+.dg-tcard .ne-title,
+.dg-tcard .dg-title-text,
+.dn-title.dg-tcard .dn-title-text,
+.mp-notes .mp-n.dg-tcard {
+  font-family: var(--tf, 'MyJournal Pen', 'Permanent Marker', cursive);
+  font-weight: 400;
+}
+.dg-tcard { zoom: var(--tk, 1); }
+
+/* vista mese: via il foglietto a quadretti sotto i titoli (resta solo il cartoncino del mood) */
+.mp-notes .mp-n.dg-tcard {
+  background: none;
+  background-image: none;
+  background-color: transparent;
+  box-shadow: none;
+  outline: none;
+  filter: none;
+  border: 0;
+  padding: 0 0 0 0.2rem;
+  border-radius: 0;
+}
+/* telefono: titoli del mese più piccoli per guadagnare spazio */
+@media (max-width: 480px) {
+  .mp-notes .mp-n.dg-tcard { font-size: 0.82rem; line-height: 1.1; }
+}
+
+/* contenitori chiari di Anno e Statistiche: carta più chiara (la grana moltiplicata scuriva il crema) */
+.st-people,
+.st-rows,
+.st-minitile,
+.st-tile:not(.st-tile-dream) {
+  background-color: #f7f2e4;
 }

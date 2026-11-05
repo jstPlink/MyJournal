@@ -12,7 +12,7 @@ import {
 import { describeGeminiError } from '../lib/gemini'
 import { yellowOf } from '../lib/pagesSkin'
 
-const TITLES = { day: 'Recap del giorno', month: 'Recap del mese', year: "Recap dell'anno" }
+const TITLES = { day: 'Riassunto del giorno', month: 'Riassunto del mese', year: "Riassunto dell'anno" }
 
 // Recap di un periodo (giorno/vista giorno, mese/vista mese, anno/statistiche):
 // di norma è già pronto, aggiornato ogni sera alle 23:00 lato server
@@ -28,12 +28,10 @@ export default function PeriodRecapCard({
   label, // etichetta leggibile per il prompt (mese/anno) — non serve per 'day'
   apiKey,
   title,
-  tab, // testo di una targhetta (stile .st-label delle Statistiche) sopra la card: sparisce insieme alla card
-  tabInside = false, // la targhetta sta dentro la card, all'altezza del tasto Genera/Rigenera
   alwaysShow = false, // mostra la card anche senza note né recap (vista giorno)
-  hideTitle = false, // il titolo sta già nella targhetta: dentro la card resta solo il tasto
-  foglietto = '', // titolo del foglietto a quadretti sopra il cartoncino (come sul web); sparisce con la card
+  foglietto = false, // true = cartoncino giallo strappato con forbici (.dg-recap), uguale ovunque; il titolo sta sempre dentro, con una linea tratteggiata sotto
   className = '',
+  style, // variabili CSS in più sul cartoncino (inclinazione e nastro nel Diario)
 }) {
   const [text, setText] = useState(undefined) // undefined = in caricamento, null = non generato
   const [loading, setLoading] = useState(false)
@@ -78,21 +76,12 @@ export default function PeriodRecapCard({
   }
 
   const card = (
-    <section className={'prc-card ' + (tab && !tabInside ? '' : foglietto ? '' : className)}>
-      <div className={'prc-head' + ((hideTitle || foglietto) && !(tab && tabInside) ? ' prc-head-end' : '')}>
-        {tab && tabInside ? (
-          <span className="st-label prc-tab-in">
-            <Icon name="sparkles" size={12} />
-            {tab}
-          </span>
-        ) : (
-          !hideTitle && !foglietto && (
-          <p className="prc-title">
-            <Icon name="sparkles" size={14} className="shrink-0" />
-            {title || TITLES[period]}
-          </p>
-          )
-        )}
+    <section className="prc-card">
+      <div className="prc-head">
+        <p className="prc-title">
+          <Icon name="sparkles" size={14} className="shrink-0" />
+          {title || TITLES[period]}
+        </p>
         {!loading && apiKey && notes?.length > 0 && (
           <button type="button" onClick={regenerate} className="prc-btn">
             {text ? 'Rigenera' : 'Genera'}
@@ -105,31 +94,16 @@ export default function PeriodRecapCard({
         <p className="prc-text">{text}</p>
       ) : (
         <p className="prc-empty">
-          {!notes || !notes.length ? 'Nessuna nota: niente da riassumere.' : 'Recap non ancora generato.'}
+          {!notes || !notes.length ? 'Nessuna nota: niente da riassumere.' : 'Riassunto non ancora generato.'}
         </p>
       )}
       {error && <p className="prc-error">{error}</p>}
     </section>
   )
-  if (foglietto) {
-    return (
-      <div className={'wd-card-wrap dg-recap-block ' + className} style={{ '--ycol': yellowOf(periodKey) }}>
-        <div className="wd-header">
-          <Icon name="sparkles" size={17} />
-          <h2>{foglietto}</h2>
-        </div>
-        <div className="dg-recap dg-recap-page">{card}</div>
-      </div>
-    )
-  }
-  if (!tab || tabInside) return card
+  if (!foglietto) return <div className={className}>{card}</div>
   return (
-    <div className={className}>
-      <span className="st-label">
-        <Icon name="sparkles" size={12} />
-        {tab}
-      </span>
-      {card}
+    <div className={'dg-recap-block ' + className} style={{ '--ycol': yellowOf(periodKey), ...style }}>
+      <div className="dg-recap dg-recap-page">{card}</div>
     </div>
   )
 }

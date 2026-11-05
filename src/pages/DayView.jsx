@@ -144,9 +144,9 @@ export default function DayView() {
         periodKey={date}
         notes={notes.filter((n) => !n.carriedFromPrevious)}
         apiKey={user?.geminiApiKey?.trim()}
-        foglietto="Recap del giorno"
+        foglietto
         alwaysShow
-        className="mx-2 mt-2 !mb-4"
+        className="mx-2 mt-2 !mb-2"
       />
 
       <main
@@ -177,7 +177,6 @@ export default function DayView() {
             dreams={dreams}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}
-            fit
           />
         )}
       </main>

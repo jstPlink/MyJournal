@@ -7,6 +7,7 @@ import { moodColor } from '../../lib/mood'
 import { parsePlace } from '../../lib/notes'
 import { osmTileFor, personTapeColor, tilt } from '../../lib/pagesSkin'
 import { MONTHS_IT, isWeekend, parseWall, weekdayLong } from '../../lib/dates'
+import { FONTS, FONT_SIZES, fontRem, titleFontVars } from '../../lib/noteFont'
 
 // Foglio della nota: gli stessi fogli A4 della vista diario (stessa proporzione,
 // stessi margini, stesse righe da 27px, stessi disegni), uno sotto l'altro. Si
@@ -19,17 +20,6 @@ const BAND = 72 // fascia vuota in cima (giorno, mese)
 const TEXT_TOP = BAND + 28 // dove parte il testo nel foglio
 const PAGE_GAP = 24
 const RATIO = 1.4142
-
-const FONT_SIZES = [
-  { id: 0, label: 'Piccolo', rem: 0.8 },
-  { id: 1, label: 'Medio', rem: 0.89 },
-  { id: 2, label: 'Grande', rem: 0.98 },
-]
-const FONTS = [
-  { id: 0, label: 'Kalam', css: "'MyJournal Hand', 'Kalam', sans-serif", k: 1 },
-  { id: 1, label: 'Caveat', css: "'MyJournal Marker', 'Caveat', cursive", k: 1.22 },
-  { id: 2, label: 'Gochi', css: "'MyJournal Hand Gochi', 'Gochi Hand', cursive", k: 1.04 },
-]
 
 function readPrefs() {
   try {
@@ -223,11 +213,8 @@ export default function NoteBook({
   const p = parseWall(form.dateKey)
   const wknd = form.dateKey ? isWeekend(form.dateKey) : false
   const mood = Math.round(Number(form.mood) * 100)
-  const time = (form.timeStart || '').replace(':', '.')
   const place = typeof form.place === 'string' ? parsePlace(form.place) : form.place
-  const font = FONTS.find((f) => f.id === prefs.ff) || FONTS[0]
-  const size = FONT_SIZES.find((s) => s.id === prefs.fs) || FONT_SIZES[1]
-  const fontRem = (size.rem * font.k).toFixed(3)
+  const font = fontRem(prefs)
   const monthLabel = p ? `${MONTHS_IT[p.mo - 1]} ${p.y}` : ''
 
   return (
@@ -257,7 +244,7 @@ export default function NoteBook({
         <div
           className="nb-flow"
           ref={flow}
-          style={{ left: 58, top: TEXT_TOP, width: geo.textW, '--nb-fs': `${fontRem}rem`, '--nb-ff': font.css }}
+          style={{ left: 58, top: TEXT_TOP, width: geo.textW, '--nb-fs': `${font.rem}rem`, '--nb-ff': font.css }}
         >
           {/* colonna foto/luogo/canzone: il testo le scorre attorno */}
           <PreviewAside imageUrls={imageUrls} place={place} songs={form.songs} seed={seed} maxH={geo.textH - 70} />
@@ -272,11 +259,7 @@ export default function NoteBook({
           )}
 
           <div className="nb-titlerow">
-            <span className="dg-tcard nb-tcard">
-              <span className="dg-time">{time}</span>
-              <span className="dg-dash" aria-hidden="true">
-                –
-              </span>
+            <span className="dg-tcard nb-tcard" style={{ transform: `rotate(${tilt(`${seed}tc`, 1.4).toFixed(2)}deg)`, transformOrigin: 'left center', ...titleFontVars(seed) }}>
               <TitleInput
                 placeholder="Titolo della nota"
                 value={form.title}

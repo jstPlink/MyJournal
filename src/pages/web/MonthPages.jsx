@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { titleFontVars } from '../../lib/noteFont'
 import { fileUrl } from '../../lib/pocketbase'
 import { dayMood, moodColor } from '../../lib/mood'
 import { plainText, parsePlace } from '../../lib/notes'
@@ -9,7 +10,6 @@ import DreamBadge from '../../components/DreamBadge'
 import { haptic } from '../../lib/haptics'
 import {
   hash,
-  handFor,
   tilt,
   rng,
   osmTileFor,
@@ -357,9 +357,8 @@ export default function MonthPages({
                     {pg.titles.map((t) => (
                       <span
                         key={t.id}
-                        className="mp-n"
-                        data-hand={handFor(t.id)}
-                        style={{ '--nr': t.rot }}
+                        className="mp-n dg-tcard"
+                        style={{ '--nr': t.rot, ...titleFontVars(t.id) }}
                       >
                         {t.text}
                       </span>

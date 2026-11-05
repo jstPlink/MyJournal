@@ -28,6 +28,7 @@ import { useAuth } from '../../context/AuthContext'
 import PersonAvatar from '../../components/PersonAvatar'
 import Icon from '../../components/Icon'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
+import { noteFontStyle, titleFontVars } from '../../lib/noteFont'
 import { fileUrl } from '../../lib/pocketbase'
 import { dayMood, moodColor } from '../../lib/mood'
 import { personTapeColor, osmTileFor, tilt, yellowOf } from '../../lib/pagesSkin'
@@ -53,7 +54,6 @@ import {
   dayMonthLabel,
   weekdayLong,
   isWeekend,
-  timeLabel,
 } from '../../lib/dates'
 
 // Riga del testo di una nota: «07.40 80 post process foto» → ora, mood
@@ -249,9 +249,7 @@ function NoteBlock({ n, part, asideMax, peopleById, tagsById, immichUrl, immichA
         {showTitle && (
           <h3 className="dg-title">
             <span className="dg-tcenter" style={{ transform: `rotate(${tilt(`${n.id}tc`, 1.4).toFixed(2)}deg)`, transformOrigin: 'left center' }}>
-              <span className="dg-tcard">
-                <span className="dg-time">{timeLabel(n.timeStart)}</span>
-                <span className="dg-dash" aria-hidden="true">–</span>
+              <span className="dg-tcard" style={titleFontVars(n.id)}>
                 <span className="dg-title-text">{displayTitle(n.title)}</span>
               </span>
             </span>
@@ -266,7 +264,7 @@ function NoteBlock({ n, part, asideMax, peopleById, tagsById, immichUrl, immichA
           </h3>
         )}
         {showAside && <NoteAside note={n} asideMax={asideMax} ghost={ghost} />}
-        <div className="dg-body">
+        <div className={'dg-body' + (!n.isDream && noteFontStyle(n.font) ? ' dg-custom-font' : '')} style={n.isDream ? undefined : noteFontStyle(n.font)}>
           {n.isDream && (
             <span
               className="dg-cloudwrap"
@@ -360,10 +358,10 @@ function DayRecap({ dKey, notes, apiKey, text }) {
           // export: il testo c'è già, niente richieste e niente pulsanti
           <section className="prc-card">
             <div className="prc-head">
-              <span className="st-label prc-tab-in">
-                <Icon name="sparkles" size={12} />
+              <p className="prc-title">
+                <Icon name="sparkles" size={14} className="shrink-0" />
                 Riassunto del giorno
-              </span>
+              </p>
             </div>
             <p className="prc-text">{text}</p>
           </section>
@@ -373,9 +371,6 @@ function DayRecap({ dKey, notes, apiKey, text }) {
             periodKey={dKey}
             notes={notes}
             apiKey={apiKey}
-            tab="Riassunto del giorno"
-            tabInside
-            hideTitle
           />
         )}
       </div>
@@ -745,26 +740,17 @@ function MonthCover({ part = 1, year, month, side, ctx, notes }) {
           <span className="dg-cover-year">{year}</span>
           <span className="dg-cover-title">{MONTHS_IT[month]}</span>
         </div>
-        <div
-          className="wd-card-wrap dg-recap-block dg-cover-recap"
-          style={{ '--rr': `${tilt(`${key}rc`, 1.3).toFixed(2)}deg`, '--tape': tapeOf('recap', key), '--ycol': yellowOf(key) }}
-        >
-          <div className="wd-header">
-            <Icon name="sparkles" size={19} />
-            <h2>Riassunto del mese</h2>
-          </div>
-          <div className="dg-recap dg-recap-page">
-            <PeriodRecapCard
-              period="month"
-              periodKey={key}
-              notes={notes}
-              label={`${MONTHS_IT[month]} ${year}`}
-              apiKey={ctx.geminiApiKey}
-              hideTitle
-              alwaysShow
-            />
-          </div>
-        </div>
+        <PeriodRecapCard
+          period="month"
+          periodKey={key}
+          notes={notes}
+          label={`${MONTHS_IT[month]} ${year}`}
+          apiKey={ctx.geminiApiKey}
+          foglietto
+          alwaysShow
+          className="dg-cover-recap"
+          style={{ '--rr': `${tilt(`${key}rc`, 1.3).toFixed(2)}deg`, '--tape': tapeOf('recap', key) }}
+        />
         {photos.length > 0 && (
           <div className="dg-cover-photos">
             {photos.map((ph, i) => (

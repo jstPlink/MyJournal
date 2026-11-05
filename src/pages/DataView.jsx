@@ -111,7 +111,7 @@ export default function DataView() {
               periodKey={String(year)}
               notes={notes}
               apiKey={geminiApiKey}
-              foglietto="Recap dell'anno"
+              foglietto
             />
 
             <div className="wd-card-wrap">

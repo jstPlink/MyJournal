@@ -197,7 +197,7 @@ export default function MonthView() {
           notes={notes}
           label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
           apiKey={user?.geminiApiKey?.trim()}
-          foglietto="Recap del mese"
+          foglietto
           className="mx-3 mb-1"
         />
 

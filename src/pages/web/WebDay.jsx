@@ -2,8 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useCacheRefresh } from '../../hooks/useConnection'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import Icon from '../../components/Icon'
-import { yellowOf } from '../../lib/pagesSkin'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import DayPages from './DayPages'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
@@ -234,22 +232,15 @@ export default function WebDay() {
         </p>
       )}
 
-      <div className="wd-card-wrap dg-recap-block mx-auto w-[78%] shrink-0" style={{ '--ycol': yellowOf(date) }}>
-        <div className="wd-header">
-          <Icon name="sparkles" size={19} />
-          <h2>Recap del giorno</h2>
-        </div>
-        <div className="dg-recap dg-recap-page">
-          <PeriodRecapCard
-            period="day"
-            periodKey={date}
-            notes={notes.filter((n) => !n.carriedFromPrevious)}
-            apiKey={user?.geminiApiKey?.trim()}
-            hideTitle
-            alwaysShow
-          />
-        </div>
-      </div>
+      <PeriodRecapCard
+        period="day"
+        periodKey={date}
+        notes={notes.filter((n) => !n.carriedFromPrevious)}
+        apiKey={user?.geminiApiKey?.trim()}
+        foglietto
+        alwaysShow
+        className="mx-auto w-[78%] shrink-0"
+      />
 
       {/* Il foglio NON si scorre, sta tutto nella pagina (fit) — altezza
           fissa qui, DayPages misura lo spazio disponibile. Larghezza piena,
@@ -268,7 +259,6 @@ export default function WebDay() {
             dreams={dreams}
             immichUrl={user?.immichUrl?.trim()}
             immichApiKey={user?.immichApiKey?.trim()}
-            fit
             onCreate={() => navigate(`/note/new?date=${date}`)}
           />
         )}

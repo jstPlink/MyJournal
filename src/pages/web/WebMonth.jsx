@@ -8,8 +8,6 @@ import { dreamDaysInRange } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
 import OnThisDay from '../../components/OnThisDay'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
-import Icon from '../../components/Icon'
-import { yellowOf } from '../../lib/pagesSkin'
 import MonthPages from './MonthPages'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
 import { MONTHS_IT, addMonths, calendarGrid } from '../../lib/dates'
@@ -187,22 +185,15 @@ export default function WebMonth() {
 
       <OnThisDay foglietto className="mx-auto mb-10 w-[78%]" />
 
-      <div className="wd-card-wrap dg-recap-block mx-auto w-[78%]" style={{ '--ycol': yellowOf(`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`) }}>
-        <div className="wd-header">
-          <Icon name="sparkles" size={19} />
-          <h2>Recap del mese</h2>
-        </div>
-        <div className="dg-recap dg-recap-page">
-          <PeriodRecapCard
-            period="month"
-            periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
-            notes={notes}
-            label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
-            apiKey={user?.geminiApiKey?.trim()}
-            hideTitle
-          />
-        </div>
-      </div>
+      <PeriodRecapCard
+        period="month"
+        periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
+        notes={notes}
+        label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
+        apiKey={user?.geminiApiKey?.trim()}
+        foglietto
+        className="mx-auto w-[78%]"
+      />
 
       <MonthPages
         grid={grid}
