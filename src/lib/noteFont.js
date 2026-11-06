@@ -47,8 +47,9 @@ export function noteFontStyle(font) {
 // stabile per nota (stesso id -> stesso carattere ovunque compaia il titolo).
 // Restituisce le variabili CSS `--tf` (famiglia) e `--tk` (correzione di misura).
 // I titoli sono in maiuscolo: la misura si pareggia sull'altezza delle maiuscole
-// (misurata: Kalam 73, Caveat 73, Gochi 56 per 100px), così la grandezza apparente è la stessa.
-const TITLE_K = [1.05, 1.05, 1.37]
+// (Kalam 73, Caveat 73, Gochi 56 per 100px) e sulla larghezza del testo (Caveat più stretto,
+// Gochi largo come Kalam): valori di compromesso misurati nel browser, per titoli in maiuscolo.
+const TITLE_K = [1.05, 1.15, 1.25]
 export function titleFontVars(id) {
   const i = hash(String(id ?? 'new')) % FONTS.length
   return { '--tf': FONTS[i].css, '--tk': TITLE_K[i] }

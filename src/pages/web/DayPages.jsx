@@ -50,7 +50,16 @@ const LINE_H = 20 // altezza stimata di una riga di descrizione
 const CHARS_PER_LINE = 34
 const GAP = 8 // spazio fra due righe
 const HEAD_H = 52 // titolo (una riga) + margini della riga
-const MEDIA_MIN = 108 // altezza minima di una riga con foto o persone
+const BARE_H = 54 // altezza minima di una riga: solo cartellino del mood e titolo
+const BARE_H_PHONE = 38 // sul telefono il mood è un quadratino: la riga minima è più bassa
+const TAPE_H = 37 // altezza di una targhetta persona/tag nella colonna completa
+const POLA_H = 132 // altezza delle due polaroid nella versione completa
+
+// Altezza che serve alla versione completa (targhette in colonna, polaroid).
+function fullNeed(it) {
+  const tapes = it.people.length + it.tags.length
+  return Math.max(tapes ? tapes * TAPE_H + 14 : 0, it.imgs.length ? POLA_H : 0)
+}
 
 function startMinutesOf(value) {
   const p = parseWall(value)
@@ -60,10 +69,6 @@ function startMinutesOf(value) {
 // Imperfezione stabile della riga (angolo piegato, strappo o niente), come nel mese.
 function flawFor(key) {
   switch (hash(`${key}~flaw`) % 6) {
-    case 0:
-      return 'dogear-br'
-    case 1:
-      return 'dogear-tr'
     case 2:
       return 'torn'
     default:
@@ -133,6 +138,9 @@ export default function DayPages({
   dreams = [], // sogni del giorno: pallino con la luna sull'asse + nuvoletta (lib/dreams.js)
 }) {
   const trackRef = useRef(null)
+  const [bareH] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia?.('(max-width: 480px)').matches ? BARE_H_PHONE : BARE_H,
+  )
   const [trackH, setTrackH] = useState(0)
   useLayoutEffect(() => {
     const el = trackRef.current
@@ -198,21 +206,24 @@ export default function DayPages({
         max: DREAM_H,
       })),
       ...items.map((it) => {
-        const media = it.people.length > 0 || it.tags.length > 0 || it.imgs.length > 0
         const k = 1
-        const min = media ? MEDIA_MIN : HEAD_H + LINE_H * k
         const lines = Math.min(6, Math.ceil((it.body || '').length / CHARS_PER_LINE))
+        const contentMax = Math.max(HEAD_H + lines * LINE_H * k + 8, fullNeed(it))
+        // l'altezza segue la durata della nota (da inizio a fine): se lo spazio
+        // non basta si passa alle versioni compatte; senza orario di fine, quanto serve
+        const spanPx = Math.max(0, it.endMin - it.startMin) * pxPerMin
+        const max = spanPx > 0 ? Math.min(contentMax, Math.max(bareH, spanPx)) : contentMax
         return {
           key: `n:${it.id}`,
           desired: it.startMin * pxPerMin,
-          min,
-          max: Math.max(min, HEAD_H + lines * LINE_H * k + 8),
+          min: bareH,
+          max: Math.max(bareH, max),
         }
       }),
     ].sort((a, b) => a.desired - b.desired)
     layoutBlocks(blocks, trackH).forEach((r) => map.set(r.key, r))
     return map
-  }, [trackH, pxPerMin, dreams, items])
+  }, [trackH, pxPerMin, dreams, items, bareH])
 
   return (
     <div className="day-outer fit">
@@ -304,15 +315,12 @@ export default function DayPages({
                 '--s1': `${85 + (h3 % 45)}% auto`,
                 '--s2': `${55 + (h1 % 35)}% auto`,
               }
-              // targhette che entrano nella riga: se non bastano, le persone si
-              // riducono a una sola targhetta col numero
-              const cap = Math.max(1, Math.floor((r.h - 14) / 37))
-              const tapes = { tags: it.tags, people: it.people, more: 0 }
-              if (it.tags.length + it.people.length > cap) {
-                tapes.tags = it.tags.slice(0, Math.max(0, cap - (it.people.length ? 1 : 0)))
-                tapes.people = []
-                tapes.more = it.people.length
-              }
+              // se persone, tag e foto non ci stanno si usano le versioni compatte
+              // (contatori e una foto sola, come sul telefono); se non c'è posto
+              // neanche per quelle restano solo cartellino del mood e titolo
+              const bare = r.h < bareH + 22
+              const compact = !bare && r.h < fullNeed(it)
+              const tapes = { tags: it.tags, people: it.people }
               const open = () => {
                 haptic(4, 'page')
                 onNavigate(`/note/${it.id}`)
@@ -329,6 +337,7 @@ export default function DayPages({
                       (hasPeople ? ' has-tapes' : '') +
                       (!hasPeople && it.imgs.length === 0 ? ' dr-plain' : '') +
                       (it.imgs.length === 0 ? ' dr-nophoto' : '') +
+                      (bare ? ' dr-bare' : compact ? ' dr-compact' : '') +
                       (kind ? ` mood-${kind}` : '') +
                       (flawFor(it.id) ? ` ${flawFor(it.id)}` : '')
                     }
@@ -381,13 +390,6 @@ export default function DayPages({
                               <span className="mp-tape-name">{person.name}</span>
                             </span>
                           ))}
-                          {tapes.more > 0 && (
-                            <span className="mp-tape mp-tape-more" style={{ '--tape-c': '#a39a86' }}>
-                              <span className="mp-tape-name">
-                                {tapes.more} {tapes.more === 1 ? 'persona' : 'persone'}
-                              </span>
-                            </span>
-                          )}
                         </span>
                       </span>
                     )}

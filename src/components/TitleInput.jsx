@@ -20,8 +20,18 @@ export default function TitleInput({ value, onChange, placeholder, className = '
       ref={ref}
       rows={1}
       placeholder={placeholder}
-      value={value}
-      onChange={(e) => onChange(e.target.value.replace(/\n/g, ' '))}
+      value={(value ?? '').toLocaleUpperCase('it-IT')}
+      onChange={(e) => {
+        // sempre maiuscolo davvero (non solo a vista), tenendo il cursore dov'era
+        const el = e.target
+        const pos = el.selectionStart
+        const next = el.value.replace(/\n/g, ' ').toLocaleUpperCase('it-IT')
+        if (next !== el.value) {
+          el.value = next
+          el.setSelectionRange(pos, pos)
+        }
+        onChange(next)
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Enter') e.preventDefault()
       }}

@@ -62,10 +62,6 @@ function MpPolaMobile({ imgs, rotation }) {
 // Imperfezione stabile della pagina: angolo piegato, strappo o niente.
 function flawFor(key) {
   switch (hash(`${key}~flaw`) % 6) {
-    case 0:
-      return 'dogear-br'
-    case 1:
-      return 'dogear-tr'
     case 2:
       return 'torn'
     default:

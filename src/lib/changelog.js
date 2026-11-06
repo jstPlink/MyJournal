@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.89.1',
+    date: '2026-11-06 12:00',
+    changes: [
+      "Vista giorno: altezza delle note in base alla durata, versioni compatte di persone, tag e foto quando non c'è posto, niente più angoli piegati; sul telefono mood a quadratino e riassunto ridotto a 4 righe con tasto per aprirlo.",
+      "Titoli delle note sempre in maiuscolo mentre si scrive; sul telefono la pagina nota ha il titolo più piccolo e il cartoncino a tutta larghezza, con persone, foto, tag e canzoni dentro il foglio.",
+    ],
+  },
+  {
     version: '0.89.0',
     date: '2026-11-05 12:00',
     changes: [

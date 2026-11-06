@@ -246,7 +246,7 @@ export default function WebDay() {
           fissa qui, DayPages misura lo spazio disponibile. Larghezza piena,
           non più w-3/5: stessa larghezza della vista mese, che non ha alcun
           tetto sulla propria griglia (solo l'header lo ha). */}
-      <div className="min-h-0 flex-1 overflow-hidden pt-8">
+      <div className="min-h-0 flex-1 overflow-hidden pt-5">
         {loading ? (
           <p className="p-6 text-center text-ink-soft">Carico…</p>
         ) : (

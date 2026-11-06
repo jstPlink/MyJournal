@@ -46,6 +46,8 @@ export default function DayView() {
   const [error, setError] = useState('')
   const [geminiNoteOpen, setGeminiNoteOpen] = useState(false)
   const [noteChoiceOpen, setNoteChoiceOpen] = useState(false)
+  // riassunto del giorno: ridotto a 4 righe, si apre con il tasto sotto il foglietto
+  const [recapOpen, setRecapOpen] = useState(false)
   const peopleById = useMemo(
     () => new Map(people.map((p) => [p.id, p])),
     [people],
@@ -139,19 +141,29 @@ export default function DayView() {
         </div>
       </MobileTopBar>
 
-      <PeriodRecapCard
-        period="day"
-        periodKey={date}
-        notes={notes.filter((n) => !n.carriedFromPrevious)}
-        apiKey={user?.geminiApiKey?.trim()}
-        foglietto
-        alwaysShow
-        className="mx-2 mt-2 !mb-2"
-      />
+      <div className={'day-recap-wrap' + (recapOpen ? '' : ' collapsed')}>
+        <PeriodRecapCard
+          period="day"
+          periodKey={date}
+          notes={notes.filter((n) => !n.carriedFromPrevious)}
+          apiKey={user?.geminiApiKey?.trim()}
+          foglietto
+          alwaysShow
+          className="mx-2 mt-2 !mb-0"
+        />
+        <button
+          type="button"
+          className="day-recap-toggle"
+          onClick={() => setRecapOpen((v) => !v)}
+          aria-expanded={recapOpen}
+        >
+          {recapOpen ? '▲ riduci' : '▼ mostra tutto'}
+        </button>
+      </div>
 
       <main
         key={date}
-        className="day-surface anim-page relative min-h-0 flex-1 overflow-hidden bg-panel px-2 py-3"
+        className="day-surface anim-page relative min-h-0 flex-1 overflow-hidden bg-panel px-2 pb-3 pt-3"
         style={{ touchAction: 'pan-y' }}
         onPointerDown={onPointerDown}
         onPointerUp={onPointerUp}

@@ -565,7 +565,6 @@ export default function NoteView() {
             placeholder="Scrivi qui la nota…"
             className="ne-body flex-1"
           />
-        </div>
 
         {hasExtras &&
           (() => {
@@ -747,6 +746,7 @@ export default function NoteView() {
               </div>
             )
           })()}
+        </div>
 
         <div className="h-6" />
       </main>

@@ -12000,3 +12000,186 @@ li:last-child > .tk-row {
 .st-tile:not(.st-tile-dream) {
   background-color: #f7f2e4;
 }
+
+/* ===== Ritocchi vista giorno / riassunti ===== */
+/* telefono, vista giorno: ore senza foglietto, più vicine alla cornice */
+@media (max-width: 1023px) {
+  .day-sheet { padding-left: 42px; }
+  .day-rail { left: -36px; width: 34px; }
+  .day-rail .hr {
+    right: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    transform: translateY(-0.5em);
+    font-size: 0.72rem;
+  }
+  .day-rail .tickline { left: 36px; }
+}
+/* telefono: mood e titolo allineati a sinistra del foglietto della nota, titolo senza foglietto a quadretti */
+@media (max-width: 480px) {
+  .dr-head,
+  .dr-wrap .dr-head { justify-content: flex-start; }
+  .dr-head .dr-title {
+    background: none;
+    background-image: none;
+    box-shadow: none;
+    outline: none;
+    padding: 0;
+    text-align: left;
+  }
+}
+/* web: le targhette delle persone non collassano mai (colonna a misura del nome, a capo da sole) */
+@media (min-width: 481px) {
+  .dr-wrap .mp-side { width: max-content; max-width: 200px; }
+  .dr-wrap .mp-side .mp-tapes { flex-direction: column; flex-wrap: nowrap; align-items: flex-start; min-width: 0; flex: 0 0 auto; }
+  .dr-wrap .mp-side .mp-tape { flex: none; max-width: 200px; }
+  .dr-wrap .mp-side .mp-tape-name { min-width: 0; }
+}
+/* telefono: cartellino del mood -15% */
+@media (max-width: 480px) {
+  .dr-mood { width: 32px; height: 32px; font-size: 0.98rem; }
+  .dr-mood::before { width: 15px; height: 6px; top: -4px; }
+}
+/* riassunti: un po' meno spazio fra il bordo superiore e il testo */
+.dg-recap .prc-card,
+.dg-recap-block .dg-recap-page .prc-card { padding-top: 5px; }
+
+/* titoli con carattere diverso: stessa altezza di riga, così non cambia l'ingombro in verticale (vista giorno e mese) */
+.dr-title { line-height: 1.25; display: inline-block; }
+
+/* ===== Vista giorno: versioni compatte quando persone, tag e foto non ci stanno =====
+   .dr-compact = contatori + una sola foto (come sul telefono); .dr-bare = solo
+   cartellino del mood e titolo */
+.dr-wrap .mp-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px 5px 8px;
+  font-family: 'MyJournal Hand', 'Kalam', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1;
+  color: #4d4234;
+  background: rgba(228, 216, 180, 0.7);
+  border-left: 2px dashed rgba(110, 90, 56, 0.6);
+  border-right: 2px dashed rgba(110, 90, 56, 0.6);
+  box-shadow: 0 2px 4px rgba(20, 12, 4, 0.2);
+}
+.dr-wrap .mp-mini svg { flex: none; opacity: 0.9; }
+.dr-wrap .mp-mini-text { font-variant-numeric: tabular-nums; }
+@media (min-width: 481px) {
+  .dr-wrap .mp-page.dr-compact .mp-side,
+  .dr-wrap .mp-page.dr-compact .mp-polas { display: none; }
+  .dr-wrap .mp-page.dr-compact .mp-side-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    position: relative;
+    z-index: 3;
+  }
+  .dr-wrap .mp-page.dr-compact .mp-pola-mobile {
+    display: block;
+    position: relative;
+    grid-column: 3;
+    grid-row: 1 / -1;
+    align-self: center;
+    z-index: 3;
+    width: 58px;
+    padding: 5px 5px 13px;
+    background: #f7f1e3;
+    box-shadow: 0 5px 10px rgba(20, 12, 4, 0.3);
+    transform: rotate(var(--pr, 3deg));
+  }
+  .dr-wrap .mp-page.dr-compact .mp-pola-mobile .mp-ph {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-size: cover;
+    background-position: center;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.25);
+  }
+  .dr-wrap .mp-page.dr-compact .mp-pola-dots { display: none; }
+}
+/* solo mood e titolo (web e telefono) */
+/* solo mood e titolo (web e telefono); persone e tag restano come contatori sulla stessa riga */
+.dr-wrap .mp-page.dr-bare .dr-desc,
+.dr-wrap .mp-page.dr-bare .mp-side,
+.dr-wrap .mp-page.dr-bare .mp-polas,
+.dr-wrap .mp-page.dr-bare .mp-pola-mobile { display: none; }
+.dr-wrap .mp-page.dr-bare { padding-top: 6px; padding-bottom: 6px; }
+.dr-wrap .mp-page.dr-bare .dr-head { grid-column: 1; grid-row: 1; }
+.dr-wrap .mp-page.dr-bare .mp-side-mobile {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  grid-column: 2;
+  grid-row: 1 / -1;
+  align-self: center;
+  position: relative;
+  z-index: 3;
+}
+
+/* vista giorno (telefono): riassunto ridotto a 4 righe; il tasto per aprirlo sta SOTTO il foglietto, lontano da Rigenera */
+.day-recap-wrap.collapsed .dg-recap .prc-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.day-recap-toggle {
+  display: block;
+  margin: 2px auto 0;
+  padding: 3px 14px;
+  border: 0;
+  background: none;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
+  font-size: 0.8rem;
+  color: #564a36;
+  cursor: var(--cursor-pointer);
+}
+
+/* telefono: il cartellino del mood diventa un semplice quadratino di cartone (meno ingombro) */
+@media (max-width: 480px) {
+  .dr-mood {
+    width: 26px;
+    height: 26px;
+    border-radius: 2px;
+    transform: none;
+    font-size: 0.85rem;
+    background: color-mix(in srgb, var(--nm, #c9b98c) 55%, #cdb88f);
+    box-shadow: 0 1px 2px rgba(40, 28, 8, 0.35);
+  }
+  .dr-mood::before { content: none; }
+  .dr-wrap .mp-page.dr-bare { padding-top: 5px; padding-bottom: 5px; }
+}
+
+/* telefono, nota: persone, foto, luogo, tag e canzoni stanno DENTRO il foglio (come nel web), senza riquadro a parte */
+.ne-sheet .ne-extras {
+  background: none;
+  background-image: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+  margin-top: 14px;
+}
+/* titolo in proporzione alla descrizione come nel web (web: 1,2rem su testo 0,89rem = 1,35; qui 1,3 su 1rem) */
+.ne-tcard .ne-title { font-size: 1.3rem; }
+
+/* telefono, nota: il cartoncino del titolo si estende fino al margine destro del foglio, con lo stesso spazio dal bordo di prima (il testo resta a sinistra) */
+@media (max-width: 480px) {
+  .ne-tcard {
+    align-self: stretch;
+    width: auto;
+    max-width: none;
+    margin-right: 0;
+    padding-right: 11px;
+  }
+  .ne-tcard .ne-title { width: 100%; text-align: left; }
+}
