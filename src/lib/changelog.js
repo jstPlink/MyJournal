@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.90.0',
+    date: '2026-11-06 22:00',
+    changes: [
+      "Vista mese: una tavola in legno «Statistiche» con «In questo giorno» (sul web sempre aperto, header semplificato), giorno migliore, nota migliore e le 5 persone più presenti del mese; sul web è larga quanto le pagine delle note, come il riassunto.",
+    ],
+  },
+  {
     version: '0.89.1',
     date: '2026-11-06 12:00',
     changes: [

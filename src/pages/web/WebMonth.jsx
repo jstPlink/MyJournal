@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext'
 import { listNotesInRange, groupByDay, describeError } from '../../lib/notes'
 import { dreamDaysInRange } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
-import OnThisDay from '../../components/OnThisDay'
+import MonthStats from '../../components/MonthStats'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
 import MonthPages from './MonthPages'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
@@ -183,7 +183,15 @@ export default function WebMonth() {
         </p>
       )}
 
-      <OnThisDay foglietto className="mx-auto mb-10 w-[78%]" />
+      <div className="month-top-wrap">
+      <MonthStats
+        notes={notes}
+        year={cursor.year}
+        month={cursor.month}
+        people={people}
+        wide
+        className="mb-10"
+      />
 
       <PeriodRecapCard
         period="month"
@@ -192,8 +200,9 @@ export default function WebMonth() {
         label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
         apiKey={user?.geminiApiKey?.trim()}
         foglietto
-        className="mx-auto w-[78%]"
+        className="mb-6"
       />
+      </div>
 
       <MonthPages
         grid={grid}

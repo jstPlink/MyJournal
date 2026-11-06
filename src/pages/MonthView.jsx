@@ -10,7 +10,7 @@ import MobileBottomBar from '../components/MobileBottomBar'
 import Footer from '../components/Footer'
 import ViewTabs from '../components/ViewTabs'
 import YearPill from '../components/YearPill'
-import OnThisDay from '../components/OnThisDay'
+import MonthStats from '../components/MonthStats'
 import PeriodRecapCard from '../components/PeriodRecapCard'
 import NewNoteWithGeminiSheet from '../components/NewNoteWithGeminiSheet'
 import NewNoteChoiceSheet from '../components/NewNoteChoiceSheet'
@@ -189,7 +189,13 @@ export default function MonthView() {
           </p>
         )}
 
-        <OnThisDay foglietto className="mx-3 mb-6 mt-3" />
+        <MonthStats
+          notes={notes}
+          year={cursor.year}
+          month={cursor.month}
+          people={allPeople}
+          className="mx-3 mb-6 mt-3"
+        />
 
         <PeriodRecapCard
           period="month"

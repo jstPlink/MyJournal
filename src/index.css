@@ -12183,3 +12183,14 @@ li:last-child > .tk-row {
   }
   .ne-tcard .ne-title { width: 100%; text-align: left; }
 }
+
+/* vista mese: la tavola Statistiche sparisce se dentro non c'è nulla */
+.month-stats:not(:has(.otd, .month-hl)) { display: none; }
+.month-stats .wd-card { padding-bottom: 24px; }
+
+/* vista mese web: tavola Statistiche e riassunto larghi quanto le pagine delle note */
+.month-top-wrap {
+  width: min(1265px, 100%);
+  margin: 0 auto;
+  padding: 0 36px 0 48px;
+}

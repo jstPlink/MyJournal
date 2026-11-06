@@ -76,7 +76,7 @@ function StatCard({ label, value, sub, icon, tone, subBig = false, onClick, vari
   )
 }
 
-function DayRow({ day, onClick, style }) {
+export function DayRow({ day, onClick, style }) {
   const titles = day.titles?.length ? day.titles : [`${day.count} ${day.count === 1 ? 'nota' : 'note'}`]
   return (
     <button type="button" onClick={onClick} style={style} className="anim-row st-row tk-row">
@@ -115,7 +115,7 @@ function MonthRow({ month, onClick, style }) {
   )
 }
 
-function NoteRow({ note, onClick, style }) {
+export function NoteRow({ note, onClick, style }) {
   return (
     <button type="button" onClick={onClick} style={style} className="anim-row st-row tk-row">
       <DateStub dateKey={dayKey(note.date)} />

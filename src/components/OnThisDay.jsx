@@ -10,7 +10,7 @@ const pad = (n) => String(n).padStart(2, '0')
 
 // "In questo giorno": note scritte nella stessa data (mese-giorno) degli anni
 // precedenti. Non renderizza nulla se non ce ne sono.
-export default function OnThisDay({ className = '', foglietto = false }) {
+export default function OnThisDay({ className = '', foglietto = false, showAll = false }) {
   const navigate = useNavigate()
   const [groups, setGroups] = useState(null)
   const [open, setOpen] = useState(false)
@@ -58,8 +58,8 @@ export default function OnThisDay({ className = '', foglietto = false }) {
   const today = dayMonthLabel(`${thisYear}-${pad(new Date().getMonth() + 1)}-${pad(new Date().getDate())}`)
 
   // gli ultimi 3 anni con note (anche non consecutivi); gli altri stanno sotto un pulsante
-  const head = groups.slice(0, 3)
-  const rest = groups.slice(3)
+  const head = showAll ? groups : groups.slice(0, 3)
+  const rest = showAll ? [] : groups.slice(3)
   const renderCard = (g) => {
           const ago = thisYear - g.year
           const mood = dayMood(g.notes)
@@ -98,18 +98,11 @@ export default function OnThisDay({ className = '', foglietto = false }) {
         }
 
   return (
-    <div className={'anim-unfurl otd ' + (foglietto ? 'wd-card-wrap otd-fg ' : '') + className}>
-      {foglietto ? (
-        <div className="wd-header">
-          <Icon name="calendar" size={19} />
-          <h2>In questo giorno · {today.toLowerCase()}</h2>
-        </div>
-      ) : (
-        <span className="st-label otd-tab">
-          <Icon name="calendar" size={12} />
-          In questo giorno · {today.toLowerCase()}
-        </span>
-      )}
+    <div className={'anim-unfurl otd ' + className}>
+      <span className="st-label otd-tab">
+        <Icon name="calendar" size={12} />
+        In questo giorno · {today.toLowerCase()}
+      </span>
       <div className={'otd-list' + (rest.length ? ' has-more' : '')}>
         {head.map(renderCard)}
       </div>
