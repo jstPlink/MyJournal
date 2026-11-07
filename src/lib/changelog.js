@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.91.2',
+    date: '2026-11-07 14:00',
+    changes: [
+      "Vista giorno: il foglietto di una nota occupa sempre tutta la sua durata (da inizio a fine), anche se descrizione e targhette ne richiedono meno.",
+    ],
+  },
+  {
     version: '0.91.1',
     date: '2026-11-07 13:00',
     changes: [

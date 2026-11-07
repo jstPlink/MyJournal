@@ -209,10 +209,11 @@ export default function DayPages({
         const k = 1
         const lines = Math.min(6, Math.ceil((it.body || '').length / CHARS_PER_LINE))
         const contentMax = Math.max(HEAD_H + lines * LINE_H * k + 8, fullNeed(it))
-        // l'altezza segue la durata della nota (da inizio a fine): se lo spazio
-        // non basta si passa alle versioni compatte; senza orario di fine, quanto serve
+        // l'altezza segue la durata della nota (da inizio a fine), anche se il
+        // contenuto ne occupa meno: se lo spazio non basta (note vicine) si passa
+        // alle versioni compatte; senza orario di fine, quanto serve al contenuto
         const spanPx = Math.max(0, it.endMin - it.startMin) * pxPerMin
-        const max = spanPx > 0 ? Math.min(contentMax, Math.max(bareH, spanPx)) : contentMax
+        const max = spanPx > 0 ? Math.max(bareH, spanPx) : contentMax
         return {
           key: `n:${it.id}`,
           desired: it.startMin * pxPerMin,
