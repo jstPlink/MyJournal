@@ -40,14 +40,17 @@ export default function ExistingMatches({
 
   return (
     <div className={'text-xs ' + className}>
-      <p className={'mb-1 font-semibold ' + (exact ? 'text-delete-dark' : 'text-ink-soft')}>
+      <p className={'mb-1.5 font-semibold ' + (exact ? 'text-delete-dark' : 'text-ink-soft')}>
         {exact ? 'Esiste già: non crearne un’altra.' : label + ':'}
       </p>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-2">
         {matches.map((m) => {
           const active = selectedIds.includes(m.id)
           const cls =
-            'rounded-full border px-2.5 py-1 font-semibold ' +
+            'rounded-full border font-semibold ' +
+            (onPick
+              ? 'flex min-h-11 items-center px-4 py-2 text-sm active:scale-95 transition '
+              : 'px-3 py-1.5 text-sm ') +
             (active ? 'border-ink bg-ink text-cream' : 'border-line bg-tag text-ink')
           return onPick ? (
             <button key={m.id} type="button" onClick={() => onPick(m)} className={cls}>
