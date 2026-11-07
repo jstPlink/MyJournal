@@ -207,7 +207,14 @@ export default function DayPages({
       })),
       ...items.map((it) => {
         const k = 1
-        const lines = Math.min(6, Math.ceil((it.body || '').length / CHARS_PER_LINE))
+        const lines = Math.min(
+          6,
+          it.body
+            ? it.body
+                .split('\n')
+                .reduce((s, l) => s + Math.max(1, Math.ceil(l.length / CHARS_PER_LINE)), 0)
+            : 0,
+        )
         const contentMax = Math.max(HEAD_H + lines * LINE_H * k + 8, fullNeed(it))
         // l'altezza segue la durata della nota (da inizio a fine), anche se il
         // contenuto ne occupa meno: se lo spazio non basta (note vicine) si passa

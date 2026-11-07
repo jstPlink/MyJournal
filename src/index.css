@@ -11573,6 +11573,7 @@ li:last-child > .tk-row {
   font-family: 'MyJournal Hand', 'Kalam', sans-serif;
   font-size: 0.9rem;
   line-height: 20px;
+  white-space: pre-line;
   color: rgba(58, 46, 28, 0.78);
   -webkit-mask: linear-gradient(#000 calc(100% - 22px), transparent);
   mask: linear-gradient(#000 calc(100% - 22px), transparent);
