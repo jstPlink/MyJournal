@@ -33,16 +33,3 @@ export function haptic(ms = 4, sound = 'tap') {
   }
 }
 
-// Vibrazione più lunga e ben percepibile, per gli avvisi (es. mancano 30/20/10/5
-// secondi alla fine di un vocale). Non unita alle chiamate vicine.
-export function hapticAlert(ms = 220) {
-  try {
-    if (Capacitor.isNativePlatform()) {
-      Haptics.vibrate({ duration: ms }).catch(() => {})
-    } else if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
-      navigator.vibrate(ms)
-    }
-  } catch {
-    /* non supportato: ignora */
-  }
-}

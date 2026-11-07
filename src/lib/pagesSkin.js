@@ -5,8 +5,6 @@
 
 import { useEffect, useState } from 'react'
 
-const HANDS = ['a', 'b', 'c', 'd']
-
 // Indice che avanza da solo ogni `intervalMs`, per far scorrere più
 // foto/luoghi/canzoni nello stesso piccolo spazio (i badge mobili della
 // skin "Pagine": una sola "diapositiva" per foto, targhetta del luogo,
@@ -39,11 +37,6 @@ export function hash(str) {
   h = Math.imul(h, 0xc2b2ae35)
   h ^= h >>> 16
   return ((h % 1e9) + 1e9) % 1e9
-}
-
-// "Mano" stabile per una nota: stesso id -> stesso font, sempre.
-export function handFor(id) {
-  return HANDS[hash(id) % HANDS.length]
 }
 
 // Inclinazione stabile per chiave, in circa [-spread, +spread] gradi.

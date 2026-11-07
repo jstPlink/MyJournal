@@ -10,7 +10,7 @@ const pad = (n) => String(n).padStart(2, '0')
 
 // "In questo giorno": note scritte nella stessa data (mese-giorno) degli anni
 // precedenti. Non renderizza nulla se non ce ne sono.
-export default function OnThisDay({ className = '', foglietto = false, showAll = false }) {
+export default function OnThisDay({ className = '', showAll = false }) {
   const navigate = useNavigate()
   const [groups, setGroups] = useState(null)
   const [open, setOpen] = useState(false)

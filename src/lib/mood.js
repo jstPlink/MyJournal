@@ -88,14 +88,6 @@ export function getMoodStopPositions() {
   return STOPS.map((s) => s.t)
 }
 
-// Stringa CSS `linear-gradient(...)` del gradiente attivo, per le anteprime.
-export function moodGradientCss(direction = 'to right') {
-  const stops = STOPS.map(
-    (s) => `rgb(${s.c[0]}, ${s.c[1]}, ${s.c[2]}) ${Math.round(s.t * 100)}%`,
-  )
-  return `linear-gradient(${direction}, ${stops.join(', ')})`
-}
-
 function clamp01(n) {
   if (Number.isNaN(n) || n == null) return 0
   return Math.min(1, Math.max(0, n))
@@ -159,45 +151,6 @@ export function moodTextColor(value) {
   }
   const lum = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255
   return lum > 0.62 ? '#3a3226' : '#fdf7ea'
-}
-
-// Opacità del titolo di una nota in base a quanto il mood si allontana dal
-// centro scala (0.5, neutro): più il mood è marcato (vicino a 0 o 1), più il
-// titolo è leggibile; più è neutro, più sfuma — al posto di nasconderlo del
-// tutto sopra/sotto una soglia. Simmetrica per costruzione (si lavora sulla
-// distanza assoluta da 0.5, non sul segno). Interpolazione lineare tra i
-// punti indicati (in "distanza da 0.5"): 0 → 0.2, 0.1 → 0.4, 0.2 → 0.7,
-// 0.3+ → 1 — divario più marcato di prima per rendere la differenza più
-// visibile a colpo d'occhio.
-const TITLE_OPACITY_STOPS = [
-  { d: 0, o: 0.2 },
-  { d: 0.1, o: 0.4 },
-  { d: 0.2, o: 0.7 },
-  { d: 0.3, o: 1 },
-]
-
-export function moodTitleOpacity(value) {
-  const dist = Math.abs(clamp01(Number(value)) - 0.5)
-  const last = TITLE_OPACITY_STOPS[TITLE_OPACITY_STOPS.length - 1]
-  if (dist >= last.d) return last.o
-  for (let i = 0; i < TITLE_OPACITY_STOPS.length - 1; i++) {
-    const lo = TITLE_OPACITY_STOPS[i]
-    const hi = TITLE_OPACITY_STOPS[i + 1]
-    if (dist >= lo.d && dist <= hi.d) {
-      const k = (dist - lo.d) / (hi.d - lo.d)
-      return lo.o + (hi.o - lo.o) * k
-    }
-  }
-  return 1
-}
-
-// Media dei mood di un elenco di note (ignora i valori non numerici).
-export function averageMood(notes) {
-  const vals = notes
-    .map((n) => Number(n.mood))
-    .filter((n) => !Number.isNaN(n))
-  if (!vals.length) return 0
-  return vals.reduce((a, b) => a + b, 0) / vals.length
 }
 
 // Peso di una nota nel calcolo del mood del giorno.

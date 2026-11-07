@@ -5,7 +5,6 @@
 
 import { MONTHS_IT, dayKey } from './dates'
 import { plainText } from './notes'
-import { timesInText } from './importSheet'
 import { pb } from './pocketbase'
 import { logGeminiRequest } from './geminiUsage'
 import { languageName } from './aiInstructions'
@@ -21,17 +20,6 @@ export async function saveGeminiCustomInstructions(text) {
   })
 }
 
-// Istruzioni fisse per TUTTI i riassunti (recap giorno/mese/anno): campo
-// `recapCustomInstructions` di `users`, usato anche dal server (recap_lib.js).
-// Restituisce il record aggiornato.
-export async function saveRecapCustomInstructions(text) {
-  const userId = pb.authStore.record?.id
-  if (!userId) throw new Error('Non autenticato.')
-  return pb.collection('users').update(userId, {
-    recapCustomInstructions: text.trim(),
-  })
-}
-
 // Prefisso del prompt con le istruzioni dell'utente per i riassunti.
 function recapInstructionsPrefix(text) {
   const t = (text || '').trim()
@@ -41,8 +29,6 @@ function recapInstructionsPrefix(text) {
 `
     : ''
 }
-
-const clamp01 = (x) => Math.min(1, Math.max(0, x))
 
 // gemini-2.5-flash è stato ritirato per i nuovi utenti (l'API risponde 404
 // indicando questo modello come sostituto): vedi errore riportato dall'utente
@@ -461,174 +447,6 @@ export async function extractNotesFromImage(
   }
   if (!Array.isArray(arr)) return []
   return arr.map(normalizeExtractedNote).filter(Boolean)
-}
-
-const padTime = (t) => {
-  const m = String(t ?? '').match(/^(\d{1,2}):(\d{2})$/)
-  return m ? `${String(m[1]).padStart(2, '0')}:${m[2]}` : ''
-}
-
-// Avvisi non bloccanti su un blocco: servono solo a guidare la revisione.
-function segmentFlags(seg, total) {
-  const flags = []
-  if (total > 5) flags.push('Molti blocchi in un giorno')
-  if (seg.content.trim().length < 40) flags.push('Blocco molto corto')
-  if (seg.content.trim() && !timesInText(seg.content).length)
-    flags.push('Nessun orario nel blocco')
-  if (seg.timeStart && seg.timeEnd && seg.timeEnd < seg.timeStart)
-    flags.push('Fine prima dell’inizio')
-  return flags
-}
-
-// Ricompone i blocchi proposti da Gemini in una PARTIZIONE del giorno: dei
-// suoi dati si tengono solo i punti di taglio (startLine) e i metadati; gli
-// intervalli vengono ricostruiti qui così da coprire OGNI riga non vuota
-// esattamente una volta, in ordine, senza buchi né sovrapposizioni. Il testo
-// di ogni nota è preso ALLA LETTERA dalle righe originali: Gemini non lo
-// riscrive, quindi non può inventare né perdere contenuto. Sovra/sotto-
-// segmentazione restano recuperabili in revisione con Fondi / Spezza.
-function partitionDay({ segs, lines, nonEmpty, dateKey, defaultMood }) {
-  const firstIdx = nonEmpty[0]
-  const lastIdx = nonEmpty[nonEmpty.length - 1]
-
-  const cuts = []
-  for (const s of segs) {
-    const c = Number(s?.startLine)
-    if (Number.isInteger(c) && c > firstIdx && c <= lastIdx && !cuts.includes(c))
-      cuts.push(c)
-  }
-  cuts.sort((a, b) => a - b)
-
-  const starts = [firstIdx, ...cuts]
-  const bySeg = [...segs].sort(
-    (a, b) => (Number(a?.startLine) || 0) - (Number(b?.startLine) || 0),
-  )
-
-  const raw = starts.map((start, k) => {
-    const end = k + 1 < starts.length ? starts[k + 1] - 1 : lastIdx
-    const meta = bySeg[k] || bySeg[bySeg.length - 1] || {}
-    const content = lines
-      .slice(start, end + 1)
-      .join('\n')
-      .replace(/^\s+|\s+$/g, '')
-    const times = timesInText(content)
-    const moodNum = Number(meta.mood)
-    return {
-      ...normalizeExtractedNote({
-        date: dateKey,
-        title: typeof meta.title === 'string' ? meta.title : '',
-        content,
-        mood: Number.isFinite(moodNum) ? clamp01(moodNum) : defaultMood,
-        timeStart: padTime(meta.timeStart) || times[0] || '',
-        timeEnd: padTime(meta.timeEnd) || times[times.length - 1] || '',
-        people: Array.isArray(meta.people) ? meta.people : [],
-        place: typeof meta.place === 'string' ? meta.place : '',
-        tags: Array.isArray(meta.tags) ? meta.tags : [],
-      }),
-      sourceStart: start,
-      sourceEnd: end,
-    }
-  })
-
-  // Blocchi risultati vuoti (solo righe bianche tra due tagli) → fusi col
-  // precedente, così la copertura resta completa.
-  const merged = []
-  for (const seg of raw) {
-    if (!seg.content.trim() && merged.length) {
-      merged[merged.length - 1].sourceEnd = seg.sourceEnd
-      continue
-    }
-    merged.push(seg)
-  }
-  return merged.map((seg) => ({ ...seg, flags: segmentFlags(seg, merged.length) }))
-}
-
-// Segmenta il testo di UNA giornata del vecchio diario (una cella del foglio
-// Google) in una o più note da rivedere una a una. Gemini indica SOLO dove
-// tagliare — vedi partitionDay. Qualunque cosa risponda, il risultato copre
-// sempre il 100% del testo del giorno.
-export async function segmentDayIntoNotes(
-  apiKey,
-  {
-    dateKey,
-    rawText,
-    sheetTitle = '',
-    moodScore = null,
-    peopleNames = [],
-    tagNames = [],
-    onRetry,
-  },
-) {
-  const lines = String(rawText ?? '')
-    .replace(/\r\n/g, '\n')
-    .split('\n')
-  const nonEmpty = []
-  lines.forEach((l, i) => {
-    if (l.trim()) nonEmpty.push(i)
-  })
-  const defaultMood = moodScore != null ? clamp01(moodScore / 100) : 0.5
-
-  if (!nonEmpty.length) {
-    return [
-      {
-        ...normalizeExtractedNote({
-          date: dateKey,
-          title: sheetTitle,
-          content: '',
-          mood: defaultMood,
-          timeStart: '',
-          timeEnd: '',
-          people: [],
-          place: '',
-          tags: [],
-        }),
-        sourceStart: null,
-        sourceEnd: null,
-        flags: ['Giornata senza testo'],
-      },
-    ]
-  }
-
-  const numbered = lines.map((l, i) => `${i}\t${l}`).join('\n')
-  const instruction =
-    'Questo è il testo di UNA giornata di un vecchio diario personale: una riga per attività, ' +
-    'molte iniziano con un orario tipo "09.00" o "17.00 ~". Le righe sono NUMERATE come "indice<TAB>testo". ' +
-    'Dividi la giornata in uno o più BLOCCHI coerenti: stesso argomento e continuità di orario stanno insieme. ' +
-    'NON riscrivere il testo: indica solo dove iniziano i blocchi. ' +
-    'Sii CONSERVATIVO: nel dubbio un blocco solo; una giornata tranquilla resta un blocco unico. ' +
-    'Taglia solo quando cambiano SIA argomento SIA fascia oraria, oppure quando una riga è chiaramente un evento a sé con un titolo proprio. ' +
-    'Rispondi SOLO con un array JSON valido, senza testo prima o dopo. Ogni elemento con ESATTAMENTE questi campi: ' +
-    '{"startLine": numero (indice della prima riga del blocco; il primo blocco parte dalla prima riga non vuota), ' +
-    '"title": stringa breve' +
-    (sheetTitle
-      ? ` (per il blocco principale puoi usare "${sheetTitle.replace(/"/g, "'")}")`
-      : '') +
-    ', ' +
-    `"mood": numero tra 0 e 1; se non hai indizi usa ${defaultMood.toFixed(2)}, ` +
-    '"timeStart": "HH:MM" dal primo orario del blocco, o "" se assente, ' +
-    '"timeEnd": "HH:MM" dall\'ultimo orario del blocco, o "" se assente, ' +
-    `"people": array di nomi di persona citati nel blocco; usa ESATTAMENTE i nomi dell'elenco ${JSON.stringify(peopleNames)} quando corrispondono, aggiungi gli altri nomi propri chiaramente citati, ` +
-    '"place": stringa col nome del luogo se chiaro dal testo, altrimenti "", ' +
-    `"tags": array preso ESATTAMENTE dall'elenco ${JSON.stringify(tagNames)} se pertinente, altrimenti []}. ` +
-    'Ordina i blocchi per startLine.\n\n' +
-    `Data: ${dateKey}\n\nTesto:\n${numbered}`
-
-  const out = await callGemini(apiKey, instruction, { onRetry })
-  const match = out.match(/\[[\s\S]*\]/)
-  let segs = []
-  if (match) {
-    try {
-      const parsed = JSON.parse(match[0])
-      if (Array.isArray(parsed)) segs = parsed
-    } catch {
-      segs = []
-    }
-  }
-  if (!segs.length) {
-    // Nessuna risposta utile: un blocco unico con tutta la giornata.
-    segs = [{ startLine: nonEmpty[0], title: sheetTitle, mood: defaultMood }]
-  }
-  return partitionDay({ segs, lines, nonEmpty, dateKey, defaultMood })
 }
 
 // Recap di un periodo: poche frasi che riassumono un insieme di note.

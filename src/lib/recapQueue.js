@@ -18,15 +18,6 @@ export function onRecapQueuePoke(fn) {
   return () => window.removeEventListener(POKE_EVENT, fn)
 }
 
-export function jobLabel(job) {
-  if (job.period === 'day') return `il giorno ${dayMonthLabel(job.key)}`
-  if (job.period === 'month') {
-    const [y, m] = job.key.split('-')
-    return `il mese di ${MONTHS_IT[Number(m) - 1]} ${y}`
-  }
-  return `l'anno ${job.key}`
-}
-
 // Etichetta breve di una voce dell'elenco: "5 ottobre", "ottobre 2026", "2026".
 export function jobShortLabel(job) {
   if (job.period === 'day') return dayMonthLabel(job.key)

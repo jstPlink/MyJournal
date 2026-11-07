@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.91.1',
+    date: '2026-11-07 13:00',
+    changes: [
+      "Pulizia del codice: tolti componenti, funzioni e stili non più usati (nessun cambiamento visibile); documentazione aggiornata alla vista mese e alla vista giorno a tavola.",
+    ],
+  },
+  {
     version: '0.91.0',
     date: '2026-11-07 11:00',
     changes: [

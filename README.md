@@ -183,24 +183,15 @@ problema del codice — l'app mostra comunque un messaggio d'errore esplicito.
 
 ## Comportamento delle schermate
 
-- **Login** — email + password, `pb.collection('users').authWithPassword`.
-  Sessione persistita in `localStorage`; le rotte sono protette.
-- **Vista mensile** (`/`) — pillola anno (tap → cambio anno rapido), nome mese in
-  italiano, **navigazione tra mesi via swipe** (o frecce ← → da tastiera). Una
-  riga per ogni giorno con almeno una nota: numero + giorno abbreviato (rosso nei
-  weekend), barra verticale con la **media dei mood** (gradiente rosso→bianco),
-  titoli delle note con `mood > 0.675`, carosello automatico delle immagini del
-  giorno. Tap su una riga → vista giornaliera. Footer: solo il pulsante in basso
-  a destra è attivo (nuova nota con data odierna).
-- **Vista giornaliera** (`/day/:date`) — note del giorno ordinate per orario;
-  l'altezza di ogni blocco è **proporzionale alla durata** (`timeEnd - timeStart`)
-  sulle 24 ore. Tap su una nota → vista nota in modifica. Footer: nuova nota in
-  quel giorno.
-- **Vista nota** (`/note/new?date=YYYY-MM-DD` o `/note/:id`) — orari inizio/fine
-  editabili, pillola anno/data (anno modificabile), slider `mood`, titolo, editor
-  Markdown con anteprima, persone, immagini. Pulsante in alto a destra:
-  **verde** = salva (nota nuova o con modifiche), **rosso** = elimina (nota
-  esistente non modificata). Footer: solo "aggiungi immagini" è attivo.
+Descrizione sintetica; l'uso completo è in [docs/GUIDA.md](docs/GUIDA.md), i dettagli tecnici in [ARCHITETTURA.md](ARCHITETTURA.md).
+
+- **Accesso** — scelta dell'archivio alla prima apertura (su questo dispositivo o su un proprio server), poi email + password (`authWithPassword`); la sessione resta in `localStorage`.
+- **Diario** (`/diario`) — il diario come libro aperto, una pagina per giorno, copertine di mese e pagine dell'anno; esportazione PDF/Markdown.
+- **Mese** (`/mese`) — tavola «Statistiche» (In questo giorno, giorno e nota migliori, 5 persone più presenti), poi la tavola dei giorni con il riassunto del mese; i giorni sono fogli di carta su legno, con giorno e numero dipinti a sinistra. Navigazione fra mesi con frecce o swipe.
+- **Giorno** (`/day/:date`) — note su una tavola di legno con le 24 ore: altezza proporzionale alla durata, versioni compatte se manca spazio.
+- **Nota** (`/note/new?date=…`, `/note/:id`) — orari, mood, titolo (sempre maiuscolo), testo, persone, tag, luogo, canzoni, immagini; salva (verde) o elimina (rosso). **Sogno** (`/dream/…`) ha una pagina propria.
+- **Anno** (`/dati`) e **Dati totali** (`/statistiche`) — andamento, panoramica e statistiche (mese/settimana migliori, persone, note per mese/anno, giorni e note migliori e peggiori).
+- **Cerca** (`/filtri`), **Impostazioni** (`/profilo`), **Importa** (`/importa`, solo web).
 
 ## Struttura
 
@@ -212,9 +203,11 @@ src/
   hooks/       useIsWide, useBack (indietro a pila), useAutoDraft, ...
   components/  PhoneShell, DraftsTab, NavStack, Toaster, ExistingMatches, selettori (persone,
                tag, luoghi, immagini), Gemini, ...
-  pages/       Login, BackendChooser, MonthView, DayView, NoteView, DataView, StatsView,
-               FilterView, Profile, MoodLab; pages/web/ = varianti desktop
+  pages/       Login, BackendChooser, MonthView, DayView, NoteView, DreamView, DataView, StatsView,
+               DiaryView, FilterView, Profile, MoodLab; pages/web/ = varianti desktop
+               (WebMonth, WebDay, WebDiary, MonthPages, DayPages…)
 public/
+  fonts/         font self-hosted (Kalam, Caveat, Gochi, Permanent Marker, DSEG, Stardos Stencil)
   mood-lab.html  banco di prova della formula del mood (aperto da /mood-lab)
 pb_migrations/ schema di PocketBase (campi, regole)
 pb_hooks/      recap con Gemini (cron serale)

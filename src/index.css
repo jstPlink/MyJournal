@@ -668,9 +668,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 /* vista nota da web: sfondo un filo più scuro del cream standard, altrimenti
    si confonde col foglio della nota (stesso tono) — come già fatto per la
    vista mobile (.mnote-main). */
-.webnote-bg {
-  background-color: var(--color-sand);
-}
+
 :root[data-paper='puntini'] .app-paper {
   background-image: var(--tex-puntini);
   background-size: 20px 20px;
@@ -1036,38 +1034,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
 }
 
 /* imperfezioni casuali della pagina (classe assegnata da MonthPages.jsx) */
-.mp-page.dogear-br::after,
-.mp-page.dogear-tr::after {
-  content: '';
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  z-index: 2;
-  filter: drop-shadow(-1px -1px 1px rgba(20, 12, 4, 0.16));
-}
-.mp-page.dogear-br::after {
-  right: -1px;
-  bottom: -1px;
-  border-radius: 0 0 3px 0;
-  background: linear-gradient(
-      315deg,
-      transparent 46%,
-      rgba(20, 12, 4, 0.2) 47% 50%,
-      transparent 51%
-    ),
-    linear-gradient(135deg, var(--paper-fold, #e7ddc7) 0 50%, transparent 50%);
-}
-.mp-page.dogear-tr::after {
-  right: -1px;
-  top: -1px;
-  background: linear-gradient(
-      225deg,
-      transparent 46%,
-      rgba(20, 12, 4, 0.2) 47% 50%,
-      transparent 51%
-    ),
-    linear-gradient(45deg, var(--paper-fold, #e7ddc7) 0 50%, transparent 50%);
-}
+
 /* Pagina strappata: il bordo a zig-zag si ritaglia SOLO sulla carta (::before),
    non sull'intera pagina. Con il clip-path sulla pagina venivano tagliate
    anche l'etichetta del mood (che sporge a sinistra) e le foto (che sporgono
@@ -2359,14 +2326,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   color: #2b2015;
 }
 /* il testo sta in un figlio che va al massimo su due righe (poi "…") */
-.dn-title-text {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-}
+
 /* L'evidenziatore è una sola fascia, sulla PRIMA riga del titolo (line-height
    1.15em: fascia da 0.57em a 1.11em): se il titolo va su due righe la seconda
    resta senza. */
@@ -2763,10 +2723,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
    (display:contents la rende "invisibile" ai fratelli), su telefono diventa
    una riga flessibile — vedi @media qui sotto. I contatori e la diapositiva
    foto esistono solo per il telefono. */
-.dn-notes-row {
-  display: contents;
-}
-.dn-side-mobile,
+
 .dn-pola-mobile {
   display: none;
 }
@@ -2793,12 +2750,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
     font-size: 0.72rem;
   }
   /* cartoncino, contatori e foto affiancati sulla stessa riga */
-  .dn-notes-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    height: 100%;
-  }
+  
   /* cartoncino spostato verso l'estremità sinistra del foglio per
      recuperare spazio, ma non troppo: a -14px copriva gli orari della
      timeline a sinistra (.day-rail) — spostato di 10px, poi di altri 15px,
@@ -2834,14 +2786,7 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   .dn-polas {
     display: none;
   }
-  .dn-side-mobile {
-    display: flex;
-    flex: 0 0 auto;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
-    padding-top: 2px;
-  }
+  
   .dn-mini {
     display: inline-flex;
     align-items: center;
@@ -2861,25 +2806,13 @@ input[type='time'].time-compact::-webkit-datetime-edit {
        Android su telefono (vedi .mp-mini in vista mese). */
   }
   /* luogo = rosso, canzone = verde (le persone restano nel tono carta) */
-  .dn-mini--place {
-    color: #5c2a20;
-    background: color-mix(in srgb, #c64637 26%, rgba(228, 216, 180, 0.62));
-    border-left-color: color-mix(in srgb, #c64637 55%, rgba(150, 124, 84, 0.5));
-    border-right-color: color-mix(in srgb, #c64637 55%, rgba(150, 124, 84, 0.5));
-  }
-  .dn-mini--song {
-    color: #34481c;
-    background: color-mix(in srgb, #7fa24e 26%, rgba(228, 216, 180, 0.62));
-    border-left-color: color-mix(in srgb, #7fa24e 55%, rgba(150, 124, 84, 0.5));
-    border-right-color: color-mix(in srgb, #7fa24e 55%, rgba(150, 124, 84, 0.5));
-  }
+  
+  
   .dn-mini svg {
     flex: none;
     opacity: 0.8;
   }
-  .dn-mini-text {
-    font-variant-numeric: tabular-nums;
-  }
+  
   /* foto: UNA sola diapositiva, nello spazio dopo i contatori (carosello se
      la nota ne ha più di una) */
   .dn-pola-mobile {
@@ -4775,11 +4708,6 @@ li:last-child > .wd-month-row {
   align-items: center;
   justify-content: space-between;
 }
-.mfooter-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 /* Barra di navigazione (Footer.jsx): 3 colonne fisse così il pulsante
    principale resta SEMPRE centrato in basso a prescindere da quante voci
@@ -5652,21 +5580,7 @@ li:last-child > .wd-month-row {
   border: none;
   cursor: var(--cursor-pointer);
 }
-.wf-mood-bar {
-  height: 8px;
-  border-radius: 999px;
-  margin-bottom: 9px;
-  background: linear-gradient(
-    to right,
-    #e0655e 0%,
-    #e79a4d 20%,
-    #e6cf5c 40%,
-    #a6d06e 60%,
-    #5ea9d6 80%,
-    #8b8fd6 100%
-  );
-  border: 1px solid var(--color-line);
-}
+
 .wf-apply {
   width: 100%;
   padding: 13px;
@@ -5824,10 +5738,7 @@ li:last-child > .wf-result {
   .wf-more {
     font-size: 0.72rem;
   }
-  .wf-mood-bar {
-    height: 9px;
-    margin-bottom: 8px;
-  }
+  
   .wf-apply {
     padding: 12px;
     font-size: 0.9rem;
@@ -5867,9 +5778,7 @@ li:last-child > .wf-result {
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
-.st-tiles.st-tiles-four {
-  grid-template-columns: repeat(4, 1fr);
-}
+
 .st-tile {
   position: relative;
   background-color: var(--color-cream);
@@ -5959,12 +5868,7 @@ li:last-child > .wf-result {
   gap: 10px;
   margin-bottom: 8px;
 }
-.prc-tab-in {
-  margin-bottom: 0;
-}
-.prc-head-end {
-  justify-content: flex-end;
-}
+
 .prc-title {
   display: flex;
   align-items: center;
@@ -6230,12 +6134,7 @@ li:last-child > .st-person-row {
   flex: 1;
   min-width: 0;
 }
-.wd-day-bars-track {
-  display: flex;
-  align-items: flex-end;
-  height: 32px;
-  gap: 1.5px;
-}
+
 .wd-day-bar {
   flex: 1;
   min-width: 1px;
@@ -6261,25 +6160,10 @@ li:last-child > .st-person-row {
   transform: scaleY(1.08);
   filter: brightness(1.15);
 }
-.wd-day-bars-ticks {
-  position: relative;
-  height: 14px;
-  margin-top: 3px;
-}
-.wd-day-bars-ticks span {
-  position: absolute;
-  transform: translateX(-50%);
-  font-size: 0.6rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-ink-soft);
-}
+
 @media (max-width: 480px) {
-  .wd-day-bars-track {
-    height: 26px;
-  }
-  .wd-day-bars-ticks span {
-    font-size: 0.52rem;
-  }
+  
+  
 }
 .st-row {
   width: 100%;
@@ -6747,35 +6631,10 @@ li:last-child > .st-row {
    cliccabile per modificarla (solo ± un giorno con le frecce accanto),
    quindi niente stile "orologio LCD" che lascerebbe intendere il
    contrario. Stesso font della vecchia intestazione .day-wd (tolta). */
-.day-label-hand {
-  position: relative;
-  display: inline-block;
-  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
-  font-size: 1.7rem;
-  color: var(--color-ink);
-  white-space: nowrap;
-}
-.day-label-hand.weekend {
-  /* stessi colori del giorno del weekend nella vista mese (.mp-page.wknd) */
-  color: color-mix(in srgb, var(--mp-wknd-ink) 78%, #000);
-}
-.day-label-hand.weekend .hl {
-  background: var(--mp-hl-wknd);
-}
+
 /* stesso evidenziatore nero del titolo di Andamento/Statistiche
    (.wd-page-title .hl) — stessa materia "scritta a mano", stesso segno. */
-.day-label-hand .hl {
-  position: absolute;
-  left: -6px;
-  right: -8px;
-  bottom: 0.08em;
-  height: 0.5em;
-  background: rgba(26, 20, 10, 0.16);
-  filter: url(#myjournal-wob);
-  transform: skewX(-10deg) rotate(-1deg);
-  mix-blend-mode: multiply;
-  z-index: -1;
-}
+
 .ne-clock-face.small {
   padding: 4.4px;
 }
@@ -8717,7 +8576,6 @@ li:last-child > .st-row {
   box-shadow: 0 1px 2px rgba(20, 12, 4, 0.25);
 }
 
-
 /* ---------- Sogni ---------- */
 /* Palette celeste, sulla stessa carta del resto dell'app:
    cielo #cfe6f7 / #dcecf9, contorno #6f9fc8, inchiostro #1f3f63, luna #3b6f9c */
@@ -9216,23 +9074,18 @@ li:last-child > .st-row {
 }
 
 /* Statistiche: contatore dei sogni dell'anno, su una riga sua */
-.st-tiles.st-tiles-dream {
-  grid-template-columns: 1fr;
-  margin-top: 16px;
-}
-.st-tiles-dream .st-tile,
+
 .st-tile.st-tile-dream {
   background-color: #dcecf9;
   background-image: none;
   border-color: #6f9fc8;
 }
-.st-tiles-dream .st-tile-label,
-.st-tiles-dream .st-tile-sub,
+
 .st-tile-dream .st-tile-label,
 .st-tile-dream .st-tile-sub {
   color: #4b6f93;
 }
-.st-tiles-dream .st-tile-value,
+
 .st-tile-dream .st-tile-value {
   color: #1f3f63;
 }
@@ -11625,7 +11478,6 @@ li:last-child > .tk-row {
 .dg-tcard .nb-title-in,
 .dg-tcard .ne-title,
 .dn-title.dg-tcard,
-.dn-title.dg-tcard .dn-title-text,
 .mp-notes .mp-n.dg-tcard { color: #564a36; }
 .dg-tcard .nb-title-in::placeholder,
 .dg-tcard .ne-title::placeholder { color: rgba(122, 113, 96, 0.5); }
@@ -11976,7 +11828,6 @@ li:last-child > .tk-row {
 .dg-tcard .nb-title-in,
 .dg-tcard .ne-title,
 .dg-tcard .dg-title-text,
-.dn-title.dg-tcard .dn-title-text,
 .mp-notes .mp-n.dg-tcard {
   font-family: var(--tf, 'MyJournal Pen', 'Permanent Marker', cursive);
   font-weight: 400;

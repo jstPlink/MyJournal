@@ -16,10 +16,6 @@ async function readSpotifyErrorDetail(res) {
   }
 }
 
-export function isSpotifyTrackUrl(url) {
-  return TRACK_RE.test(String(url || ''))
-}
-
 // { url, title, thumbnailUrl }
 export async function fetchSpotifyTrack(url) {
   const clean = String(url || '').trim()

@@ -10,7 +10,6 @@ import Dialog from '../../components/Dialog'
 import AddImagesSheet from '../../components/AddImagesSheet'
 import ImmichPicker from '../../components/ImmichPicker'
 import PeoplePickerSheet from '../../components/PeoplePickerSheet'
-import PersonAvatar from '../../components/PersonAvatar'
 import TagPickerSheet from '../../components/TagPickerSheet'
 import AddSongSheet from '../../components/AddSongSheet'
 import PlacePickerSheet from '../../components/PlacePickerSheet'
@@ -28,7 +27,7 @@ import {
   parsePlace,
   peopleUsageCounts,
 } from '../../lib/notes'
-import { personTapeColor, osmTileFor, tilt } from '../../lib/pagesSkin'
+import { osmTileFor, tilt } from '../../lib/pagesSkin'
 import { fileUrl } from '../../lib/pocketbase'
 import { listPeople } from '../../lib/people'
 import { listTags } from '../../lib/tags'
