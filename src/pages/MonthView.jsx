@@ -11,6 +11,7 @@ import Footer from '../components/Footer'
 import ViewTabs from '../components/ViewTabs'
 import YearPill from '../components/YearPill'
 import MonthStats from '../components/MonthStats'
+import Icon from '../components/Icon'
 import PeriodRecapCard from '../components/PeriodRecapCard'
 import NewNoteWithGeminiSheet from '../components/NewNoteWithGeminiSheet'
 import NewNoteChoiceSheet from '../components/NewNoteChoiceSheet'
@@ -197,6 +198,15 @@ export default function MonthView() {
           className="mx-3 mb-6 mt-3"
         />
 
+
+        <div className="pb-2 pt-1">
+          <div className="month-boardwrap wd-card-wrap">
+            <div className="wd-header">
+              <Icon name="calendar" size={19} />
+              <h2>Mese</h2>
+            </div>
+          <div className="month-board">
+            <div className="month-recap-in">
         <PeriodRecapCard
           period="month"
           periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
@@ -204,10 +214,9 @@ export default function MonthView() {
           label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
           apiKey={user?.geminiApiKey?.trim()}
           foglietto
-          className="mx-3 mb-1"
+          className="mb-1"
         />
-
-        <div className="pb-2 pt-1">
+            </div>
           <MonthPages
             grid={pagesData.grid}
             byDay={pagesData.byDay}
@@ -218,6 +227,8 @@ export default function MonthView() {
             immichApiKey={user?.immichApiKey?.trim()}
             dreamDays={dreamDays}
           />
+          </div>
+          </div>
         </div>
 
         {loading && !notes.length && (

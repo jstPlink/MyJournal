@@ -277,6 +277,32 @@ export default function MonthPages({
     return () => ro.disconnect()
   }, [pages])
 
+  // Etichette dei giorni scritte sulla tavola (vista mese web): stanno FUORI dai
+  // fogli (non seguono né l'inclinazione né l'animazione al passaggio del mouse),
+  // allineate in alto a ciascun foglio. offsetTop ignora le trasformazioni;
+  // un ResizeObserver le tiene allineate quando i fogli cambiano altezza.
+  useLayoutEffect(() => {
+    const root = stackRef.current
+    if (!root) return undefined
+    const place = () => {
+      const pgs = root.querySelectorAll(':scope > .mp-page')
+      const labs = root.querySelectorAll(':scope > .mp-labs > .mp-lab')
+      pgs.forEach((pg, i) => {
+        if (labs[i]) {
+          labs[i].style.top = `${pg.offsetTop + 6}px`
+          // la linea intagliata attraversa anche i fogli, fino al bordo destro della pila
+          labs[i].style.setProperty('--lw', `${labs[i].offsetWidth + root.clientWidth}px`)
+        }
+      })
+    }
+    place()
+    if (typeof ResizeObserver === 'undefined') return undefined
+    const ro = new ResizeObserver(place)
+    root.querySelectorAll(':scope > .mp-page').forEach((pg) => ro.observe(pg))
+    ro.observe(root)
+    return () => ro.disconnect()
+  }, [pages])
+
   return (
     <div className="month-pages">
       <div className="mp-stack" ref={stackRef}>
@@ -330,7 +356,7 @@ export default function MonthPages({
               <span className="mp-head">
                 <span className="mp-wd">
                   <span className="mp-hl" aria-hidden="true" />
-                  {pg.weekday}&nbsp;{pg.dayNum}
+                  <span className="mp-wd-w">{pg.weekday}</span>{' '}<span className="mp-wd-n">{pg.dayNum}</span>
                 </span>
                 {pg.hasDream && (
                   <span className="mp-moon" title="Sogno" aria-label="Quel giorno hai segnato un sogno">
@@ -515,6 +541,17 @@ export default function MonthPages({
             </button>
           )
         })}
+        <span className="mp-labs" aria-hidden="true">
+          {pages.map((pg) => (
+            <span key={pg.key} className={'mp-lab' + (pg.weekend ? ' wknd' : '')}>
+              <span className="mp-wd-w">
+                <span className="f">{pg.weekday}</span>
+                <span className="s">{pg.weekday.slice(0, 3)}</span>
+              </span>
+              <span className="mp-wd-n">{pg.dayNum}</span>
+            </span>
+          ))}
+        </span>
       </div>
     </div>
   )

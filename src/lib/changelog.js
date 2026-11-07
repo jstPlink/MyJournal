@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.91.0',
+    date: '2026-11-07 11:00',
+    changes: [
+      "Vista mese (web e telefono): la lista dei giorni sta su una tavola di legno con l'intestazione «Mese»; il riassunto del mese è dentro la tavola. Giorno della settimana e numero sono dipinti in stencil sul legno, a sinistra di ogni foglio e fuori dai fogli (non si animano al passaggio del mouse), con una linea intagliata irregolare fra un giorno e l'altro; fogli più distanziati.",
+    ],
+  },
+  {
     version: '0.90.0',
     date: '2026-11-06 22:00',
     changes: [

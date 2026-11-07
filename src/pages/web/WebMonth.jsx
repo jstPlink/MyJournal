@@ -7,6 +7,7 @@ import { listNotesInRange, groupByDay, describeError } from '../../lib/notes'
 import { dreamDaysInRange } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
 import MonthStats from '../../components/MonthStats'
+import Icon from '../../components/Icon'
 import PeriodRecapCard from '../../components/PeriodRecapCard'
 import MonthPages from './MonthPages'
 import { ClockNav, ClockDropdownList } from '../../components/web/ClockNav'
@@ -192,18 +193,25 @@ export default function WebMonth() {
         wide
         className="mb-10"
       />
-
-      <PeriodRecapCard
-        period="month"
-        periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
-        notes={notes}
-        label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
-        apiKey={user?.geminiApiKey?.trim()}
-        foglietto
-        className="mb-6"
-      />
       </div>
 
+      <div className="month-boardwrap wd-card-wrap">
+        <div className="wd-header">
+          <Icon name="calendar" size={19} />
+          <h2>Mese</h2>
+        </div>
+      <div className="month-board">
+        <div className="month-recap-in">
+          <PeriodRecapCard
+            period="month"
+            periodKey={`${cursor.year}-${String(cursor.month + 1).padStart(2, '0')}`}
+            notes={notes}
+            label={`${MONTHS_IT[cursor.month]} ${cursor.year}`}
+            apiKey={user?.geminiApiKey?.trim()}
+            foglietto
+            className="mb-6"
+          />
+        </div>
       <MonthPages
         grid={grid}
         byDay={byDay}
@@ -214,6 +222,8 @@ export default function WebMonth() {
         immichApiKey={immichApiKey}
         dreamDays={dreamDays}
       />
+      </div>
+      </div>
     </div>
   )
 }
