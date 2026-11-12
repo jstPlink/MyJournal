@@ -365,7 +365,7 @@ export default function DreamView() {
           </div>
         </div>
         {canDictate && <div className="dream-mic-bar">{voiceButton}</div>}
-        <DreamBottom />
+        <DreamBottom repeat />
       </div>
     </div>
   )

@@ -12125,8 +12125,8 @@ li:last-child > .tk-row {
 .month-board .mp-wd-n { font-weight: 700; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 @media (min-width: 481px) {
   .month-board { padding-left: 0; padding-right: 0; }
-  .month-board .month-pages { padding: 0 22px 0 114px; }
-  .month-board .mp-lab { left: -92px; width: 92px; }
+  .month-board .month-pages { padding: 0 22px 0 104px; }
+  .month-board .mp-lab { left: -82px; width: 82px; }
   
   .month-board .mp-wd-w { font-size: 0.72rem; }
   .month-board .mp-wd-n { font-size: 2.1rem; margin-top: 3px; }
@@ -12134,8 +12134,8 @@ li:last-child > .tk-row {
 /* telefono: tavola quasi a tutta larghezza, colonna dei giorni stretta (3 lettere + numero) */
 @media (max-width: 480px) {
   .month-board { width: auto; margin: 0 6px 24px; padding: 16px 0 22px; border-width: 5px; }
-  .month-board .month-pages { padding: 0 8px 0 42px; }
-  .month-board .mp-lab { left: -36px; width: 36px; }
+  .month-board .month-pages { padding: 0 8px 0 38px; }
+  .month-board .mp-lab { left: -32px; width: 32px; }
   
   .month-board .mp-wd-w { font-size: 0.66rem; letter-spacing: 0.04em; }
   .month-board .mp-wd-w .f { display: none; }
@@ -12279,8 +12279,8 @@ li:last-child > .tk-row {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
-  mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 12px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 12px), transparent);
 }
 .dream-scroll .dream-body-wrap { padding: 4px 14px 34px; }
 .dream-shell:not(.has-mic) .dream-scroll .dream-body-wrap { padding-bottom: 76px; }
