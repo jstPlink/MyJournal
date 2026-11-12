@@ -1,4 +1,4 @@
-# MyJournal – Architettura (v0.91.4)
+# MyJournal – Architettura (v0.92.0)
 
 Panoramica tecnica e guida per rispondere alle domande sul progetto. Per l'uso dell'app vedi [docs/GUIDA.md](docs/GUIDA.md); per la
 cronologia, `src/lib/changelog.js`; per il deploy, [deploy/README.md](deploy/README.md).
@@ -89,7 +89,7 @@ file: la logica sta in `pb_hooks/recap_lib.js`, caricata con `require()` dentro 
 | `tags` | `name`, `user` | |
 | `places` | `name`, `lat`, `lon`, `user` | Elenco curato; il campo `place` delle note è un JSON indipendente (non una relazione). |
 | `import_csvs` | `label`, `content`, `user` | Libreria dei file caricati in Importa. |
-| `recaps` | `period` (`day`/`month`/`year`), `key` (`AAAA-MM-GG`/`AAAA-MM`/`AAAA`), `text`, `user` | Scritti dal server alle 23:00 o dal tasto "Genera". |
+| `recaps` | `period` (`day`/`month`/`year`), `key` (`AAAA-MM-GG`/`AAAA-MM`/`AAAA`), `text`, `manual` (bool, migration `1758000025`), `user` | Scritti dal server alle 23:00, dal tasto "Genera" o a mano dall'utente (`manual` = vero: il server non lo rigenera mai). **Il riassunto dell'anno non si genera mai in automatico** (solo a mano o col tasto). |
 | `dreams` | `date` (come `note`), `time` (solo l'orario, data segnaposto 2000-01-01), `title`, `content`, `clarity` (0–1), `extra` (JSON libero per parametri futuri), `user` | Sogni: **a parte dalle note** (niente mood, recap, statistiche delle note). Migration `1758000023_dreams.js`. |
 | `recap_jobs` | `period`, `key`, `queuedAt` (ms), `user`; indice unico (user, period, key) | **Coda** dei recap segnati da aggiornare (giorno, mese e anno di ogni nota toccata); `queuedAt` = quando sono stati segnati. L'utente può solo leggerla; scrive solo il server (`$app` salta le regole). |
 

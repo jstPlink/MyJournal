@@ -581,7 +581,16 @@ function generateBatch(app, userId, dayKeys, monthKeys, yearKeys, maxAttempts, p
 const BATCH_ATTEMPTS = 3 // tentativi (10 s l'uno) per richiesta, poi resta in coda
 const BATCH_SPACING_MS = 2000 // pausa fra due richieste a Gemini dello stesso utente
 
+// Scritto a mano (campo `manual`): non si rigenera mai da solo. L'anno non si
+// compila più in automatico in nessun caso.
+function skipAutoRecap(app, userId, period, key) {
+  if (period === 'year') return true
+  const rec = findRecap(app, userId, period, key)
+  return Boolean(rec && rec.get('manual'))
+}
+
 function enqueueRecapJob(app, userId, period, key) {
+  if (skipAutoRecap(app, userId, period, key)) return
   let job = null
   try {
     job = app.findFirstRecordByFilter(
@@ -677,7 +686,10 @@ function processUserJobs(app, userId, allJobs, quiet) {
   for (const j of allJobs) {
     const p = j.get('period')
     const k = j.get('key')
-    if ((p === 'month' && k === currentMonthKey()) || (p === 'year' && k === currentYearKey())) {
+    if (
+      (p === 'month' && k === currentMonthKey()) ||
+      skipAutoRecap(app, userId, p, k)
+    ) {
       app.delete(j)
     } else {
       jobs.push(j)

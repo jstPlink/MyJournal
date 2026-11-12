@@ -6,7 +6,7 @@ import { useNav } from '../../context/NavContext'
 import { listNotesInRange, groupByDay, displayTitle, parsePlace, describeError } from '../../lib/notes'
 import { listPeople } from '../../lib/people'
 import { listDreamsInRange, dreamTitle } from '../../lib/dreams'
-import { getYearRecap, regenerateYearRecap, listDayRecapsInYear } from '../../lib/recaps'
+import { getYearRecap, regenerateYearRecap, listDayRecapsInYear, writeRecap } from '../../lib/recaps'
 import { exportYearMarkdown, exportYearPdf } from '../../lib/exportData'
 
 // orario del sogno (il campo `time` ha una data segnaposto)
@@ -588,6 +588,8 @@ function YearPage1({ year, side, ctx }) {
   const notes = ctx.yearNotes
   const [text, setText] = useState(undefined) // undefined = in lettura, null = non generato
   const [busy, setBusy] = useState(false)
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState('')
   useEffect(() => {
     let off = false
     getYearRecap(year).then((t) => !off && setText(t))
@@ -606,6 +608,17 @@ function YearPage1({ year, side, ctx }) {
       setBusy(false)
     }
   }
+  async function saveHand() {
+    const v = draft.trim()
+    if (!v) return
+    try {
+      await writeRecap('year', String(year), v)
+      setText(v)
+      setEditing(false)
+    } catch {
+      /* il testo resta com'era */
+    }
+  }
   // la prima frase è l'apertura, il resto l'articolo
   const sentences = (text || '').match(/[^.!?]+[.!?]+(\s|$)|[^.!?]+$/g)?.map((x) => x.trim()) || []
   const lead = sentences.length > 1 ? sentences[0] : ''
@@ -619,12 +632,41 @@ function YearPage1({ year, side, ctx }) {
         <h1 className="dgy-title">{year}</h1>
         {ORN}
         {lead && <p className="dgy-lead">{lead}</p>}
-        {body ? (
+        {editing ? (
+          <>
+            <textarea
+              className="prc-edit"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              rows={9}
+              autoFocus
+              placeholder="Scrivi il riassunto dell'anno…"
+            />
+            <button type="button" className="dgy-gen" onClick={saveHand}>
+              Salva
+            </button>
+            <button type="button" className="dgy-gen" onClick={() => setEditing(false)}>
+              Annulla
+            </button>
+          </>
+        ) : body ? (
           <p className="dgy-text">{body}</p>
         ) : (
           <p className="dgy-text dgy-empty">{text === undefined ? '' : 'Il riassunto dell’anno non è ancora stato generato.'}</p>
         )}
-        {text !== undefined && ctx.geminiApiKey && hasNotes && (
+        {text !== undefined && !editing && (
+          <button
+            type="button"
+            className="dgy-gen"
+            onClick={() => {
+              setDraft(text || '')
+              setEditing(true)
+            }}
+          >
+            {text ? 'Modifica a mano' : 'Scrivi a mano'}
+          </button>
+        )}
+        {text !== undefined && !editing && ctx.geminiApiKey && hasNotes && (
           <button type="button" className="dgy-gen" onClick={generate} disabled={busy}>
             {busy ? 'Scrivo…' : text ? 'Rigenera il riassunto' : 'Genera il riassunto'}
           </button>

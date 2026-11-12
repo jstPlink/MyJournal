@@ -5,6 +5,9 @@ import {
   getDayRecap,
   getMonthRecap,
   getYearRecap,
+  isRecapManual,
+  releaseRecap,
+  writeRecap,
   regenerateDayRecap,
   regenerateMonthRecap,
   regenerateYearRecap,
@@ -37,11 +40,18 @@ export default function PeriodRecapCard({
   const [loading, setLoading] = useState(false)
   const [retry, setRetry] = useState(null)
   const [error, setError] = useState('')
+  const [manual, setManual] = useState(false) // scritto a mano: il server non lo rigenera
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState('')
 
   useEffect(() => {
     let cancelled = false
     setText(undefined)
     setError('')
+    setEditing(false)
+    isRecapManual(period, periodKey).then((m) => {
+      if (!cancelled) setManual(Boolean(m))
+    })
     const reader = period === 'day' ? getDayRecap : period === 'month' ? getMonthRecap : getYearRecap
     reader(periodKey).then((t) => {
       if (!cancelled) setText(t)
@@ -52,7 +62,33 @@ export default function PeriodRecapCard({
   }, [period, periodKey])
 
   if (text === undefined) return null // in caricamento: niente salto di layout per un attimo
-  if (!alwaysShow && !text && (!apiKey || !notes || !notes.length)) return null
+  if (!alwaysShow && !text && (!notes || !notes.length)) return null
+
+  async function saveHand() {
+    const v = draft.trim()
+    if (!v) {
+      setError('Scrivi qualcosa, oppure annulla.')
+      return
+    }
+    setError('')
+    try {
+      await writeRecap(period, periodKey, v)
+      setText(v)
+      setManual(true)
+      setEditing(false)
+    } catch (err) {
+      setError(describeGeminiError(err))
+    }
+  }
+
+  async function backToAuto() {
+    try {
+      await releaseRecap(period, periodKey, text)
+      setManual(false)
+    } catch (err) {
+      setError(describeGeminiError(err))
+    }
+  }
 
   async function regenerate() {
     if (loading) return
@@ -82,19 +118,60 @@ export default function PeriodRecapCard({
           <Icon name="sparkles" size={14} className="shrink-0" />
           {title || TITLES[period]}
         </p>
-        {!loading && apiKey && notes?.length > 0 && (
-          <button type="button" onClick={regenerate} className="prc-btn">
-            {text ? 'Rigenera' : 'Genera'}
-          </button>
+        {!loading && !editing && (
+          <span className="prc-actions">
+            <button
+              type="button"
+              onClick={() => {
+                setDraft(text || '')
+                setEditing(true)
+              }}
+              className="prc-btn"
+            >
+              {text ? 'Modifica' : 'Scrivi'}
+            </button>
+            {apiKey && notes?.length > 0 && (
+              <button type="button" onClick={regenerate} className="prc-btn">
+                {text ? 'Rigenera' : 'Genera'}
+              </button>
+            )}
+          </span>
         )}
       </div>
-      {loading ? (
+      {editing ? (
+        <>
+          <textarea
+            className="prc-edit"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            rows={6}
+            autoFocus
+            placeholder="Scrivi il riassunto a mano…"
+          />
+          <div className="prc-actions prc-edit-actions">
+            <button type="button" onClick={saveHand} className="prc-btn prc-btn-ok">
+              Salva
+            </button>
+            <button type="button" onClick={() => setEditing(false)} className="prc-btn">
+              Annulla
+            </button>
+          </div>
+        </>
+      ) : loading ? (
         <GeminiWait retry={retry} />
       ) : text ? (
         <p className="prc-text">{text}</p>
       ) : (
         <p className="prc-empty">
           {!notes || !notes.length ? 'Nessuna nota: niente da riassumere.' : 'Riassunto non ancora generato.'}
+        </p>
+      )}
+      {manual && text && !editing && !loading && (
+        <p className="prc-manual">
+          Scritto a mano: non viene più aggiornato in automatico.{' '}
+          <button type="button" onClick={backToAuto} className="prc-link">
+            Torna automatico
+          </button>
         </p>
       )}
       {error && <p className="prc-error">{error}</p>}

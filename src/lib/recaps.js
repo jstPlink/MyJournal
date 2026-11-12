@@ -42,13 +42,29 @@ export const getYearRecap = (year) => getRecap('year', String(year))
 // Istruzioni dell'utente per i riassunti (Impostazioni → Gemini).
 const recapInstructions = () => recapInstructionsOf(pb.authStore.record)
 
-async function saveRecap(period, key, text) {
+// true = riassunto scritto a mano: il server non lo rigenera mai in automatico.
+export const isRecapManual = (period, key) =>
+  cachedRead(`recapm:${period}:${key}`, async () => {
+    const rec = await findRecap(period, key)
+    return Boolean(rec?.manual)
+  })
+
+async function saveRecap(period, key, text, manual = false) {
   const userId = pb.authStore.record?.id
   if (!userId) throw new Error('Non autenticato.')
   const existing = await findRecap(period, key)
-  if (existing) await pb.collection(COLLECTION).update(existing.id, { text })
-  else await pb.collection(COLLECTION).create({ user: userId, period, key, text })
+  if (existing) await pb.collection(COLLECTION).update(existing.id, { text, manual })
+  else await pb.collection(COLLECTION).create({ user: userId, period, key, text, manual })
   await cacheSet(`recap:${period}:${key}`, text)
+  await cacheSet(`recapm:${period}:${key}`, manual)
+}
+
+// Testo scritto a mano dall'utente: da qui in poi resta suo (manual = true).
+export const writeRecap = (period, key, text) => saveRecap(period, key, text.trim(), true)
+
+// Torna alla generazione automatica (il testo resta finché non viene rigenerato).
+export async function releaseRecap(period, key, text) {
+  await saveRecap(period, key, text, false)
 }
 
 export async function regenerateDayRecap(apiKey, dateKey, notes, onRetry) {

@@ -31,6 +31,7 @@ import {
   updateDream,
 } from '../lib/dreams'
 
+const snap = (o) => JSON.stringify(o)
 const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 // Pagina per scrivere (o modificare) un sogno: rotte /dream/new?date=AAAA-MM-GG e
@@ -60,7 +61,8 @@ export default function DreamView() {
   const [loading, setLoading] = useState(!isNew)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
-  const [confirmDelete, setConfirmDelete] = useState(false)
+  // com'era all'apertura di un sogno già salvato: serve a sapere se è stato modificato
+  const [baseline, setBaseline] = useState(null)
 
   // Uscendo da un sogno nuovo senza salvarlo (indietro, tasto di Android, cambio pagina) la
   // bozza resta sul dispositivo e compare nella linguetta celeste.
@@ -93,7 +95,18 @@ export default function DreamView() {
         setTitle(d.title || '')
         setContent(d.content || '')
         setClarity(Number(d.clarity) || 0)
-        setExtra(d.extra && typeof d.extra === 'object' ? d.extra : {})
+        const ex = d.extra && typeof d.extra === 'object' ? d.extra : {}
+        setExtra(ex)
+        setBaseline(
+          snap({
+            dateKey: dayKey(d.date),
+            time: timeInputValue(d.time) || DEFAULT_DREAM_TIME,
+            title: d.title || '',
+            content: d.content || '',
+            clarity: Number(d.clarity) || 0,
+            extra: ex,
+          }),
+        )
         setLoading(false)
       })
       .catch((err) => {
@@ -130,10 +143,7 @@ export default function DreamView() {
   }
 
   async function remove() {
-    if (!confirmDelete) {
-      setConfirmDelete(true)
-      return
-    }
+    if (!window.confirm('Eliminare definitivamente questo sogno?')) return
     setBusy(true)
     try {
       await deleteDream(id)
@@ -260,19 +270,36 @@ export default function DreamView() {
     <>
       {voice}
       {error && <p className="dream-error">{error}</p>}
-      {!isNew && (
-        <button type="button" onClick={remove} disabled={busy} className="dream-delete">
-          <Icon name="trash" size={15} strokeWidth={2.6} />
-          {confirmDelete ? 'Tocca ancora per eliminare' : 'Elimina il sogno'}
-        </button>
-      )}
     </>
   )
 
+  // Verde = salva (sogno nuovo o modificato). Rosso = elimina (sogno esistente invariato).
+  const dirty =
+    isNew || baseline === null || snap({ dateKey, time, title, content, clarity, extra }) !== baseline
+  const mode = dirty ? 'save' : 'delete'
+
   const saveBtn = wide ? (
+    mode === 'delete' ? (
+      <button type="button" disabled={busy || loading} onClick={remove} className="ne-delete">
+        <Icon name="trash" size={16} strokeWidth={2.6} />
+        Elimina il sogno
+      </button>
+    ) : (
     <button type="button" disabled={busy || loading} onClick={save} className="ne-save">
       <Icon name="check" size={16} strokeWidth={2.6} />
       {isNew ? 'Segna il sogno' : 'Salva modifiche'}
+    </button>
+    )
+  ) : mode === 'delete' ? (
+    <button
+      type="button"
+      disabled={busy || loading}
+      onClick={remove}
+      className="mcircle-action delete dream-del-m"
+      title="Elimina il sogno"
+      aria-label="Elimina il sogno"
+    >
+      <Icon name="trash" size={19} strokeWidth={2.8} />
     </button>
   ) : (
     <button
@@ -317,7 +344,7 @@ export default function DreamView() {
   }
 
   return (
-    <div className="dream-shell">
+    <div className={'dream-shell' + (canDictate ? ' has-mic' : '')}>
       <div className="dream-page">
         <DreamWaves height={66} />
         <DreamGarland />

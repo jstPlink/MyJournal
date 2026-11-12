@@ -140,8 +140,8 @@ export function personTapeColor(person) {
 // Giallo del cartoncino del riassunto: leggere variazioni casuali (stabili per chiave)
 // attorno al giallo base #efe0b5 (tinta 44°, saturazione 62%, luminosità 82%).
 export function yellowOf(key) {
-  const h = 44 + tilt(`${key}h`, 4)
-  const s = 62 + tilt(`${key}s`, 7)
-  const l = 82 + tilt(`${key}l`, 3)
+  const h = 50 + tilt(`${key}h`, 3)
+  const s = 92 + tilt(`${key}s`, 5)
+  const l = 76 + tilt(`${key}l`, 3)
   return `hsl(${h.toFixed(1)} ${s.toFixed(1)}% ${l.toFixed(1)}%)`
 }
