@@ -9,12 +9,12 @@
 
 export const CHANGELOG = [
   {
-    version: '0.92.0',
+    version: '0.92.1',
     date: '2026-11-12 15:30',
     changes: [
       "Riassunti di giorno, mese e anno: si possono scrivere o correggere a mano (Modifica / Scrivi). Un riassunto scritto a mano non viene più rigenerato in automatico; «Torna automatico» lo rimette com'era. Il riassunto dell'anno non si compila più da solo.",
       "Riassunti: foglietto di un giallo più vivo, da post-it.",
-      "Sogni: il tasto di registrazione sta in una fascia fissa in fondo allo schermo e non copre più il testo; sul sogno aperto compare il cestino al posto del check, che torna al primo cambiamento (come nelle note).",
+      "Sogni: il tasto di registrazione sta sotto nel layout e occupa il suo spazio: il foglio scorre sopra e finisce dove inizia il tasto; sul sogno aperto compare il cestino al posto del check, che torna al primo cambiamento (come nelle note).",
       "Ricerca persone in una nota: risultati più grandi e facili da toccare.",
     ],
   },

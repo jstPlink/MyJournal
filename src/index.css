@@ -12259,18 +12259,27 @@ li:last-child > .tk-row {
 .prc-manual { margin: 8px 0 0; font-size: 0.74rem; color: var(--color-ink-soft); }
 .prc-link { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--color-ink); text-decoration: underline; }
 
-/* sogno, telefono: il tasto di registrazione sta in una fascia fissa in fondo allo
-   schermo e il foglio finisce sopra, senza finirci sotto */
-.dream-shell.has-mic::after {
-  content: '';
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: calc(env(safe-area-inset-bottom) + 132px);
-  background: linear-gradient(to top, #e7f2fb 62%, rgba(231, 242, 251, 0));
-  pointer-events: none;
-  z-index: 74;
+/* sogno, telefono: il tasto di registrazione sta sotto, nel layout, e occupa lo spazio che serve;
+   il foglio scorre sopra e finisce dove inizia il tasto */
+.dream-shell.has-mic {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  min-height: 0;
 }
-.dream-shell.has-mic .dream-page { padding-bottom: calc(env(safe-area-inset-bottom) + 140px); }
+.dream-shell.has-mic .dream-page {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 24px;
+}
+.dream-mic-bar {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  padding: 8px 0 calc(env(safe-area-inset-bottom) + 10px);
+  background: #e7f2fb;
+}
+.dream-mic-bar .gfab.inline { align-items: center; }
 .dream-del-m { box-shadow: 0 3px 7px rgba(40, 90, 140, 0.28); }

@@ -166,17 +166,17 @@ export default function DreamView() {
   const canDictate = Boolean(user?.geminiApiKey?.trim() || user?.groqApiKey?.trim())
   const voiceButton = (
     <VoiceRecordButton
-        fab={wide ? 'inline' : true}
+        fab="inline"
         draftId={isNew ? draftId : undefined}
         onSaved={() => isNew && ensureDreamDraft({ id: draftId, ...latest.current })}
-        listHost={wide ? listHost : null}
+        listHost={listHost}
         apiKey={user?.geminiApiKey?.trim()}
         onTranscribed={(t) =>
           setContent((c) => (c.replace(/<[^>]*>/g, '').trim() ? c + '<br><br>' : '') + escapeHtml(t))
         }
       />
   )
-  const voice = canDictate && (wide ? <div className="dream-voice" ref={setListHost} /> : <div className="dream-voice">{voiceButton}</div>)
+  const voice = canDictate && <div className="dream-voice" ref={setListHost} />
 
   const backBtn = (
     <button
@@ -364,6 +364,7 @@ export default function DreamView() {
         </div>
         <DreamBottom />
       </div>
+      {canDictate && <div className="dream-mic-bar">{voiceButton}</div>}
     </div>
   )
 }
