@@ -85,26 +85,48 @@ export function NoteFontTools({ prefs, setPref }) {
 }
 
 // Colonna «da album»: foto, luogo e canzone della nota in modifica.
-function PreviewAside({ imageUrls, place, songs, seed, maxH }) {
+function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemoveImage }) {
   const song = songs?.[0] || null
   const name = place?.name?.trim() || ''
   let map = null
   if (name && Number.isFinite(Number(place?.lat)) && Number.isFinite(Number(place?.lon))) {
     map = osmTileFor(Number(place.lat), Number(place.lon), 14)
   }
-  const imgs = (imageUrls || []).filter(Boolean).slice(0, 3)
+  // l'indice resta quello della lista completa (serve a visualizzare/rimuovere la foto giusta)
+  const imgs = (imageUrls || [])
+    .map((u, idx) => ({ u, idx }))
+    .filter((x) => x.u)
+    .slice(0, 3)
   if (!imgs.length && !name && !song) return null
   return (
     <span className="dg-aside nb-aside" style={{ maxHeight: maxH }}>
       {imgs.length > 0 && (
         <span className="dg-photos">
-          {imgs.map((u, i) => (
+          {imgs.map(({ u, idx }, i) => (
             <span
               key={u}
-              className="dn-pola"
+              className="dn-pola nb-pola"
               style={{ '--pr': `${tilt(`${seed}p${i}`, 4).toFixed(2)}deg`, '--dx': `${i % 2 ? 16 : -12}px` }}
             >
               <span className="dn-ph" style={{ backgroundImage: `url(${u})` }} />
+              {onViewImage && (
+                <button
+                  type="button"
+                  title="Visualizza"
+                  onClick={() => onViewImage(idx)}
+                  className="nb-pola-view"
+                />
+              )}
+              {onRemoveImage && (
+                <button
+                  type="button"
+                  title="Rimuovi"
+                  onClick={() => onRemoveImage(idx)}
+                  className="ne-media-x nb-pola-x"
+                >
+                  <Icon name="x" size={11} />
+                </button>
+              )}
             </span>
           ))}
         </span>
@@ -147,6 +169,8 @@ export default function NoteBook({
   set,
   editorRef,
   imageUrls,
+  onViewImage,
+  onRemoveImage,
   seed = 'new',
   people = [],
   tags = [],
@@ -247,7 +271,15 @@ export default function NoteBook({
           style={{ left: 58, top: TEXT_TOP, width: geo.textW, '--nb-fs': `${font.rem}rem`, '--nb-ff': font.css }}
         >
           {/* colonna foto/luogo/canzone: il testo le scorre attorno */}
-          <PreviewAside imageUrls={imageUrls} place={place} songs={form.songs} seed={seed} maxH={geo.textH - 70} />
+          <PreviewAside
+            imageUrls={imageUrls}
+            place={place}
+            songs={form.songs}
+            seed={seed}
+            maxH={geo.textH - 70}
+            onViewImage={onViewImage}
+            onRemoveImage={onRemoveImage}
+          />
           {/* zone vuote fra un foglio e l'altro: uno spaziatore (altezza del testo) e
               un blocco pieno per ogni passaggio di foglio */}
           {Array.from({ length: pages }, (_, i) => (

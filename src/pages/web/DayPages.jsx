@@ -25,6 +25,36 @@ function RowMini({ kind, icon, count }) {
   )
 }
 
+const MINI_H = 30 // altezza di una targhetta compatta (con lo spazio fra una e l'altra)
+const POLA_COL_H = 106 // altezza della diapositiva con la foto nella colonna di destra
+
+// Cosa entra nella colonna di destra (targhette compatte + foto) in `h` pixel:
+// prima tutto, poi foto + una targhetta riassuntiva, poi solo le targhette,
+// poi solo la riassuntiva, poi solo la foto; altrimenti niente.
+function sideLayout(it, h) {
+  const minis = [
+    { kind: 'people', icon: 'user', count: it.people.length },
+    { kind: 'tag', icon: 'tag', count: it.tags.length },
+  ].filter((m) => m.count > 0)
+  const photo = it.imgsCarousel.length > 0
+  const total = it.people.length + it.tags.length
+  const more = total > 0 ? [{ kind: 'more', icon: 'list', count: total }] : []
+  const room = h - 16
+  const need = (list, withPhoto) => list.length * MINI_H + (withPhoto ? POLA_COL_H : 0)
+  const tries = [
+    [minis, photo],
+    [more, photo],
+    [minis, false],
+    [more, false],
+    [[], photo],
+  ]
+  for (const [list, withPhoto] of tries) {
+    if (!list.length && !withPhoto) continue
+    if (need(list, withPhoto) <= room) return { minis: list, photo: withPhoto }
+  }
+  return { minis: [], photo: false }
+}
+
 function RowPolaMobile({ imgs, rotation }) {
   const idx = useCarouselIndex(imgs.length, 3200)
   if (!imgs.length) return null
@@ -77,50 +107,45 @@ function flawFor(key) {
 }
 
 // Posiziona righe e sogni sulla tavola, che NON scorre: ognuno parte dall'ora
-// della nota; se non c'è posto le righe si accorciano (meno descrizione), poi
-// si rialzano e, se serve, si schiacciano ancora un po'.
+// della nota e dura quanto la nota (max), ma si ferma prima dell'inizio della
+// successiva; se così resta meno del minimo, la successiva viene spostata più
+// in basso. Se in fondo non c'è più posto le righe si rialzano dal fondo e, se
+// serve, si schiacciano un po'. Ogni nota si accorcia solo per sé: una nota
+// tarda non fa più rimpicciolire tutte le altre.
 function layoutBlocks(blocks, height) {
-  // blocks: { key, desired, min, max }
-  const place = (hs) => {
-    const tops = []
-    let bottom = -Infinity
-    blocks.forEach((b, i) => {
-      const top = Math.max(b.desired, bottom + GAP)
-      tops.push(top)
-      bottom = top + hs[i]
-    })
-    return { tops, bottom }
+  // blocks: { key, desired, min, max }, già in ordine di orario
+  const n = blocks.length
+  const tops = []
+  const hs = []
+  let bottom = -Infinity
+  for (let i = 0; i < n; i++) {
+    const b = blocks[i]
+    const top = Math.max(b.desired, bottom + GAP)
+    const limit = i + 1 < n ? blocks[i + 1].desired - GAP : height
+    const h = Math.max(b.min, Math.min(b.max, limit - top))
+    tops.push(top)
+    hs.push(h)
+    bottom = top + h
   }
-  let k = 1
-  let hs = blocks.map((b) => b.max)
-  let res = place(hs)
-  while (res.bottom > height && k > 0) {
-    k = Math.max(0, k - 0.1)
-    hs = blocks.map((b) => b.min + (b.max - b.min) * k)
-    res = place(hs)
-  }
-  if (res.bottom > height) {
-    // anche al minimo non ci stanno: le schiaccio un po', poi le rialzo dal fondo
-    const gaps = GAP * (blocks.length - 1)
+  if (bottom > height) {
+    const gaps = GAP * (n - 1)
     const sum = hs.reduce((x, y) => x + y, 0)
     if (sum + gaps > height) {
       const s = Math.max(0.5, (height - gaps) / sum)
-      hs = hs.map((h) => h * s)
+      for (let i = 0; i < n; i++) hs[i] *= s
     }
-    const tops = place(hs).tops
-    let limit = height
-    for (let i = blocks.length - 1; i >= 0; i--) {
-      tops[i] = Math.min(tops[i], limit - hs[i])
-      limit = tops[i] - GAP
+    let lim = height
+    for (let i = n - 1; i >= 0; i--) {
+      tops[i] = Math.min(tops[i], lim - hs[i])
+      lim = tops[i] - GAP
     }
     let floor = 0
-    for (let i = 0; i < blocks.length; i++) {
+    for (let i = 0; i < n; i++) {
       tops[i] = Math.max(tops[i], floor)
       floor = tops[i] + hs[i] + GAP
     }
-    res = { tops, bottom: floor - GAP }
   }
-  return blocks.map((b, i) => ({ key: b.key, top: res.tops[i], h: hs[i] }))
+  return blocks.map((b, i) => ({ key: b.key, top: tops[i], h: hs[i] }))
 }
 
 // Vista giorno "pagine" (web + telefono): la giornata come una tavola di pino
@@ -329,6 +354,7 @@ export default function DayPages({
               const bare = r.h < bareH + 22
               const compact = !bare && r.h < fullNeed(it)
               const tapes = { tags: it.tags, people: it.people }
+              const side = bare ? { minis: [], photo: false } : sideLayout(it, r.h)
               const open = () => {
                 haptic(4, 'page')
                 onNavigate(`/note/${it.id}`)
@@ -363,16 +389,23 @@ export default function DayPages({
                         {it.body && <span className="dr-desc">{it.body}</span>}
                       </span>
 
-                      {hasPeople && (
-                        <span className="mp-side-mobile">
-                          <RowMini kind="people" icon="user" count={it.people.length} />
-                          <RowMini kind="tag" icon="tag" count={it.tags.length} />
+                      {(side.minis.length > 0 || side.photo) && (
+                        <span className="dr-right">
+                          {side.minis.length > 0 && (
+                            <span className="mp-side-mobile">
+                              {side.minis.map((m) => (
+                                <RowMini key={m.kind} kind={m.kind} icon={m.icon} count={m.count} />
+                              ))}
+                            </span>
+                          )}
+                          {side.photo && (
+                            <RowPolaMobile
+                              imgs={it.imgsCarousel}
+                              rotation={`${tilt(`${it.id}pm`, 4).toFixed(2)}deg`}
+                            />
+                          )}
                         </span>
                       )}
-                      <RowPolaMobile
-                        imgs={it.imgsCarousel}
-                        rotation={`${tilt(`${it.id}pm`, 4).toFixed(2)}deg`}
-                      />
                     </span>
 
                     {hasPeople && (

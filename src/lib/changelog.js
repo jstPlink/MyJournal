@@ -9,6 +9,31 @@
 
 export const CHANGELOG = [
   {
+    version: '0.91.5',
+    date: '2026-11-12 14:00',
+    changes: [
+      "Vista giorno su telefono: la colonna di targhette e foto è centrata verticalmente nel foglietto.",
+    ],
+  },
+  {
+    version: '0.91.4',
+    date: '2026-11-12 13:00',
+    changes: [
+      "Vista giorno: le note si estendono per tutta la loro durata. Prima una nota tarda o sovrapposta le faceva accorciare tutte; ora si accorcia solo quella che incontra la successiva.",
+      "Vista giorno su telefono: foglietto in due colonne (mood e titolo in alto a sinistra con la descrizione sotto; a destra targhette compatte e foto). Se non entrano tutte compare una targhetta riassuntiva, e niente esce più dalla tavola.",
+    ],
+  },
+  {
+    version: '0.91.3',
+    date: '2026-11-12 12:00',
+    changes: [
+      "Vista mese su telefono: meno spazio inutilizzato fra il numero del giorno e il foglietto.",
+      "Vista giorno su telefono: orari a metà fra il bordo del legno e i foglietti, nuvoletta del sogno allineata ai foglietti.",
+      "Targhette compatte con un colore per tipo (web e telefono): persone rosse, luoghi azzurri, canzoni verdi, tag gialli.",
+      "Nota da web: le foto nel foglio si ingrandiscono con un clic e si tolgono con la x.",
+    ],
+  },
+  {
     version: '0.91.2',
     date: '2026-11-07 14:00',
     changes: [

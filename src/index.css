@@ -12134,8 +12134,8 @@ li:last-child > .tk-row {
 /* telefono: tavola quasi a tutta larghezza, colonna dei giorni stretta (3 lettere + numero) */
 @media (max-width: 480px) {
   .month-board { width: auto; margin: 0 6px 24px; padding: 16px 0 22px; border-width: 5px; }
-  .month-board .month-pages { padding: 0 8px 0 50px; }
-  .month-board .mp-lab { left: -42px; width: 42px; }
+  .month-board .month-pages { padding: 0 8px 0 42px; }
+  .month-board .mp-lab { left: -36px; width: 36px; }
   
   .month-board .mp-wd-w { font-size: 0.66rem; letter-spacing: 0.04em; }
   .month-board .mp-wd-w .f { display: none; }
@@ -12152,3 +12152,87 @@ li:last-child > .tk-row {
   .month-recap-in { padding: 10px 8px 16px; }
 }
 .month-recap-in:empty { display: none; }
+
+
+/* ===== Targhette compatte (contatori) con un colore per tipo, in mese e giorno, web e telefono =====
+   persone = rosso, luoghi = azzurro, canzoni/audio = verde, tag = giallo post-it */
+.mp-mini.mp-mini--people { --mk: #c64637; --mk-ink: #7a3226; }
+.mp-mini.mp-mini--place { --mk: #4f86b8; --mk-ink: #1f4468; }
+.mp-mini.mp-mini--song { --mk: #7fa24e; --mk-ink: #3c5420; }
+.mp-mini.mp-mini--tag { --mk: #efcf4e; --mk-ink: #5a4710; }
+.mp-mini.mp-mini--people,
+.mp-mini.mp-mini--place,
+.mp-mini.mp-mini--song,
+.mp-mini.mp-mini--tag {
+  color: var(--mk-ink);
+  background: color-mix(in srgb, var(--mk) 38%, rgba(240, 230, 200, 0.82));
+  border-left-color: color-mix(in srgb, var(--mk) 70%, rgba(110, 90, 56, 0.6));
+  border-right-color: color-mix(in srgb, var(--mk) 70%, rgba(110, 90, 56, 0.6));
+}
+
+/* ===== Vista giorno su telefono: orari a metà fra il bordo del legno e i foglietti, sogno allineato ai foglietti ===== */
+@media (max-width: 480px) {
+  .day-rail .hr { right: 5px; }
+  .day-rail .hr::after { right: -14px; }
+  .day-dream { left: 0; }
+}
+
+/* foto nel foglio della nota (web): si ingrandiscono con un clic e si tolgono con la x */
+.nb-pola .nb-pola-view {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+.nb-pola .nb-pola-x {
+  top: 4px;
+  right: 4px;
+  z-index: 2;
+}
+/* l'album di foto sta sopra l'editor: i paragrafi (a tutta larghezza, il testo gira solo attorno) non intercettano i clic */
+.nb-aside { position: relative; z-index: 6; }
+
+/* ===== Vista giorno, telefono: foglietto in due colonne =====
+   a sinistra mood + titolo in alto e la descrizione sotto; a destra una colonna con
+   tutte le targhette compatte e la foto (DayPages.jsx: sideLayout decide cosa entra;
+   se sono troppe compare una targhetta riassuntiva) */
+.dr-right { display: contents; }
+.mp-mini.mp-mini--more { --mk: #8a7a5a; --mk-ink: #4d4234; }
+.mp-mini.mp-mini--more {
+  color: var(--mk-ink);
+  background: color-mix(in srgb, var(--mk) 30%, rgba(240, 230, 200, 0.82));
+  border-left-color: color-mix(in srgb, var(--mk) 70%, rgba(110, 90, 56, 0.6));
+  border-right-color: color-mix(in srgb, var(--mk) 70%, rgba(110, 90, 56, 0.6));
+}
+@media (max-width: 480px) {
+  .dr-wrap .mp-notes-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .dr-wrap .dr-head { grid-column: 1; grid-row: 1; justify-self: stretch; justify-content: flex-start; }
+  .dr-wrap .dr-head .dr-title { max-width: none; }
+  .dr-wrap .dr-desc { grid-column: 1; grid-row: 2; }
+  .dr-wrap .dr-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: center;
+    justify-content: center;
+    max-height: 100%;
+    position: relative;
+    z-index: 3;
+  }
+  .dr-wrap .dr-right .mp-side-mobile,
+  .dr-wrap .dr-right .mp-pola-mobile {
+    grid-column: auto;
+    grid-row: auto;
+    align-self: auto;
+  }
+  .dr-wrap .dr-right .mp-side-mobile { align-items: flex-end; }
+}

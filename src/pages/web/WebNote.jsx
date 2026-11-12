@@ -419,6 +419,18 @@ export default function WebNote() {
     }
   }
 
+  // foto del foglio: indice nella lista «già salvate + nuove»
+  const removeImageAt = (idx) => {
+    if (idx < existingImages.length) {
+      const fn = existingImages[idx]
+      setExistingImages((p) => p.filter((x) => x !== fn))
+      setRemovedImages((p) => [...p, fn])
+    } else {
+      const k = idx - existingImages.length
+      setNewFiles((prev) => prev.filter((_, i) => i !== k))
+    }
+  }
+
   if (loading) {
     return <p className="py-20 text-center text-ink-soft">Carico…</p>
   }
@@ -616,6 +628,8 @@ export default function WebNote() {
           editorRef={editorRef}
           seed={id || 'new'}
           prefs={effFont}
+          onViewImage={setViewerIndex}
+          onRemoveImage={removeImageAt}
           imageUrls={[
             ...existingImages.map((fn) => (record ? fileUrl(record, fn, { thumb: '300x300' }) : '')),
             ...previews.map((p) => p.url),
