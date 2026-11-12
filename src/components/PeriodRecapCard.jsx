@@ -7,6 +7,7 @@ import {
   getYearRecap,
   isRecapManual,
   releaseRecap,
+  clearRecap,
   writeRecap,
   regenerateDayRecap,
   regenerateMonthRecap,
@@ -66,11 +67,20 @@ export default function PeriodRecapCard({
 
   async function saveHand() {
     const v = draft.trim()
+    setError('')
     if (!v) {
-      setError('Scrivi qualcosa, oppure annulla.')
+      // vuoto = torna automatico: si elimina il testo e, se si può, se ne genera subito uno nuovo
+      try {
+        await clearRecap(period, periodKey)
+        setText(null)
+        setManual(false)
+        setEditing(false)
+        if (apiKey && notes?.length > 0 && period !== 'year') regenerate()
+      } catch (err) {
+        setError(describeGeminiError(err))
+      }
       return
     }
-    setError('')
     try {
       await writeRecap(period, periodKey, v)
       setText(v)
@@ -146,7 +156,7 @@ export default function PeriodRecapCard({
             onChange={(e) => setDraft(e.target.value)}
             rows={6}
             autoFocus
-            placeholder="Scrivi il riassunto a mano…"
+            placeholder="Scrivi il riassunto a mano… (vuoto = torna automatico)"
           />
           <div className="prc-actions prc-edit-actions">
             <button type="button" onClick={saveHand} className="prc-btn prc-btn-ok">

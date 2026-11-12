@@ -6,7 +6,7 @@ import { useNav } from '../../context/NavContext'
 import { listNotesInRange, groupByDay, displayTitle, parsePlace, describeError } from '../../lib/notes'
 import { listPeople } from '../../lib/people'
 import { listDreamsInRange, dreamTitle } from '../../lib/dreams'
-import { getYearRecap, regenerateYearRecap, listDayRecapsInYear, writeRecap } from '../../lib/recaps'
+import { getYearRecap, regenerateYearRecap, listDayRecapsInYear, writeRecap, clearRecap } from '../../lib/recaps'
 import { exportYearMarkdown, exportYearPdf } from '../../lib/exportData'
 
 // orario del sogno (il campo `time` ha una data segnaposto)
@@ -610,8 +610,13 @@ function YearPage1({ year, side, ctx }) {
   }
   async function saveHand() {
     const v = draft.trim()
-    if (!v) return
     try {
+      if (!v) {
+        await clearRecap('year', String(year))
+        setText(null)
+        setEditing(false)
+        return
+      }
       await writeRecap('year', String(year), v)
       setText(v)
       setEditing(false)

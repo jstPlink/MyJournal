@@ -9,6 +9,13 @@
 
 export const CHANGELOG = [
   {
+    version: '0.92.4',
+    date: '2026-11-12 17:00',
+    changes: [
+      "Riassunti: salvando un testo vuoto il riassunto torna subito automatico (si rigenera da solo, tranne quello dell'anno, che resta vuoto finché non lo scrivi tu).",
+    ],
+  },
+  {
     version: '0.92.3',
     date: '2026-11-12 15:30',
     changes: [

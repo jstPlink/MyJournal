@@ -62,6 +62,15 @@ async function saveRecap(period, key, text, manual = false) {
 // Testo scritto a mano dall'utente: da qui in poi resta suo (manual = true).
 export const writeRecap = (period, key, text) => saveRecap(period, key, text.trim(), true)
 
+// Svuotato a mano: il riassunto si elimina e torna del tutto automatico (il server lo
+// riscrive alla prossima modifica del periodo; l'anno resta vuoto finché non lo si scrive).
+export async function clearRecap(period, key) {
+  const existing = await findRecap(period, key)
+  if (existing) await pb.collection(COLLECTION).delete(existing.id)
+  await cacheSet(`recap:${period}:${key}`, null)
+  await cacheSet(`recapm:${period}:${key}`, false)
+}
+
 // Torna alla generazione automatica (il testo resta finché non viene rigenerato).
 export async function releaseRecap(period, key, text) {
   await saveRecap(period, key, text, false)
