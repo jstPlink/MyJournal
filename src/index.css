@@ -12259,27 +12259,36 @@ li:last-child > .tk-row {
 .prc-manual { margin: 8px 0 0; font-size: 0.74rem; color: var(--color-ink-soft); }
 .prc-link { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--color-ink); text-decoration: underline; }
 
-/* sogno, telefono: il tasto di registrazione sta sotto, nel layout, e occupa lo spazio che serve;
-   il foglio scorre sopra e finisce dove inizia il tasto */
-.dream-shell.has-mic {
+/* sogno, telefono: la parte alta (indietro, anno, orari, nitidezza) resta ferma; scorre solo il
+   foglio, che sfuma in basso e finisce sopra il tasto di registrazione (nel layout, sopra lo sfondo) */
+.dream-shell {
   display: flex;
   flex-direction: column;
   height: 100dvh;
   min-height: 0;
 }
-.dream-shell.has-mic .dream-page {
+.dream-shell .dream-page {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+.dream-clarity-wrap { flex: none; padding: 6px 14px 0; }
+.dream-scroll {
   flex: 1 1 0;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 24px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent);
 }
+.dream-scroll .dream-body-wrap { padding: 4px 14px 34px; }
+.dream-shell:not(.has-mic) .dream-scroll .dream-body-wrap { padding-bottom: 76px; }
 .dream-mic-bar {
   flex: none;
   display: flex;
   justify-content: center;
-  padding: 8px 0 calc(env(safe-area-inset-bottom) + 10px);
-  background: #e7f2fb;
+  padding: 4px 0 calc(env(safe-area-inset-bottom) + 10px);
 }
 .dream-mic-bar .gfab.inline { align-items: center; }
 .dream-del-m { box-shadow: 0 3px 7px rgba(40, 90, 140, 0.28); }

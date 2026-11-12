@@ -357,14 +357,16 @@ export default function DreamView() {
           {dateClock}
           {timeClock}
         </div>
-        <div className="dream-body-wrap">
-          {clarityBlock}
-          {sheet}
-          {tail}
+        <div className="dream-clarity-wrap">{clarityBlock}</div>
+        <div className="dream-scroll">
+          <div className="dream-body-wrap">
+            {sheet}
+            {tail}
+          </div>
         </div>
+        {canDictate && <div className="dream-mic-bar">{voiceButton}</div>}
         <DreamBottom />
       </div>
-      {canDictate && <div className="dream-mic-bar">{voiceButton}</div>}
     </div>
   )
 }
