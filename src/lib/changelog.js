@@ -9,6 +9,40 @@
 
 export const CHANGELOG = [
   {
+    version: '0.92.8',
+    date: '2026-11-13 13:00',
+    changes: [
+      "Moneta del giorno (vista mese): più dettagli (anello a trattini, tacche, riflesso), testo più spesso e centrato nel dischetto, giorno più grande e numero più piccolo; ora sta sopra il foglietto del giorno.",
+      "Vista giorno: più spazio fra il giorno della settimana e il selettore dell'anno; su telefono il testo è più grande.",
+    ],
+  },
+  {
+    version: '0.92.7',
+    date: '2026-11-13 12:00',
+    changes: [
+      "Vista mese: il giorno di oggi è una moneta da poker di legno rossa, più grande e storta, dietro giorno e numero, con tre rossi, anello sottile e tacche alternate e uno spessore finto.",
+      "Vista giorno: il giorno della settimana ha lo stesso stile del titolo «Giorno», con l'evidenziatore (rosso nel weekend).",
+    ],
+  },
+  {
+    version: '0.92.6',
+    date: '2026-11-13 11:00',
+    changes: [
+      "Vista giorno: il giorno della settimana accanto ai selettori della data, a pennarello e sottolineato (nero nei feriali, rosso nel weekend); su telefono in versione breve (lun, mar...).",
+      "Riassunto del giorno: sul web non si riduce mai; sul telefono mostra il 20% di righe in meno per dare più spazio alla tavola, con un po' d'aria sotto il tasto «mostra tutto».",
+    ],
+  },
+  {
+    version: '0.92.5',
+    date: '2026-11-13 10:00',
+    changes: [
+      "Riassunto del giorno: foglietto postit liscio (senza grana di cartone) e colore più desaturato del 5%.",
+      "Una nota che finisce a mezzanotte (00:00) non compare più nel giorno successivo.",
+      "Vista giorno web: orari a metà fra il bordo del legno e i foglietti; il riassunto parte ridotto come sul telefono.",
+      "Vista mese: il giorno di oggi è segnato da un dischetto di legno (stile chip da poker) sul numero, al posto della targhetta rossa.",
+    ],
+  },
+  {
     version: '0.92.4',
     date: '2026-11-12 17:00',
     changes: [

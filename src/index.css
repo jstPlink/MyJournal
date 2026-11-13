@@ -941,45 +941,13 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   margin-top: 0;
 }
 
-/* il giorno di OGGI: pagina dritta e un filo sollevata, bordo del foglio
-   appena rossiccio + nastro decorativo rosso ("washi tape") che attraversa
-   il centro alto del foglio — tema oggetti da diario. */
+/* il giorno di OGGI: pagina dritta e un filo sollevata (il segno «oggi» è il
+   dischetto di legno sul numero del giorno, vista mese). */
 .mp-page.is-today {
   transform: rotate(0deg) translateY(-2px);
   z-index: 20;
   box-shadow: 0 -6px 14px -8px rgba(20, 12, 4, 0.26),
     0 18px 30px -14px rgba(20, 12, 4, 0.44);
-}
-.mp-today-tape {
-  position: absolute;
-  top: -7px;
-  left: 31%;
-  z-index: 5;
-  width: 40%;
-  height: 31px;
-  transform: rotate(-1.4deg);
-  background: repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.045) 0 5px,
-      rgba(255, 255, 255, 0) 5px 8px,
-      rgba(255, 255, 255, 0) 8px 15px
-    ),
-    linear-gradient(180deg, #cb463a, #ae392e);
-  box-shadow: 0 2px 7px rgba(20, 12, 4, 0.3);
-  opacity: 0.93;
-  filter: url(#myjournal-wob);
-}
-.mp-today-tape::after {
-  content: '\00b7 oggi \00b7';
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(255, 247, 242, 0.95);
 }
 /* natura, grana e disegnini slittano di foglio in foglio: nessuna pagina uguale */
 .mp-page:nth-child(2n)::before {
@@ -2044,16 +2012,6 @@ input[type='time'].time-compact::-webkit-datetime-edit {
   }
   .mp-pola-dots i.on {
     background: rgba(51, 41, 28, 0.78);
-  }
-  /* nastro "oggi" un filo più stretto */
-  .mp-today-tape {
-    left: 26%;
-    width: 46%;
-    height: 26px;
-  }
-  .mp-today-tape::after {
-    font-size: 0.6rem;
-    letter-spacing: 0.16em;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -11983,17 +11941,17 @@ li:last-child > .tk-row {
   z-index: 3;
 }
 
-/* vista giorno (telefono): riassunto ridotto a 4 righe; il tasto per aprirlo sta SOTTO il foglietto, lontano da Rigenera */
+/* vista giorno (telefono): riassunto ridotto a 3 righe; il tasto per aprirlo sta SOTTO il foglietto, lontano da Rigenera */
 .day-recap-wrap.collapsed .dg-recap .prc-text {
   display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 .day-recap-toggle {
   display: block;
-  margin: 2px auto 0;
+  margin: 2px auto 8px;
   padding: 3px 14px;
   border: 0;
   background: none;
@@ -12292,3 +12250,112 @@ li:last-child > .tk-row {
 }
 .dream-mic-bar .gfab.inline { align-items: center; }
 .dream-del-m { box-shadow: 0 3px 7px rgba(40, 90, 140, 0.28); }
+
+/* ===== Riassunto: foglietto postit liscio, senza grana di cartone, colore desaturato del 5% ===== */
+.dg-recap .prc-card {
+  background-image: none;
+  background-blend-mode: normal;
+  filter: saturate(0.95);
+}
+
+/* ===== Vista giorno web: orari a metà fra il bordo del legno e i foglietti ===== */
+@media (min-width: 1024px) {
+  .day-rail .hr {
+    left: 27.5px;
+    right: auto;
+    transform: translate(-50%, -0.5em) rotate(-1.5deg);
+  }
+}
+
+/* ===== Vista mese: il giorno di oggi è una moneta da poker di legno rossa, SOPRA i fogli, con giorno e numero =====
+   rossi: centro chiaro, anello esterno più scuro, tacche alternate; il rosso scuro è anche quello del testo,
+   dell'anello sottile e delle tacche scure. Spessore finto con un bordo sotto e un po' di dettagli (anello a trattini, riflesso). */
+.month-board .mp-lab.is-today > span { visibility: hidden; }
+.month-board .mp-chip {
+  --chip: 80px;
+  --lh: 48px; /* altezza del blocco giorno+numero delle etichette, per centrare la moneta */
+  --c-in: #dd7568;
+  --c-out: #c6493c;
+  --c-dark: #8e2b21;
+  --c-notch: #b83f33;
+  position: absolute;
+  z-index: 30;
+  left: calc(-41px - var(--chip) / 2);
+  margin-top: calc(var(--lh) / 2 - var(--chip) / 2);
+  width: var(--chip);
+  height: var(--chip);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255, 236, 226, 0.3), transparent 36%),
+    radial-gradient(circle, var(--c-in) 0 52%, var(--c-dark) 53% 58%, var(--c-out) 59% 76%, var(--c-dark) 77% 78.5%, transparent 79%),
+    repeating-conic-gradient(from -9deg, var(--c-notch) 0 14deg, var(--c-dark) 14deg 15.5deg, var(--c-notch) 15.5deg 30deg, var(--c-out) 30deg 44deg, var(--c-dark) 44deg 45deg);
+  box-shadow: 0 3px 0 #70231a, 0 5px 6px rgba(60, 20, 12, 0.38), inset 0 1px 1px rgba(255, 225, 215, 0.35);
+}
+/* anello di trattini sul bordo del centro */
+.month-board .mp-chip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from -9deg, var(--c-dark) 0 4deg, transparent 4deg 12deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 60%, #000 61% 67%, transparent 68%);
+  mask: radial-gradient(circle, transparent 0 60%, #000 61% 67%, transparent 68%);
+  opacity: 0.55;
+}
+.month-board .mp-chip-in {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  line-height: 1;
+  color: var(--c-dark);
+  font-family: 'MyJournal Stencil', ui-sans-serif, system-ui, serif;
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 215, 205, 0.5);
+  -webkit-text-stroke: 0.7px var(--c-dark);
+  transform: rotate(-9deg);
+}
+.month-board .mp-chip-w { font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.month-board .mp-chip-n { font-size: 1.3rem; margin-top: 2px; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  .month-board .mp-chip {
+    --chip: 46px;
+    --lh: 37px;
+    left: calc(-16px + 3px - var(--chip) / 2);
+  }
+  .month-board .mp-chip-w { font-size: 0.62rem; letter-spacing: 0.04em; }
+  .month-board .mp-chip-n { font-size: 0.98rem; margin-top: 1px; }
+}
+
+/* ===== Vista giorno: giorno della settimana come il titolo «Giorno» (pennarello + evidenziatore); rosso nel weekend ===== */
+.day-wd {
+  position: relative;
+  display: inline-block;
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  color: var(--color-ink);
+  text-transform: capitalize;
+  white-space: nowrap;
+  margin-left: 16px;
+}
+.day-wd .hl {
+  position: absolute;
+  left: -6px;
+  right: -8px;
+  bottom: 0.08em;
+  height: 0.5em;
+  background: rgba(26, 20, 10, 0.16);
+  filter: url(#myjournal-wob);
+  transform: skewX(-10deg) rotate(-1deg);
+  mix-blend-mode: multiply;
+  z-index: -1;
+}
+.day-wd.wknd { color: #c4372c; }
+.day-wd.wknd .hl { background: rgba(196, 55, 44, 0.2); }
+@media (max-width: 480px) {
+  .day-wd { font-size: 1.5rem; margin-left: 10px; text-transform: lowercase; }
+}

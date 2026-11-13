@@ -16,7 +16,7 @@ import { listNotesForDay, describeError } from '../lib/notes'
 import { listDreamsForDay } from '../lib/dreams'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
-import { addDaysKey, dayMonthLabel, parseWall, todayKey } from '../lib/dates'
+import { addDaysKey, dayMonthLabel, isWeekend, parseWall, todayKey, weekdayShort } from '../lib/dates'
 import { noteInstructionsOf } from '../lib/aiInstructions'
 
 const SWIPE_THRESHOLD = 55 // px, swipe orizzontale per cambiare giorno
@@ -130,7 +130,7 @@ export default function DayView() {
   return (
     <PhoneShell>
       <MobileTopBar className="mtop-day">
-        <div className="flex flex-1 justify-center">
+        <div className="flex flex-1 items-center justify-center gap-2">
           <YearPill
             skin="clock"
             year={year}
@@ -138,6 +138,7 @@ export default function DayView() {
             layout="row"
             onStep={go}
           />
+          <span className={'day-wd' + (isWeekend(date) ? ' wknd' : '')}>{weekdayShort(date)}<span className="hl" aria-hidden="true" /></span>
         </div>
       </MobileTopBar>
 

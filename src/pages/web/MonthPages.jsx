@@ -287,7 +287,9 @@ export default function MonthPages({
     const place = () => {
       const pgs = root.querySelectorAll(':scope > .mp-page')
       const labs = root.querySelectorAll(':scope > .mp-labs > .mp-lab')
+      const chip = root.querySelector(':scope > .mp-chip')
       pgs.forEach((pg, i) => {
+        if (chip && pg.classList.contains('is-today')) chip.style.top = `${pg.offsetTop + 6}px`
         if (labs[i]) {
           labs[i].style.top = `${pg.offsetTop + 6}px`
           // la linea intagliata attraversa anche i fogli, fino al bordo destro della pila
@@ -339,10 +341,6 @@ export default function MonthPages({
                   : 'nessuna nota')
               }
             >
-              {pg.isToday && (
-                <span className="mp-today-tape" aria-hidden="true" />
-              )}
-
               {pg.has && (
                 <span
                   className={'mp-tab' + (pg.kind ? ` mp-tab--${pg.kind}` : '')}
@@ -543,7 +541,7 @@ export default function MonthPages({
         })}
         <span className="mp-labs" aria-hidden="true">
           {pages.map((pg) => (
-            <span key={pg.key} className={'mp-lab' + (pg.weekend ? ' wknd' : '')}>
+            <span key={pg.key} className={'mp-lab' + (pg.weekend ? ' wknd' : '') + (pg.isToday ? ' is-today' : '')}>
               <span className="mp-wd-w">
                 <span className="f">{pg.weekday}</span>
                 <span className="s">{pg.weekday.slice(0, 3)}</span>
@@ -552,6 +550,17 @@ export default function MonthPages({
             </span>
           ))}
         </span>
+        {pages.map(
+          (pg) =>
+            pg.isToday && (
+              <span key="chip" className="mp-chip" aria-hidden="true">
+                <span className="mp-chip-in">
+                  <span className="mp-chip-w">{pg.weekday.slice(0, 3)}</span>
+                  <span className="mp-chip-n">{pg.dayNum}</span>
+                </span>
+              </span>
+            ),
+        )}
       </div>
     </div>
   )

@@ -9,7 +9,7 @@ import { listNotesForDay, describeError } from '../../lib/notes'
 import { listDreamsForDay } from '../../lib/dreams'
 import { listPeople } from '../../lib/people'
 import { listTags } from '../../lib/tags'
-import { MONTHS_IT, addDaysKey, parseWall, todayKey } from '../../lib/dates'
+import { MONTHS_IT, addDaysKey, isWeekend, parseWall, todayKey, weekdayLong } from '../../lib/dates'
 
 // Stessa logica della vista giorno mobile (src/pages/DayView.jsx): l'intera
 // giornata (24h) viene compressa per stare tutta nell'altezza disponibile
@@ -146,7 +146,7 @@ export default function WebDay() {
             Giorno
             <span className="hl" aria-hidden="true" />
           </h1>
-          <div ref={navRef} className="flex flex-wrap items-center gap-3 justify-self-center">
+          <div ref={navRef} className="flex flex-nowrap items-center gap-3 justify-self-center">
             {cur && (
               <>
                 <ClockNav
@@ -219,6 +219,7 @@ export default function WebDay() {
                     />
                   }
                 />
+                <span className={'day-wd' + (isWeekend(date) ? ' wknd' : '')}>{weekdayLong(date)}<span className="hl" aria-hidden="true" /></span>
               </>
             )}
           </div>

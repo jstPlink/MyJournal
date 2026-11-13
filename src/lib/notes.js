@@ -197,7 +197,13 @@ export async function listNotesForDay(date) {
     listNotesInRange(dayRange(date)),
     listNotesInRange(dayRange(addDaysKey(date, -1))),
   ])
-  const carried = prev.filter(crossesMidnight).map((n) => ({ ...n, carriedFromPrevious: true }))
+  // Una nota che finisce esattamente a mezzanotte (00:00) appartiene tutta al
+  // giorno in cui inizia: nel giorno dopo non compare.
+  const endsAtMidnight = (n) => {
+    const b = parseWall(n.timeEnd)
+    return Boolean(b) && b.h === 0 && b.mi === 0
+  }
+  const carried = prev.filter((n) => crossesMidnight(n) && !endsAtMidnight(n)).map((n) => ({ ...n, carriedFromPrevious: true }))
   return [...today, ...carried]
 }
 
