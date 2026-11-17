@@ -9,6 +9,15 @@
 
 export const CHANGELOG = [
   {
+    version: '0.92.9',
+    date: '2026-11-17 12:00',
+    changes: [
+      "Quando l'IA finisce di elaborare una richiesta (nota, testo della nota, trascrizione, recap) il telefono vibra con una doppia vibrazione.",
+      "Tentativi più ravvicinati: se Gemini è sovraccarico si riprova dopo 1,5 secondi invece di 5 (Groq dopo 1 secondo).",
+      "Nel messaggio di attesa compare lo stato: quando la risposta è arrivata c'è scritto «Risposta ricevuta… Sto elaborando la nota», anche per la trascrizione vocale.",
+    ],
+  },
+  {
     version: '0.92.8',
     date: '2026-11-13 13:00',
     changes: [

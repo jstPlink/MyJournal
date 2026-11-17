@@ -209,6 +209,7 @@ export default function VoiceRecordButton({ apiKey, onTranscribed, onSaved, disa
         setProgress('Riprovo con un altro formato audio…')
         text = await transcribeAudio(apiKey, { audioBase64: await blobToBase64(wav), mimeType: 'audio/wav' }, onRetry)
       }
+      setProgress('Trascrizione ricevuta. Sto elaborando la nota…')
       onTranscribed(text)
       // Nella nota con Gemini il vocale originale resta (segnato «trascritto») fino a
       // quando la nota non viene creata; fuori da lì si cancella subito.

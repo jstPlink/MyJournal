@@ -1,5 +1,5 @@
 import { Capacitor } from '@capacitor/core'
-import { Haptics, ImpactStyle } from '@capacitor/haptics'
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics'
 import { playSound } from './sounds'
 
 let last = 0
@@ -13,6 +13,20 @@ let last = 0
 // Chiamate ravvicinate (< 40 ms) vengono unite.
 // `sound` = suono che accompagna il tocco (vedi sounds.js; i suoni si spengono
 // da Impostazioni → Aspetto).
+// Doppia vibrazione "ho finito": l'IA ha concluso una richiesta (nota, testo, trascrizione, recap).
+// Più riconoscibile del tocco breve, così ci si accorge del risultato anche guardando altrove.
+export function hapticDone() {
+  try {
+    if (Capacitor.isNativePlatform()) {
+      Haptics.notification({ type: NotificationType.Success }).catch(() => {})
+    } else if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') {
+      navigator.vibrate([25, 70, 25])
+    }
+  } catch {
+    /* non supportato: ignora */
+  }
+}
+
 export function haptic(ms = 4, sound = 'tap') {
   const now = Date.now()
   if (now - last < 40) return

@@ -8,6 +8,26 @@ import { plainText } from './notes'
 import { pb } from './pocketbase'
 import { logGeminiRequest } from './geminiUsage'
 import { languageName } from './aiInstructions'
+import { hapticDone } from './haptics'
+
+// Stato dell'ultima richiesta all'IA, per le UI di attesa (GeminiWait): `request` = in corso,
+// `received` = l'IA ha risposto e l'app sta elaborando la nota, `idle` = nulla in corso.
+let aiStatus = { phase: 'idle', model: '' }
+const aiListeners = new Set()
+export function setAiStatus(next) {
+  aiStatus = next
+  aiListeners.forEach((l) => l())
+}
+export const subscribeAiStatus = (l) => {
+  aiListeners.add(l)
+  return () => aiListeners.delete(l)
+}
+export const getAiStatus = () => aiStatus
+// Chiamata quando una richiesta è riuscita: stato «ricevuto» + vibrazione di fine.
+function aiReceived(model) {
+  setAiStatus({ phase: 'received', model })
+  hapticDone()
+}
 
 // Salva le istruzioni personalizzate sull'account (campo `geminiCustomInstructions`
 // di `users`) — usata sia da Impostazioni sia dai pannelli dove si scrive il
@@ -125,8 +145,8 @@ async function callGeminiOnce(apiKey, contents, model = MODEL) {
 }
 
 // Se una richiesta fallisce per un intoppo momentaneo si riprova da sole: dopo
-// 5 secondi, per 4 volte — in tutto 5 tentativi prima di arrendersi.
-const RETRY_DELAYS_MS = [5000, 5000, 5000, 5000]
+// 1,5 secondi, per 4 volte — in tutto 5 tentativi prima di arrendersi.
+const RETRY_DELAYS_MS = [1500, 1500, 1500, 1500]
 const OVERLOAD_MAX_ATTEMPTS = RETRY_DELAYS_MS.length + 1
 
 // Vale la pena riprovare? Sì per i guasti momentanei (server sovraccarico o
@@ -156,17 +176,24 @@ async function callGeminiParts(apiKey, parts, { onRetry } = {}) {
 // chiedere piccole correzioni su un output già ottenuto — vedi refineText).
 async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
   let lastErr
+  setAiStatus({ phase: 'request', model: '' })
   for (let attempt = 1; attempt <= OVERLOAD_MAX_ATTEMPTS; attempt++) {
     const model = await modelForAttempt(apiKey, attempt, contents)
     try {
-      return model === GROQ_TEXT_MODEL ? await callGroqText(contents) : await callGeminiOnce(apiKey, contents, model)
+      const text =
+        model === GROQ_TEXT_MODEL ? await callGroqText(contents) : await callGeminiOnce(apiKey, contents, model)
+      aiReceived(model)
+      return text
     } catch (err) {
       lastErr = err
       const last = attempt === OVERLOAD_MAX_ATTEMPTS
       // Il modello di riserva non c'è o non risponde come previsto (404, 400...):
       // non è colpa dell'utente, si passa subito al tentativo dopo.
       if (model !== MODEL && !isRetryable(err) && !last) continue
-      if (!isRetryable(err) || last) throw err
+      if (!isRetryable(err) || last) {
+        setAiStatus({ phase: 'idle', model: '' })
+        throw err
+      }
       // il 3° argomento è il nome del modello con cui si farà il prossimo tentativo
       const next = await modelForAttempt(apiKey, attempt + 1, contents)
       onRetry?.(attempt, OVERLOAD_MAX_ATTEMPTS, next)
@@ -533,6 +560,7 @@ function groqExt(mimeType = '') {
 
 export async function transcribeWithGroq(groqKey, blob, mimeType, onRetry) {
   let lastErr
+  setAiStatus({ phase: 'request', model: '' })
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       const form = new FormData()
@@ -560,14 +588,18 @@ export async function transcribeWithGroq(groqKey, blob, mimeType, onRetry) {
       }
       const text = body.trim()
       if (!text) throw new Error('Groq non ha restituito testo.')
+      aiReceived(GROQ_MODEL)
       return text
     } catch (err) {
       err.provider = 'groq'
       lastErr = err
       const retry = err.status == null ? err.name === 'TypeError' : err.status === 429 || err.status >= 500
-      if (!retry || attempt === 2) throw err
+      if (!retry || attempt === 2) {
+        setAiStatus({ phase: 'idle', model: '' })
+        throw err
+      }
       onRetry?.(attempt, 2, GROQ_MODEL)
-      await wait(2000)
+      await wait(1000)
     }
   }
   throw lastErr

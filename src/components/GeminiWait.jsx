@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
+import { getAiStatus, subscribeAiStatus } from '../lib/gemini'
 
 // Feedback di attesa per le chiamate a Gemini: un timer che scorre e una
 // barra di caricamento in loop, per rendere chiaro che sta lavorando (le
@@ -15,7 +16,11 @@ export default function GeminiWait({ ai = 'Gemini', retry = null }) {
     return () => clearInterval(id)
   }, [])
 
+  const status = useSyncExternalStore(subscribeAiStatus, getAiStatus)
+  const received = status.phase === 'received'
+
   const who = retry?.model && /llama|mixtral|whisper/i.test(retry.model) ? 'Groq' : ai
+  const receivedWho = /llama|mixtral|whisper/i.test(status.model || '') ? 'Groq' : ai
 
   return (
     <div className="flex flex-col items-center gap-3 py-10">
@@ -26,9 +31,11 @@ export default function GeminiWait({ ai = 'Gemini', retry = null }) {
         />
       </div>
       <p className="text-sm text-ink-soft">
-        {`Generando con ${who}${retry?.model ? ` (${retry.model})` : ''}. Tentativo ${
-          retry ? retry.attempt + 1 : 1
-        }/${retry ? retry.maxAttempts : 5} · ${seconds}s`}
+        {received
+          ? `Risposta ricevuta da ${receivedWho}${status.model ? ` (${status.model})` : ''}. Sto elaborando la nota… · ${seconds}s`
+          : `Generando con ${who}${retry?.model ? ` (${retry.model})` : ''}. Tentativo ${
+              retry ? retry.attempt + 1 : 1
+            }/${retry ? retry.maxAttempts : 5} · ${seconds}s`}
       </p>
     </div>
   )

@@ -125,7 +125,7 @@ un prompt, "Nuova nota con Gemini", dettatura vocale, estrazione note da screens
   Ogni sera alle **23:00** il server li rigenera tutti insieme, con **una sola richiesta a Gemini**: così consuma poche richieste. Se Gemini non
   risponde, riprova alle 23:20 e alle 23:40.
 - I periodi chiusi **prima** che la funzione esistesse non hanno recap: si generano a mano col tasto "Genera/Rigenera" nelle viste.
-- Se una richiesta a Gemini fallisce per un intoppo momentaneo (server sovraccarico, rete, limite al minuto) l'app riprova da sola ogni 5 secondi: in tutto 5 tentativi prima di mostrare l'errore. Non riprova se la chiave non è valida o se il limite giornaliero è esaurito.
+- Se una richiesta a Gemini fallisce per un intoppo momentaneo (server sovraccarico, rete, limite al minuto) l'app riprova da sola ogni 1,5 secondi: in tutto 5 tentativi prima di mostrare l'errore. Durante l'attesa il messaggio dice a che tentativo è, e quando la risposta è arrivata scrive «Sto elaborando la nota». Quando l'IA ha finito il telefono vibra due volte. Non riprova se la chiave non è valida o se il limite giornaliero è esaurito.
 - Una linguetta sul bordo destro («Aggiornamento recap alle 23.00») ricorda che i recap sono in attesa e, toccandola, li elenca: prima i giorni, poi i mesi, poi gli anni. Se non vuoi aspettare, il tasto "Genera/Rigenera" nelle viste
   lo fa subito.
 - **Vocali di «Nuova nota con Gemini».** I vocali restano sul dispositivo finché non li trascrivi, anche se chiudi il pannello (anche mentre registri o trascrivi). Salvando la nota la bozza sparisce solo quando non restano vocali da trascrivere; altrimenti resta nella linguetta a destra con i vocali rimasti.
