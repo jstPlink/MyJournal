@@ -6,6 +6,8 @@ import { getConnection } from '../lib/cache'
 import PhoneShell from '../components/PhoneShell'
 import MobileTopBar from '../components/MobileTopBar'
 import MobileBottomBar from '../components/MobileBottomBar'
+import NoteBook from '../components/web/NoteBook'
+import { sanitizeFont } from '../lib/noteFont'
 import DatePickerPopover from '../components/DatePickerPopover'
 import TimePickerPopover from '../components/TimePickerPopover'
 import Icon from '../components/Icon'
@@ -38,6 +40,7 @@ import { titleFontVars } from '../lib/noteFont'
 import { fileUrl } from '../lib/pocketbase'
 import { listPeople } from '../lib/people'
 import { listTags } from '../lib/tags'
+import { useNoteNeighbors } from '../hooks/useNoteNeighbors'
 import { haptic } from '../lib/haptics'
 import { notifyNotesChanged } from '../lib/widgetSync'
 import { pokeRecapQueue } from '../lib/recapQueue'
@@ -85,6 +88,40 @@ function FabButton({ icon, iconSize = 19, active, count, onClick, title }) {
           bordo. */}
       {active && <span className="mcircle-count">{count}</span>}
     </span>
+  )
+}
+
+// Larghezza con cui si disegna il foglio del web: sul telefono lo stesso identico
+// foglio viene poi scalato alla larghezza dello schermo.
+const PAGE_W = 460
+
+function ScaledPage({ children }) {
+  const boxRef = useRef(null)
+  const innerRef = useRef(null)
+  const [dims, setDims] = useState({ scale: 0.75, h: 0 })
+  useEffect(() => {
+    const box = boxRef.current
+    const inner = innerRef.current
+    if (!box || !inner) return
+    const upd = () => {
+      const scale = Math.min(1, box.clientWidth / PAGE_W)
+      setDims({ scale, h: inner.offsetHeight * scale })
+    }
+    upd()
+    const ro = new ResizeObserver(upd)
+    ro.observe(box)
+    ro.observe(inner)
+    return () => ro.disconnect()
+  }, [])
+  return (
+    <div ref={boxRef} style={{ width: '100%', height: dims.h || undefined }}>
+      <div
+        ref={innerRef}
+        style={{ width: PAGE_W, transform: 'scale(' + dims.scale + ')', transformOrigin: 'top left' }}
+      >
+        {children}
+      </div>
+    </div>
   )
 }
 
@@ -199,6 +236,10 @@ export default function NoteView() {
   const [songSheetOpen, setSongSheetOpen] = useState(false)
   const [placeSheetOpen, setPlaceSheetOpen] = useState(false)
   const [geminiSheetOpen, setGeminiSheetOpen] = useState(false)
+  // Nota già scritta: si apre in lettura (foglio al centro, frecce per scorrere
+  // alle note vicine); la matita apre la modifica (barra strumenti a sinistra,
+  // foglio spostato a destra). Una nota nuova parte già in modifica.
+  const [editing, setEditing] = useState(isNew)
   const fileInputRef = useRef(null)
   const editorRef = useRef(null)
   const savingRef = useRef(false) // guardia anti doppio invio
@@ -220,6 +261,7 @@ export default function NoteView() {
 
   useEffect(() => {
     if (isNew) return
+    setEditing(false)
     let alive = true
     setLoading(true)
     getNote(id)
@@ -241,6 +283,34 @@ export default function NoteView() {
       alive = false
     }
   }, [id, isNew])
+
+  const neighbors = useNoteNeighbors(id, !isNew)
+  const [slide, setSlide] = useState('')
+  const swipeRef = useRef(null)
+
+  // nota precedente (-1) o successiva (1), con una piccola scivolata del foglio
+  function goNote(dir) {
+    const target = dir < 0 ? neighbors.prev : neighbors.next
+    if (!target) return
+    haptic()
+    setSlide(dir < 0 ? 'slide-prev' : 'slide-next')
+    navigate('/note/' + target, { replace: true })
+  }
+
+  // swipe orizzontale sul foglio in lettura: verso destra = precedente, verso sinistra = successiva
+  const onSwipeStart = (e) => {
+    const tc = e.touches[0]
+    swipeRef.current = { x: tc.clientX, y: tc.clientY }
+  }
+  const onSwipeEnd = (e) => {
+    const s = swipeRef.current
+    swipeRef.current = null
+    if (!s || editing || isNew) return
+    const tc = e.changedTouches[0]
+    const dx = tc.clientX - s.x
+    const dy = tc.clientY - s.y
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) goNote(dx > 0 ? -1 : 1)
+  }
 
   useEffect(() => {
     listPeople()
@@ -471,19 +541,34 @@ export default function NoteView() {
           >
             <Icon name="chevron-left" size={19} strokeWidth={2.8} />
           </button>
-          <span className="mtop-year">{year}</span>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={mode === 'save' ? handleSave : handleDelete}
-            title={mode === 'save' ? 'Salva' : 'Elimina nota'}
-            className={'mcircle-action ' + mode}
-          >
-            <Icon name={mode === 'save' ? 'check' : 'trash'} size={19} strokeWidth={2.8} />
-          </button>
+          {editing ? <span className="mtop-year">{year}</span> : <span />}
+          {editing ? (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={mode === 'save' ? handleSave : handleDelete}
+              title={mode === 'save' ? 'Salva' : 'Elimina nota'}
+              className={'mcircle-action ' + mode}
+            >
+              <Icon name={mode === 'save' ? 'check' : 'trash'} size={19} strokeWidth={2.8} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                haptic()
+                setEditing(true)
+              }}
+              title="Modifica la nota"
+              aria-label="Modifica la nota"
+              className="mcircle-action edit"
+            >
+              <Icon name="edit" size={19} strokeWidth={2.6} />
+            </button>
+          )}
         </div>
 
-        <div className="mtop-row2">
+        <div className={'mtop-row2' + (editing ? '' : ' mnote-ro')}>
           <TimePickerPopover
             time={form.timeStart}
             onChange={(timeStart) => set({ timeStart })}
@@ -495,6 +580,19 @@ export default function NoteView() {
               <span className="mclock-digits">{form.timeStart}</span>
             </span>
           </TimePickerPopover>
+
+          {!isNew && !editing && (
+            <button
+              type="button"
+              disabled={!neighbors.prev}
+              onClick={() => goNote(-1)}
+              className="mnav-btn"
+              title="Nota precedente"
+              aria-label="Nota precedente"
+            >
+              <Icon name="chevron-left" size={18} strokeWidth={2.8} />
+            </button>
+          )}
 
           <DatePickerPopover
             dateKey={form.dateKey}
@@ -513,6 +611,19 @@ export default function NoteView() {
             </span>
           </DatePickerPopover>
 
+          {!isNew && !editing && (
+            <button
+              type="button"
+              disabled={!neighbors.next}
+              onClick={() => goNote(1)}
+              className="mnav-btn"
+              title="Nota successiva"
+              aria-label="Nota successiva"
+            >
+              <Icon name="chevron-right" size={18} strokeWidth={2.8} />
+            </button>
+          )}
+
           <TimePickerPopover
             time={form.timeEnd}
             onChange={(timeEnd) => set({ timeEnd })}
@@ -527,13 +638,44 @@ export default function NoteView() {
         </div>
       </MobileTopBar>
 
-      <main className="mnote-main anim-page flex flex-1 flex-col overflow-y-auto no-scrollbar px-4 py-4">
+      <main
+        key={id || 'new'}
+        className={
+          'mnote-main anim-page flex flex-1 flex-col overflow-y-auto no-scrollbar px-4 py-4' +
+          (editing ? ' is-editing' : ' mnote-ro ' + slide)
+        }
+        onTouchStart={editing || isNew ? undefined : onSwipeStart}
+        onTouchEnd={editing || isNew ? undefined : onSwipeEnd}
+      >
         {loadError && (
           <p className="mb-4 rounded-2xl bg-delete/10 px-4 py-3 text-sm text-delete-dark">
             {loadError}
           </p>
         )}
 
+        {!editing ? (
+          <ScaledPage>
+              <NoteBook
+                form={form}
+                set={set}
+                editorRef={editorRef}
+                seed={id || 'new'}
+                prefs={sanitizeFont(record?.font) || { ff: 0, fs: 1 }}
+                onViewImage={setViewerIndex}
+                imageUrls={[
+                  ...existingImages.map((fn) => (record ? fileUrl(record, fn, { thumb: '300x300' }) : '')),
+                  ...previews.map((p) => p.url),
+                ]}
+                people={selectedPeople}
+                tags={selectedTags}
+                immichUrl={immichUrl}
+                immichApiKey={immichApiKey}
+                readOnly
+                fixedWidth={PAGE_W}
+              />
+          </ScaledPage>
+        ) : (
+        <>
         <div className="mnote-mood-frame">
           <MoodSlider
             value={form.mood}
@@ -556,6 +698,7 @@ export default function NoteView() {
               value={form.title}
               onChange={(title) => set({ title })}
               className="ne-title"
+              readOnly={!editing}
             />
           </span>
           <RichText
@@ -564,6 +707,7 @@ export default function NoteView() {
             onChange={(html) => set({ content: html })}
             placeholder="Scrivi qui la nota…"
             className="ne-body flex-1"
+            readOnly={!editing}
           />
 
         {hasExtras &&
@@ -682,16 +826,15 @@ export default function NoteView() {
               sections.push(
                 <div key="tags" className="ne-chips">
                   {selectedTags.map((tag) => (
-                    <span key={tag.id} className="ne-chip sq">
-                      <Icon name="tag" size={11} />
-                      {tag.name}
+                    <span key={tag.id} className="dn-tag nv-tag">
+                      #{tag.name}
                       <button
                         type="button"
                         title="Rimuovi"
                         onClick={() => toggleTag(tag.id)}
-                        className="rm"
+                        className="nb-x"
                       >
-                        <Icon name="x" size={12} />
+                        <Icon name="x" size={10} />
                       </button>
                     </span>
                   ))}
@@ -701,36 +844,28 @@ export default function NoteView() {
 
             if (form.songs.length > 0) {
               sections.push(
-                <div key="songs" className="flex flex-col gap-2">
+                <div key="songs" className="ne-discs">
                   {form.songs.map((song, i) => (
-                    <div key={i} className="ne-song">
-                      {song.thumbnailUrl ? (
-                        <div
-                          className="ne-song-thumb"
-                          style={{ backgroundImage: `url(${song.thumbnailUrl})` }}
-                        />
-                      ) : (
-                        <span className="ne-song-thumb">
-                          <Icon name="music" size={14} />
+                    <span key={i} className="dn-disc-wrap">
+                      <span
+                        className="dn-disc"
+                        style={song.thumbnailUrl ? { '--cover': 'url(' + song.thumbnailUrl + ')' } : undefined}
+                      />
+                      {(song.title || song.artist) && (
+                        <span className="dn-song">
+                          {song.title && <span className="t">{song.title}</span>}
+                          {song.artist && <span className="a">{song.artist}</span>}
                         </span>
                       )}
-                      <a
-                        href={song.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="ne-song-title"
-                      >
-                        {song.title}
-                      </a>
                       <button
                         type="button"
                         title="Rimuovi"
                         onClick={() => removeSong(i)}
-                        className="ne-song-rm"
+                        className="ne-media-x"
                       >
-                        <Icon name="x" size={14} />
+                        <Icon name="x" size={11} />
                       </button>
-                    </div>
+                    </span>
                   ))}
                 </div>,
               )
@@ -747,9 +882,73 @@ export default function NoteView() {
             )
           })()}
         </div>
+        </>
+        )}
 
         <div className="h-6" />
       </main>
+
+      {editing && (
+        <div className="mbottom-slide">
+          <MobileBottomBar className="mbottom-note">
+            <div className="mfooter">
+              <button
+                type="button"
+                onClick={() => {
+                  haptic()
+                  setGeminiSheetOpen(true)
+                }}
+                title="Gemini"
+                aria-label="Gemini"
+                className="mcircle mgemini"
+              >
+                <Icon name="sparkles" size={19} />
+              </button>
+
+              <div className="mextra-group">
+                <FabButton
+                  icon="user"
+                  active={selectedPeople.length > 0}
+                  count={selectedPeople.length}
+                  onClick={() => setPeopleSheetOpen(true)}
+                  title="Aggiungi persone"
+                />
+                <FabButton
+                  icon="tag"
+                  active={selectedTags.length > 0}
+                  count={selectedTags.length}
+                  onClick={() => setTagSheetOpen(true)}
+                  title="Aggiungi tag"
+                />
+                <FabButton
+                  icon="music"
+                  active={form.songs.length > 0}
+                  count={form.songs.length}
+                  onClick={() => setSongSheetOpen(true)}
+                  title="Aggiungi canzone"
+                />
+                <FabButton
+                  icon="map-pin"
+                  active={Boolean(form.place)}
+                  count={form.place ? 1 : 0}
+                  onClick={() => setPlaceSheetOpen(true)}
+                  title="Aggiungi luogo"
+                />
+                <FabButton
+                  icon="image-plus"
+                  iconSize={21}
+                  active={existingImages.length + previews.length > 0}
+                  count={existingImages.length + previews.length}
+                  onClick={() =>
+                    immichReady ? setAddSheetOpen(true) : fileInputRef.current?.click()
+                  }
+                  title="Aggiungi immagini"
+                />
+              </div>
+            </div>
+          </MobileBottomBar>
+        </div>
+      )}
 
       <input
         ref={fileInputRef}
@@ -759,64 +958,6 @@ export default function NoteView() {
         hidden
         onChange={onPickFiles}
       />
-
-      <MobileBottomBar className="mbottom-note">
-        <div className="mfooter">
-          <button
-            type="button"
-            onClick={() => {
-              haptic()
-              setGeminiSheetOpen(true)
-            }}
-            title="Gemini"
-            aria-label="Gemini"
-            className="mcircle mgemini"
-          >
-            <Icon name="sparkles" size={19} />
-          </button>
-
-          <div className="mextra-group">
-            <FabButton
-              icon="user"
-              active={selectedPeople.length > 0}
-              count={selectedPeople.length}
-              onClick={() => setPeopleSheetOpen(true)}
-              title="Aggiungi persone"
-            />
-            <FabButton
-              icon="tag"
-              active={selectedTags.length > 0}
-              count={selectedTags.length}
-              onClick={() => setTagSheetOpen(true)}
-              title="Aggiungi tag"
-            />
-            <FabButton
-              icon="music"
-              active={form.songs.length > 0}
-              count={form.songs.length}
-              onClick={() => setSongSheetOpen(true)}
-              title="Aggiungi canzone"
-            />
-            <FabButton
-              icon="map-pin"
-              active={Boolean(form.place)}
-              count={form.place ? 1 : 0}
-              onClick={() => setPlaceSheetOpen(true)}
-              title="Aggiungi luogo"
-            />
-            <FabButton
-              icon="image-plus"
-              iconSize={21}
-              active={existingImages.length + previews.length > 0}
-              count={existingImages.length + previews.length}
-              onClick={() =>
-                immichReady ? setAddSheetOpen(true) : fileInputRef.current?.click()
-              }
-              title="Aggiungi immagini"
-            />
-          </div>
-        </div>
-      </MobileBottomBar>
 
       <Dialog
         open={Boolean(dialog)}

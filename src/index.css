@@ -12359,3 +12359,269 @@ li:last-child > .tk-row {
 @media (max-width: 480px) {
   .day-wd { font-size: 1.5rem; margin-left: 10px; text-transform: lowercase; }
 }
+/* ── Vista nota: lettura (foglio al centro) / modifica (barra a sinistra) ── */
+.mnote-yearnav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.mnav-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background-color: #efe7d4;
+  border: 2px dashed rgba(52, 44, 28, 0.45);
+  color: #33291c;
+  box-shadow: 0 2px 5px rgba(20, 12, 4, 0.2);
+}
+.mnav-btn:disabled {
+  opacity: 0.3;
+}
+.mcircle-action.edit {
+  background: #efe7d4;
+  border: 2px dashed rgba(52, 44, 28, 0.5);
+  color: #33291c;
+}
+/* lettura: niente modifica a sfiorare */
+.mnote-ro .mnote-mood-frame,
+.mtop-row2.mnote-ro {
+  pointer-events: none;
+}
+.mnote-ro .ne-media-x,
+.mnote-ro .rm,
+.mnote-ro .ne-song-rm {
+  display: none;
+}
+.mnote-ro .richtext,
+.mnote-ro .ne-title {
+  caret-color: transparent;
+}
+
+/* ── Attesa grande di Gemini (creazione nota): foglio che si riempie di righe ── */
+.gw-big {
+  flex: 1 1 auto;
+  min-height: 60dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 24px 12px;
+}
+.gw-paper {
+  position: relative;
+  width: min(62vw, 230px);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  background: var(--color-paper, #fbf6e6);
+  border-radius: 6px;
+  box-shadow: 0 8px 22px rgba(20, 12, 4, 0.22);
+  transform: rotate(-2deg);
+  animation: gw-float 3.2s ease-in-out infinite;
+}
+.gw-line {
+  display: block;
+  height: 7px;
+  width: var(--w);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--color-ink, #33291c) 70%, transparent);
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: gw-write 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.32s);
+}
+.gw-spark {
+  position: absolute;
+  color: #c9962b;
+  animation: gw-twinkle 1.6s ease-in-out infinite;
+}
+.gw-spark-a {
+  top: -12px;
+  right: -10px;
+}
+.gw-spark-b {
+  bottom: -8px;
+  left: -8px;
+  animation-delay: 0.7s;
+}
+.gw-title {
+  font-family: 'MyJournal Pen', 'Permanent Marker', cursive;
+  font-size: 1.7rem;
+  line-height: 1.2;
+  color: var(--color-ink, #33291c);
+}
+.gw-detail {
+  font-size: 1.05rem;
+  color: var(--color-ink-soft, #6b5e48);
+}
+@keyframes gw-write {
+  0% { transform: scaleX(0); opacity: 1; }
+  45%, 75% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes gw-float {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(1.5deg) translateY(-8px); }
+}
+@keyframes gw-twinkle {
+  0%, 100% { transform: scale(0.7) rotate(0); opacity: 0.5; }
+  50% { transform: scale(1.2) rotate(20deg); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gw-paper, .gw-spark { animation: none; }
+  .gw-line { animation: none; transform: scaleX(1); }
+}
+
+/* ── Vista nota web: lettura (foglio al centro) / modifica (blocco a sinistra) ── */
+.ne-grid {
+  grid-template-columns: 0px 1fr;
+  gap: 0;
+  transition: grid-template-columns 0.42s cubic-bezier(0.3, 0.9, 0.3, 1), gap 0.42s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.ne-grid.is-editing {
+  grid-template-columns: 247px 1fr;
+  gap: 26px;
+}
+.ne-grid .ne-meta {
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 0.3s ease, transform 0.42s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.ne-grid.is-editing .ne-meta {
+  opacity: 1;
+  transform: none;
+  overflow: visible;
+}
+.ne-grid:not(.is-editing) .ne-mood-top {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .ne-grid,
+  .ne-grid.is-editing {
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+}
+.ne-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 12px;
+  background-color: #efe7d4;
+  border: 2px dashed rgba(52, 44, 28, 0.5);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.ne-nav {
+  display: inline-flex;
+  gap: 10px;
+}
+.ne-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background-color: #efe7d4;
+  border: 2px dashed rgba(52, 44, 28, 0.4);
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.ne-nav-btn:disabled {
+  opacity: 0.35;
+}
+.nb-ro .nb-x,
+.nb-ro .nb-pola-x {
+  display: none;
+}
+.nb-ro .nb-editor,
+.nb-ro .nb-title-in {
+  caret-color: transparent;
+}
+/* disco con targhetta: l'area occupata segue lo spostamento visivo (54px), cosi il testo non ci passa sotto */
+.nb-aside {
+  margin: 0 0 66px 14px;
+}
+
+/* lettura sul telefono: niente barra mood né orari (restano solo data e frecce) */
+.mtop-row2.mnote-ro .mtime-slot {
+  display: none;
+}
+.mtop-row2.mnote-ro {
+  justify-content: center;
+}
+
+/* modifica sul telefono: la barra degli strumenti sale dal basso */
+.mbottom-slide {
+  animation: mbottom-up 0.38s cubic-bezier(0.3, 0.9, 0.3, 1) both;
+}
+@keyframes mbottom-up {
+  from { transform: translateY(110%); }
+  to { transform: none; }
+}
+/* targhetta tag nel foglio di modifica: la stessa del web, con la sua x */
+.nv-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.nv-tag .nb-x {
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+/* canzoni nel foglio di modifica sul telefono: lo stesso disco del web */
+.ne-discs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 18px;
+}
+.ne-discs .dn-disc-wrap {
+  position: relative;
+}
+
+/* foglio del web disegnato stretto (telefono): il mese non deve finire sotto il giorno */
+.nb-fixed .dg-month {
+  text-align: right;
+  padding-right: 26px;
+  box-sizing: border-box;
+}
+
+/* frecce precedente/successiva accanto alla data (lettura sul telefono) */
+.mtop-row2.mnote-ro {
+  align-items: center;
+  gap: 16px;
+}
+.mtop-row2.mnote-ro .mnav-btn {
+  pointer-events: auto;
+  width: 42px;
+  height: 42px;
+}
+.mtop-row2.mnote-ro .mdate-slot {
+  flex: 0 0 121px;
+}
+.mnote-main.slide-next {
+  animation: note-slide-next 0.28s ease-out both;
+}
+.mnote-main.slide-prev {
+  animation: note-slide-prev 0.28s ease-out both;
+}
+@keyframes note-slide-next {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes note-slide-prev {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: none; }
+}

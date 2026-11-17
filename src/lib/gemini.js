@@ -54,6 +54,9 @@ function recapInstructionsPrefix(text) {
 // indicando questo modello come sostituto): vedi errore riportato dall'utente
 // il 2026-09-06.
 const MODEL = 'gemini-3.6-flash'
+// Modello veloce provato per primo sulle note (vedi callGeminiTurns).
+export const FAST_MODEL = 'gemini-omni-1.1-flash'
+let omniDisabled = false
 
 // Bozza del prompt scritto per "Nuova nota con Gemini": salvata in
 // localStorage a ogni battitura e cancellata solo alla generazione riuscita.
@@ -85,7 +88,7 @@ export function clearGeminiPromptDraft() {
 
 // Un tentativo, senza riprovi: il chiamante fornisce `contents` completo
 // (un turno per ogni scambio utente/modello — vedi callGeminiParts).
-async function callGeminiOnce(apiKey, contents, model = MODEL) {
+async function callGeminiOnce(apiKey, contents, model = MODEL, timeoutMs = 60000) {
   // Senza risposta entro 60 s la richiesta si interrompe e conta come tentativo fallito
   // (altrimenti una connessione appesa lascia l'attesa ferma senza ritentare).
   const res = await fetch(
@@ -94,7 +97,7 @@ async function callGeminiOnce(apiKey, contents, model = MODEL) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contents }),
-      signal: AbortSignal.timeout(60000),
+      signal: AbortSignal.timeout(timeoutMs),
     },
   )
   logGeminiRequest(res.status) // contatore richieste (vedi geminiUsage.js)
@@ -168,17 +171,35 @@ function wait(ms) {
 // errori dell'utente, quindi si riprova da soli (vedi RETRY_DELAYS_MS) prima di
 // arrendersi. `onRetry(attempt, maxAttempts)` (opzionale) avvisa
 // chi ha in corso una UI di attesa (vedi GeminiWait) che si sta ritentando.
-async function callGeminiParts(apiKey, parts, { onRetry } = {}) {
-  return callGeminiTurns(apiKey, [{ role: 'user', parts }], { onRetry })
+async function callGeminiParts(apiKey, parts, { onRetry, fast, accept } = {}) {
+  return callGeminiTurns(apiKey, [{ role: 'user', parts }], { onRetry, fast, accept })
 }
 
 // Come callGeminiParts ma con una conversazione a più turni (usata per
 // chiedere piccole correzioni su un output già ottenuto — vedi refineText).
-async function callGeminiTurns(apiKey, contents, { onRetry } = {}) {
+async function callGeminiTurns(apiKey, contents, { onRetry, fast = false, accept } = {}) {
   let lastErr
   setAiStatus({ phase: 'request', model: '' })
+  // Primo tentativo opzionale col modello «omni» (di solito più rapido): se non
+  // risponde in modo utile si passa SUBITO al principale, senza attesa, e per il
+  // resto della sessione non lo si riprova.
+  if (fast && !omniDisabled && isTextOnly(contents)) {
+    onRetry?.(0, OVERLOAD_MAX_ATTEMPTS, FAST_MODEL)
+    try {
+      const text = await callGeminiOnce(apiKey, contents, FAST_MODEL, 25000)
+      if (!accept || accept(text)) {
+        aiReceived(FAST_MODEL)
+        return text
+      }
+      omniDisabled = true // risposta non utilizzabile: si passa al principale
+    } catch (err) {
+      if (err?.status === 404 || err?.status === 400 || !isRetryable(err)) omniDisabled = true
+      lastErr = err
+    }
+  }
   for (let attempt = 1; attempt <= OVERLOAD_MAX_ATTEMPTS; attempt++) {
     const model = await modelForAttempt(apiKey, attempt, contents)
+    if (attempt === 1) onRetry?.(0, OVERLOAD_MAX_ATTEMPTS, model)
     try {
       const text =
         model === GROQ_TEXT_MODEL ? await callGroqText(contents) : await callGeminiOnce(apiKey, contents, model)
@@ -377,7 +398,17 @@ export async function draftNoteFromPrompt(
       ? `Istruzioni fisse dell'utente su come scrivere le note (rispettale sempre, a meno che non contraddicano il formato JSON richiesto sopra): ${customInstructions.trim()}\n\n`
       : '') +
     `Indicazioni dell'utente:\n${prompt}`
-  const raw = await callGemini(apiKey, instruction, { onRetry })
+  const raw = await callGemini(apiKey, instruction, {
+    onRetry,
+    fast: true,
+    accept: (t) => {
+      try {
+        return Boolean(JSON.parse(t.match(/\{[\s\S]*\}/)?.[0] || ''))
+      } catch {
+        return false
+      }
+    },
+  })
   const match = raw.match(/\{[\s\S]*\}/)
   if (!match) throw new Error('Gemini non ha restituito un risultato valido.')
   let data

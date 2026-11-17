@@ -293,7 +293,7 @@ export default function NewNoteWithGeminiSheet({
                 Configura una chiave API Gemini in Profilo per usare questa funzione.
               </p>
             ) : loading ? (
-              <GeminiWait retry={retry} />
+              <GeminiWait big retry={retry} />
             ) : (
               <>
                 <div className="ne-sheet mt-3 flex min-h-[34dvh] flex-none flex-col">
@@ -352,7 +352,7 @@ export default function NewNoteWithGeminiSheet({
               funzione.
             </p>
           ) : loading ? (
-            <GeminiWait retry={retry} />
+            <GeminiWait big retry={retry} />
           ) : (
             <div className="gms-stack">
               <textarea

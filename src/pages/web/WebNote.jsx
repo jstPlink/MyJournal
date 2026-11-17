@@ -27,10 +27,10 @@ import {
   parsePlace,
   peopleUsageCounts,
 } from '../../lib/notes'
-import { osmTileFor, tilt } from '../../lib/pagesSkin'
 import { fileUrl } from '../../lib/pocketbase'
 import { listPeople } from '../../lib/people'
 import { listTags } from '../../lib/tags'
+import { useNoteNeighbors } from '../../hooks/useNoteNeighbors'
 import { notifyNotesChanged } from '../../lib/widgetSync'
 import { pokeRecapQueue } from '../../lib/recapQueue'
 import { useAutoDraft } from '../../hooks/useAutoDraft'
@@ -182,6 +182,11 @@ export default function WebNote() {
   const fileInputRef = useRef(null)
   const editorRef = useRef(null)
   const savingRef = useRef(false)
+  // Nota già scritta: si apre in lettura, col foglio al centro e le frecce per
+  // scorrere alle note vicine. La matita apre la modifica: compare il blocco a
+  // sinistra e il foglio scivola a destra. Una nota nuova parte in modifica.
+  const [editing, setEditing] = useState(isNew)
+  const neighbors = useNoteNeighbors(id, !isNew)
 
   const effectiveId = id || createdId
   const existsOnServer = Boolean(effectiveId)
@@ -200,6 +205,7 @@ export default function WebNote() {
 
   useEffect(() => {
     if (isNew) return
+    setEditing(false)
     let alive = true
     setLoading(true)
     getNote(id)
@@ -435,20 +441,6 @@ export default function WebNote() {
     return <p className="py-20 text-center text-ink-soft">Carico…</p>
   }
 
-  const noImages = existingImages.length === 0 && previews.length === 0
-  const hasMedia =
-    !noImages ||
-    selectedTags.length > 0 ||
-    form.songs.length > 0 ||
-    Boolean(form.place)
-
-  const placeLat = Number(form.place?.lat)
-  const placeLon = Number(form.place?.lon)
-  const placeMap =
-    Number.isFinite(placeLat) && Number.isFinite(placeLon)
-      ? osmTileFor(placeLat, placeLon, 14)
-      : null
-
   const parsedDate = parseWall(form.dateKey)
   const dayStr = parsedDate ? String(parsedDate.d).padStart(2, '0') : '--'
   const monthStr = parsedDate ? MONTHS_IT[parsedDate.mo - 1].slice(0, 3).toUpperCase() : '---'
@@ -473,7 +465,51 @@ export default function WebNote() {
             Indietro
           </button>
 
-          {mode === 'save' ? (
+          {!isNew && !editing && (
+            <span className="ne-nav">
+              <button
+                type="button"
+                disabled={!neighbors.prev}
+                onClick={() => {
+                  haptic()
+                  navigate(`/note/${neighbors.prev}`, { replace: true })
+                }}
+                className="ne-nav-btn"
+                title="Nota precedente"
+              >
+                <Icon name="chevron-left" size={16} strokeWidth={2.6} />
+                Precedente
+              </button>
+              <button
+                type="button"
+                disabled={!neighbors.next}
+                onClick={() => {
+                  haptic()
+                  navigate(`/note/${neighbors.next}`, { replace: true })
+                }}
+                className="ne-nav-btn"
+                title="Nota successiva"
+              >
+                Successiva
+                <Icon name="chevron-right" size={16} strokeWidth={2.6} />
+              </button>
+            </span>
+          )}
+
+          {!editing ? (
+            <button
+              type="button"
+              onClick={() => {
+                haptic()
+                setEditing(true)
+              }}
+              className="ne-edit"
+              title="Modifica la nota"
+            >
+              <Icon name="edit" size={16} strokeWidth={2.6} />
+              Modifica
+            </button>
+          ) : mode === 'save' ? (
             <button type="button" disabled={busy} onClick={handleSave} className="ne-save">
               <Icon name="check" size={16} strokeWidth={2.6} />
               {existsOnServer ? 'Salva modifiche' : 'Crea nota'}
@@ -493,9 +529,9 @@ export default function WebNote() {
         </p>
       )}
 
-      <div className="ne-grid">
+      <div className={'ne-grid' + (editing ? ' is-editing' : '')}>
         {/* Colonna meta */}
-        <div className="ne-meta">
+        <div className="ne-meta" aria-hidden={!editing} inert={!editing}>
           <div className="ne-sub">
             <div className="ne-sub-head">
               <span className="ne-sub-title">Data</span>
@@ -640,152 +676,11 @@ export default function WebNote() {
           onRemoveTag={toggleTag}
           immichUrl={immichUrl}
           immichApiKey={immichApiKey}
+          readOnly={!editing}
+          onRemoveSong={removeSong}
+          onRemovePlace={() => set({ place: null })}
         />
 
-        {hasMedia && (
-          <div className="ne-media">
-            {!noImages && (
-              <span className="ne-media-col">
-                <span className="ne-media-polas">
-                  {existingImages.map((fn, i) => (
-                    <span
-                      key={fn}
-                      className="mp-pola ne-media-pola"
-                      style={{ '--pr': `${tilt(`${fn}p${i}`, 4).toFixed(2)}deg` }}
-                    >
-                      <span
-                        className="mp-ph"
-                        style={{
-                          backgroundImage: record
-                            ? `url(${fileUrl(record, fn, { thumb: '300x300' })})`
-                            : undefined,
-                        }}
-                      />
-                      <button
-                        type="button"
-                        title="Visualizza"
-                        onClick={() => setViewerIndex(i)}
-                        className="absolute inset-0 cursor-zoom-in"
-                      />
-                      <button
-                        type="button"
-                        title="Rimuovi"
-                        onClick={() => {
-                          setExistingImages((p) => p.filter((x) => x !== fn))
-                          setRemovedImages((p) => [...p, fn])
-                        }}
-                        className="ne-media-x"
-                      >
-                        <Icon name="x" size={11} />
-                      </button>
-                    </span>
-                  ))}
-                  {previews.map((p, i) => (
-                    <span
-                      key={p.url}
-                      className="mp-pola ne-media-pola"
-                      style={{ '--pr': `${tilt(`${p.url}p${i}`, 4).toFixed(2)}deg` }}
-                    >
-                      <span className="mp-ph" style={{ backgroundImage: `url(${p.url})` }} />
-                      <button
-                        type="button"
-                        title="Visualizza"
-                        onClick={() => setViewerIndex(existingImages.length + i)}
-                        className="absolute inset-0 cursor-zoom-in"
-                      />
-                      <button
-                        type="button"
-                        title="Rimuovi"
-                        onClick={() =>
-                          setNewFiles((prev) => prev.filter((_, idx) => idx !== i))
-                        }
-                        className="ne-media-x"
-                      >
-                        <Icon name="x" size={11} />
-                      </button>
-                    </span>
-                  ))}
-                </span>
-              </span>
-            )}
-
-            {selectedTags.length > 0 && (
-              <span className="ne-media-col">
-                <span className="ne-media-tags">
-                  {selectedTags.map((tag) => (
-                    <span key={tag.id} className="ne-chip sq">
-                      <Icon name="tag" size={11} />
-                      {tag.name}
-                      <button
-                        type="button"
-                        title="Rimuovi"
-                        onClick={() => toggleTag(tag.id)}
-                        className="rm"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </span>
-              </span>
-            )}
-
-            {form.songs.length > 0 && (
-              <span className="ne-media-col">
-                {form.songs.map((song, i) => (
-                  <span key={i} className="mp-disc-wrap ne-media-pola">
-                    <span
-                      className="mp-disc"
-                      style={
-                        song.thumbnailUrl
-                          ? { '--cover': `url(${song.thumbnailUrl})` }
-                          : undefined
-                      }
-                    />
-                    {(song.title || song.artist) && (
-                      <span className="mp-song">
-                        {song.title && <span className="t">{song.title}</span>}
-                        {song.artist && <span className="a">{song.artist}</span>}
-                      </span>
-                    )}
-                    <button
-                      type="button"
-                      title="Rimuovi"
-                      onClick={() => removeSong(i)}
-                      className="ne-media-x"
-                    >
-                      <Icon name="x" size={11} />
-                    </button>
-                  </span>
-                ))}
-              </span>
-            )}
-
-            {form.place && (
-              <span className="ne-media-col">
-                <span className="mp-place ne-media-pola">
-                  <span
-                    className={'mp-map' + (placeMap ? ' real' : '')}
-                    style={
-                      placeMap
-                        ? { '--map-url': `url(${placeMap.url})`, '--map-pos': placeMap.pos }
-                        : undefined
-                    }
-                  />
-                  <span className="mp-place-name">{form.place.name}</span>
-                  <button
-                    type="button"
-                    title="Rimuovi"
-                    onClick={() => set({ place: null })}
-                    className="ne-media-x"
-                  >
-                    <Icon name="x" size={11} />
-                  </button>
-                </span>
-              </span>
-            )}
-          </div>
-        )}
         </div>
       </div>
 

@@ -109,7 +109,7 @@ function toBullet(root, node, range, removeCount = 1) {
 // Editor WYSIWYG minimale (grassetto / corsivo / sottolineato).
 // Il contenuto viene emesso come HTML tramite onChange.
 const RichText = forwardRef(function RichText(
-  { value, onChange, onFocusChange, placeholder = '', className = '' },
+  { value, onChange, onFocusChange, placeholder = '', className = '', readOnly = false },
   ref,
 ) {
   const elRef = useRef(null)
@@ -224,7 +224,7 @@ const RichText = forwardRef(function RichText(
     <div
       ref={elRef}
       className={'richtext ' + className}
-      contentEditable
+      contentEditable={!readOnly}
       suppressContentEditableWarning
       role="textbox"
       aria-multiline="true"

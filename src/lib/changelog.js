@@ -9,6 +9,16 @@
 
 export const CHANGELOG = [
   {
+    version: '0.93.0',
+    date: '2026-11-17 12:00',
+    changes: [
+      "Vista nota (telefono): una nota già scritta si apre in lettura, col foglio al centro e le frecce accanto alla data (oppure uno swipe a destra/sinistra sul foglio) per passare alla nota precedente o successiva. La matita in alto a destra apre la modifica: compaiono il mood sopra e la barra degli strumenti che sale dal basso, come prima. In lettura il foglio è identico a quello del web (stessa targhetta dei tag, stesso disco delle canzoni), senza barra mood, anno e orari. Le note nuove si aprono direttamente in modifica.",
+      "Elaborazione di una nota con Gemini: schermata a tutto spazio con testo grande al centro e un'animazione in loop (foglio che si riempie di righe) al posto della barra; il nome del modello in uso è sempre scritto per intero.",
+      "Il primo tentativo usa Gemini Omni 1.1 Flash; se non risponde si passa subito a Gemini 3.6 Flash, senza attesa.",
+      "Vista nota: sul telefono, in lettura non si vedono più barra mood, anno e orari. Sul web le targhette di persone e tag non finiscono più fuori dal foglio: se non ci stanno in fondo passano intere sul foglio dopo; il disco della canzone non copre più il testo e tutto (anche la rimozione di canzone e luogo) sta dentro il foglio, senza blocco ripetuto sotto.",
+    ],
+  },
+  {
     version: '0.92.9',
     date: '2026-11-17 12:00',
     changes: [

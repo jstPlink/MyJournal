@@ -1,9 +1,9 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 
 // Titolo della nota: come un campo di testo, ma se è più lungo della larghezza
 // va a capo e il campo si allunga in verticale (mai barra di scorrimento). Invio non
 // manda a capo: il titolo resta una riga logica.
-export default function TitleInput({ value, onChange, placeholder, className = '' }) {
+export default function TitleInput({ value, onChange, placeholder, className = '', readOnly = false }) {
   const ref = useRef(null)
 
   useLayoutEffect(() => {
@@ -15,10 +15,23 @@ export default function TitleInput({ value, onChange, placeholder, className = '
     el.style.overflowY = 'hidden'
   }, [value])
 
+  // a caratteri caricati le righe possono cambiare: si rimisura (altrimenti il campo
+  // resta alto come con il carattere di riserva)
+  useEffect(() => {
+    const fit = () => {
+      const el = ref.current
+      if (!el) return
+      el.style.height = 'auto'
+      el.style.height = el.scrollHeight + 'px'
+    }
+    document.fonts?.ready.then(fit)
+  }, [])
+
   return (
     <textarea
       ref={ref}
       rows={1}
+      readOnly={readOnly}
       placeholder={placeholder}
       value={(value ?? '').toLocaleUpperCase('it-IT')}
       onChange={(e) => {

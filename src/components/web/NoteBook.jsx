@@ -85,8 +85,8 @@ export function NoteFontTools({ prefs, setPref }) {
 }
 
 // Colonna «da album»: foto, luogo e canzone della nota in modifica.
-function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemoveImage }) {
-  const song = songs?.[0] || null
+function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemoveImage, onRemoveSong, onRemovePlace }) {
+  const songList = songs || []
   const name = place?.name?.trim() || ''
   let map = null
   if (name && Number.isFinite(Number(place?.lat)) && Number.isFinite(Number(place?.lon))) {
@@ -97,7 +97,7 @@ function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemo
     .map((u, idx) => ({ u, idx }))
     .filter((x) => x.u)
     .slice(0, 3)
-  if (!imgs.length && !name && !song) return null
+  if (!imgs.length && !name && !songList.length) return null
   return (
     <span className="dg-aside nb-aside" style={{ maxHeight: maxH }}>
       {imgs.length > 0 && (
@@ -131,7 +131,7 @@ function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemo
           ))}
         </span>
       )}
-      {(name || song) && (
+      {(name || songList.length > 0) && (
         <span className="dn-media">
           {name && (
             <span className="dg-stampwrap">
@@ -141,11 +141,16 @@ function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemo
                   style={map ? { '--map-url': `url(${map.url})`, '--map-pos': map.pos } : undefined}
                 />
                 <span className="dn-place-name">{name}</span>
+                {onRemovePlace && (
+                  <button type="button" title="Rimuovi" onClick={onRemovePlace} className="ne-media-x nb-pola-x">
+                    <Icon name="x" size={11} />
+                  </button>
+                )}
               </span>
             </span>
           )}
-          {song && (
-            <span className="dn-disc-wrap">
+          {songList.map((song, si) => (
+            <span key={si} className="dn-disc-wrap">
               <span
                 className="dn-disc"
                 style={song.thumbnailUrl ? { '--cover': `url(${song.thumbnailUrl})` } : undefined}
@@ -156,8 +161,13 @@ function PreviewAside({ imageUrls, place, songs, seed, maxH, onViewImage, onRemo
                   {song.artist && <span className="a">{song.artist}</span>}
                 </span>
               )}
+              {onRemoveSong && (
+                <button type="button" title="Rimuovi" onClick={() => onRemoveSong(si)} className="ne-media-x nb-pola-x">
+                  <Icon name="x" size={11} />
+                </button>
+              )}
             </span>
-          )}
+          ))}
         </span>
       )}
     </span>
@@ -179,6 +189,10 @@ export default function NoteBook({
   prefs,
   immichUrl,
   immichApiKey,
+  readOnly = false,
+  fixedWidth = 0,
+  onRemoveSong,
+  onRemovePlace,
 }) {
   const wrap = useRef(null)
   const flow = useRef(null)
@@ -186,6 +200,8 @@ export default function NoteBook({
   const tapesBox = useRef(null)
   const [avail, setAvail] = useState({ w: 700, vh: typeof window !== 'undefined' ? window.innerHeight : 900 })
   const [pages, setPages] = useState(1)
+  const [tapePush, setTapePush] = useState(0)
+  const tapePushRef = useRef(0)
 
   // dimensioni dei fogli: come nel diario (altezza dalla finestra, proporzione A4)
   useEffect(() => {
@@ -204,14 +220,18 @@ export default function NoteBook({
   const geo = useMemo(() => {
     let h = Math.max(520, avail.vh - 230)
     let w = Math.round(h / RATIO)
-    if (w > avail.w) {
+    // telefono: foglio alla larghezza fissa del web (poi scalato da fuori)
+    if (fixedWidth) {
+      w = fixedWidth
+      h = Math.round(w * RATIO)
+    } else if (w > avail.w) {
       w = Math.max(320, Math.floor(avail.w))
       h = Math.round(w * RATIO)
     }
     // altezza utile del testo in un foglio: righe intere, come `cap` del diario
     const textH = Math.max(ROW * 4, Math.floor((h - BAND - 34 - 1 - ROW - 10 - 14) / ROW) * ROW)
     return { w, h, textH, textW: w - 92, stride: h + PAGE_GAP }
-  }, [avail])
+  }, [avail, fixedWidth])
 
   // quanti fogli servono: il testo non deve finire nella zona vuota
   useLayoutEffect(() => {
@@ -221,7 +241,21 @@ export default function NoteBook({
       const ed = editorBox.current
       const tp = tapesBox.current
       let bottom = ed ? ed.offsetTop + ed.offsetHeight : 0
-      if (tp && tp.offsetHeight) bottom = Math.max(bottom, tp.offsetTop + tp.offsetHeight)
+      if (tp && tp.offsetHeight) {
+        // le targhette (persone/tag) non devono mai stare a cavallo di due fogli
+        // (il blocco che separa i fogli le schiaccerebbe): se non ci stanno
+        // intere in fondo al foglio, passano tutte sul successivo
+        const top0 = tp.offsetTop - tapePushRef.current
+        const h = tp.offsetHeight
+        const pg = Math.floor(top0 / geo.stride)
+        const end = pg * geo.stride + geo.textH
+        const need = top0 + h > end && h < geo.textH ? (pg + 1) * geo.stride - top0 : 0
+        if (Math.abs(need - tapePushRef.current) > 0.5) {
+          tapePushRef.current = need
+          setTapePush(need)
+        }
+        bottom = Math.max(bottom, top0 + need + h)
+      }
       const n = bottom <= geo.textH ? 1 : 1 + Math.ceil((bottom - geo.textH) / geo.stride)
       setPages((old) => (old === n ? old : n))
     }
@@ -242,7 +276,7 @@ export default function NoteBook({
   const monthLabel = p ? `${MONTHS_IT[p.mo - 1]} ${p.y}` : ''
 
   return (
-    <div className="nb-wrap" ref={wrap} style={{ '--nm': moodColor(form.mood) }}>
+    <div className={'nb-wrap' + (readOnly ? ' nb-ro' : '') + (fixedWidth ? ' nb-fixed' : '')} ref={wrap} style={{ '--nm': moodColor(form.mood) }}>
       <div className="nb-stack" style={{ width: geo.w, height: pages * geo.stride - PAGE_GAP }}>
         {Array.from({ length: pages }, (_, i) => (
           <section
@@ -279,6 +313,8 @@ export default function NoteBook({
             maxH={geo.textH - 70}
             onViewImage={onViewImage}
             onRemoveImage={onRemoveImage}
+            onRemoveSong={onRemoveSong}
+            onRemovePlace={onRemovePlace}
           />
           {/* zone vuote fra un foglio e l'altro: uno spaziatore (altezza del testo) e
               un blocco pieno per ogni passaggio di foglio */}
@@ -297,6 +333,7 @@ export default function NoteBook({
                 value={form.title}
                 onChange={(title) => set({ title })}
                 className="nb-title-in"
+                readOnly={readOnly}
               />
             </span>
             <span className="dg-nmood" title="Mood della nota">
@@ -314,11 +351,12 @@ export default function NoteBook({
               onChange={(html) => set({ content: html })}
               placeholder="Scrivi qui la nota…"
               className="nb-editor"
+              readOnly={readOnly}
             />
           </div>
 
           {(people.length > 0 || tags.length > 0) && (
-            <div ref={tapesBox} className="nb-tapes">
+            <div ref={tapesBox} className="nb-tapes" style={tapePush ? { marginTop: tapePush } : undefined}>
               {people.length > 0 && (
                 <span className="dn-tapes dg-tapesrow">
                   {people.map((pe) => (
