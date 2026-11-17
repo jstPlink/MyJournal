@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.93.1',
+    date: '2026-11-17 18:00',
+    changes: [
+      "Errore «Groq (404): il modello llama-3.3-70b-versatile non esiste»: Groq ha ritirato quel modello. La riserva di testo ora usa openai/gpt-oss-120b (anche per i recap sul server) e, se la riserva non funziona, l'errore mostrato è quello di Gemini, non quello di Groq.",
+      "Vista nota sul web: in modifica c'è di nuovo il pulsante «Gemini sul testo» (ripulire, scrivere, correggere il testo con l'IA).",
+    ],
+  },
+  {
     version: '0.93.0',
     date: '2026-11-17 12:00',
     changes: [

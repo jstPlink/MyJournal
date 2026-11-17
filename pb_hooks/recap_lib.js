@@ -99,7 +99,7 @@ function callGeminiText(apiKey, promptText, maxAttempts, jsonMode) {
 // giro delle 23:00.
 
 const PLAN_DELAYS_MS = [3000, 5000, 7000, 9000]
-const GROQ_TEXT_MODEL = 'llama-3.3-70b-versatile'
+const GROQ_TEXT_MODEL = 'openai/gpt-oss-120b' // llama-3.3-70b-versatile ritirato da Groq; in sync con src/lib/gemini.js
 
 function groqApiKeyFor(app, userId) {
   try {

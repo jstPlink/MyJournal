@@ -45,6 +45,8 @@ import {
 } from '../../lib/dates'
 import { haptic } from '../../lib/haptics'
 import ImageLightbox from '../../components/ImageLightbox'
+import GeminiSheet from '../../components/GeminiSheet'
+import { noteInstructionsOf } from '../../lib/aiInstructions'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
@@ -179,6 +181,7 @@ export default function WebNote() {
   const [tagSheetOpen, setTagSheetOpen] = useState(false)
   const [songSheetOpen, setSongSheetOpen] = useState(false)
   const [placeSheetOpen, setPlaceSheetOpen] = useState(false)
+  const [geminiSheetOpen, setGeminiSheetOpen] = useState(false)
   const fileInputRef = useRef(null)
   const editorRef = useRef(null)
   const savingRef = useRef(false)
@@ -637,6 +640,19 @@ export default function WebNote() {
           </div>
           <div className="ne-sub">
             <div className="ne-sub-head">
+              <span className="ne-sub-title">Intelligenza artificiale</span>
+            </div>
+            <div className="ne-addrow">
+              <AddTag
+                icon="sparkles"
+                label="Gemini sul testo"
+                count={0}
+                onClick={() => setGeminiSheetOpen(true)}
+              />
+            </div>
+          </div>
+          <div className="ne-sub">
+            <div className="ne-sub-head">
               <span className="ne-sub-title">Carattere</span>
             </div>
             <NoteFontTools prefs={effFont} setPref={pickFont} />
@@ -762,6 +778,15 @@ export default function WebNote() {
         onAdd={(song) => setForm((f) => ({ ...f, songs: [...f.songs, song] }))}
         spotifyClientId={spotifyClientId}
         spotifyClientSecret={spotifyClientSecret}
+      />
+
+      <GeminiSheet
+        open={geminiSheetOpen}
+        onClose={() => setGeminiSheetOpen(false)}
+        apiKey={user?.geminiApiKey?.trim()}
+        content={form.content}
+        onReplaceContent={(text) => set({ content: text })}
+        customInstructions={noteInstructionsOf(user)}
       />
 
       <PlacePickerSheet

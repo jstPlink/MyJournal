@@ -197,6 +197,7 @@ async function callGeminiTurns(apiKey, contents, { onRetry, fast = false, accept
       lastErr = err
     }
   }
+  let geminiErr = null
   for (let attempt = 1; attempt <= OVERLOAD_MAX_ATTEMPTS; attempt++) {
     const model = await modelForAttempt(apiKey, attempt, contents)
     if (attempt === 1) onRetry?.(0, OVERLOAD_MAX_ATTEMPTS, model)
@@ -207,13 +208,16 @@ async function callGeminiTurns(apiKey, contents, { onRetry, fast = false, accept
       return text
     } catch (err) {
       lastErr = err
+      if (model !== GROQ_TEXT_MODEL) geminiErr = err
       const last = attempt === OVERLOAD_MAX_ATTEMPTS
       // Il modello di riserva non c'è o non risponde come previsto (404, 400...):
       // non è colpa dell'utente, si passa subito al tentativo dopo.
       if (model !== MODEL && !isRetryable(err) && !last) continue
       if (!isRetryable(err) || last) {
         setAiStatus({ phase: 'idle', model: '' })
-        throw err
+        // se l'ultima è la riserva Groq ed è lei a non funzionare (modello ritirato,
+        // chiave...), l'errore utile è quello di Gemini, non il suo
+        throw model === GROQ_TEXT_MODEL && geminiErr ? geminiErr : err
       }
       // il 3° argomento è il nome del modello con cui si farà il prossimo tentativo
       const next = await modelForAttempt(apiKey, attempt + 1, contents)
@@ -259,7 +263,8 @@ function fallbackModels(apiKey) {
 
 // Modello di scrittura di Groq: ultimo tentativo quando Gemini è intasato. Solo per
 // richieste di solo testo (niente audio o immagini) e se l'utente ha la chiave Groq.
-export const GROQ_TEXT_MODEL = 'llama-3.3-70b-versatile'
+// llama-3.3-70b-versatile è stato ritirato da Groq (404): sostituto indicato da Groq
+export const GROQ_TEXT_MODEL = 'openai/gpt-oss-120b'
 const groqKeyOfUser = () => (pb.authStore.record?.groqApiKey || '').trim()
 const isTextOnly = (contents) => contents.every((c) => (c.parts || []).every((p) => typeof p.text === 'string'))
 

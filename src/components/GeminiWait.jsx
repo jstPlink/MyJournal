@@ -5,7 +5,7 @@ import Icon from './Icon'
 // Nome leggibile del modello (es. «gemini-omni-1.1-flash» → «Gemini Omni 1.1 Flash»).
 function modelLabel(model) {
   if (!model) return ''
-  if (/llama|mixtral|whisper/i.test(model)) return 'Groq ' + model
+  if (/llama|mixtral|whisper|gpt-oss/i.test(model)) return 'Groq ' + model
   return model
     .replace(/^models\//, '')
     .split('-')
