@@ -190,7 +190,7 @@ export default function NoteBook({
   immichUrl,
   immichApiKey,
   readOnly = false,
-  fixedWidth = 0,
+  compact = false,
   onRemoveSong,
   onRemovePlace,
 }) {
@@ -220,9 +220,9 @@ export default function NoteBook({
   const geo = useMemo(() => {
     let h = Math.max(520, avail.vh - 230)
     let w = Math.round(h / RATIO)
-    // telefono: foglio alla larghezza fissa del web (poi scalato da fuori)
-    if (fixedWidth) {
-      w = fixedWidth
+    // telefono: il foglio prende tutta la larghezza dello schermo
+    if (compact) {
+      w = Math.max(300, Math.floor(avail.w))
       h = Math.round(w * RATIO)
     } else if (w > avail.w) {
       w = Math.max(320, Math.floor(avail.w))
@@ -231,7 +231,7 @@ export default function NoteBook({
     // altezza utile del testo in un foglio: righe intere, come `cap` del diario
     const textH = Math.max(ROW * 4, Math.floor((h - BAND - 34 - 1 - ROW - 10 - 14) / ROW) * ROW)
     return { w, h, textH, textW: w - 92, stride: h + PAGE_GAP }
-  }, [avail, fixedWidth])
+  }, [avail, compact])
 
   // quanti fogli servono: il testo non deve finire nella zona vuota
   useLayoutEffect(() => {
@@ -276,7 +276,7 @@ export default function NoteBook({
   const monthLabel = p ? `${MONTHS_IT[p.mo - 1]} ${p.y}` : ''
 
   return (
-    <div className={'nb-wrap' + (readOnly ? ' nb-ro' : '') + (fixedWidth ? ' nb-fixed' : '')} ref={wrap} style={{ '--nm': moodColor(form.mood) }}>
+    <div className={'nb-wrap' + (readOnly ? ' nb-ro' : '') + (compact ? ' nb-compact' : '')} ref={wrap} style={{ '--nm': moodColor(form.mood) }}>
       <div className="nb-stack" style={{ width: geo.w, height: pages * geo.stride - PAGE_GAP }}>
         {Array.from({ length: pages }, (_, i) => (
           <section
@@ -286,7 +286,7 @@ export default function NoteBook({
           >
             <span className="dg-margin" aria-hidden="true" />
             <div className="dg-band">
-              <span className="dg-month">{monthLabel}</span>
+              <span className="dg-month">{compact && i === 0 ? `${weekdayLong(form.dateKey)} ${monthLabel}` : monthLabel}</span>
               {i === 0 && p && (
                 <span className="dg-day">
                   <b>{p.d}</b>

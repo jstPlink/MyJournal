@@ -9,6 +9,14 @@
 
 export const CHANGELOG = [
   {
+    version: '0.93.2',
+    date: '2026-11-17 19:00',
+    changes: [
+      "Vista nota (telefono), lettura: le frecce e la data stanno sulla riga in alto, tra indietro e matita; la riga sotto con gli orari non c'è più in lettura (resta in modifica), così c'è più spazio per il foglio.",
+      "Il foglio in lettura ora usa tutta la larghezza dello schermo, senza più rimpicciolirlo, con la grandezza del testo del foglio del web. Il giorno della settimana è accanto al mese.",
+    ],
+  },
+  {
     version: '0.93.1',
     date: '2026-11-17 18:00',
     changes: [

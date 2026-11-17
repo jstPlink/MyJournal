@@ -91,40 +91,6 @@ function FabButton({ icon, iconSize = 19, active, count, onClick, title }) {
   )
 }
 
-// Larghezza con cui si disegna il foglio del web: sul telefono lo stesso identico
-// foglio viene poi scalato alla larghezza dello schermo.
-const PAGE_W = 460
-
-function ScaledPage({ children }) {
-  const boxRef = useRef(null)
-  const innerRef = useRef(null)
-  const [dims, setDims] = useState({ scale: 0.75, h: 0 })
-  useEffect(() => {
-    const box = boxRef.current
-    const inner = innerRef.current
-    if (!box || !inner) return
-    const upd = () => {
-      const scale = Math.min(1, box.clientWidth / PAGE_W)
-      setDims({ scale, h: inner.offsetHeight * scale })
-    }
-    upd()
-    const ro = new ResizeObserver(upd)
-    ro.observe(box)
-    ro.observe(inner)
-    return () => ro.disconnect()
-  }, [])
-  return (
-    <div ref={boxRef} style={{ width: '100%', height: dims.h || undefined }}>
-      <div
-        ref={innerRef}
-        style={{ width: PAGE_W, transform: 'scale(' + dims.scale + ')', transformOrigin: 'top left' }}
-      >
-        {children}
-      </div>
-    </div>
-  )
-}
-
 function emptyForm(dKey) {
   const timeEnd = nowRoundedTo5()
   return {
@@ -525,6 +491,25 @@ export default function NoteView() {
     form.songs.length > 0 ||
     !noImages
 
+  const datePicker = (
+    <DatePickerPopover
+      dateKey={form.dateKey}
+      onChange={(dateKey) => set({ dateKey })}
+      className="mdate-slot"
+      buttonClassName="mclock-face"
+      textClassName=""
+      ariaLabel={`Cambia data, ora ${dayStr} ${monthStr} ${year}`}
+    >
+      <span className="mclock-screen">
+        <span className="mclock-digits">
+          {dayStr}
+          <span className="mclock-sep">:</span>
+          {monthStr}
+        </span>
+      </span>
+    </DatePickerPopover>
+  )
+
   return (
     <PhoneShell>
       <MobileTopBar className="mtop-note">
@@ -541,7 +526,37 @@ export default function NoteView() {
           >
             <Icon name="chevron-left" size={19} strokeWidth={2.8} />
           </button>
-          {editing ? <span className="mtop-year">{year}</span> : <span />}
+          {editing ? (
+            <span className="mtop-year">{year}</span>
+          ) : (
+            <span className="mnote-datenav">
+              {!isNew && (
+                <button
+                  type="button"
+                  disabled={!neighbors.prev}
+                  onClick={() => goNote(-1)}
+                  className="mnav-btn"
+                  title="Nota precedente"
+                  aria-label="Nota precedente"
+                >
+                  <Icon name="chevron-left" size={18} strokeWidth={2.8} />
+                </button>
+              )}
+              {datePicker}
+              {!isNew && (
+                <button
+                  type="button"
+                  disabled={!neighbors.next}
+                  onClick={() => goNote(1)}
+                  className="mnav-btn"
+                  title="Nota successiva"
+                  aria-label="Nota successiva"
+                >
+                  <Icon name="chevron-right" size={18} strokeWidth={2.8} />
+                </button>
+              )}
+            </span>
+          )}
           {editing ? (
             <button
               type="button"
@@ -568,7 +583,8 @@ export default function NoteView() {
           )}
         </div>
 
-        <div className={'mtop-row2' + (editing ? '' : ' mnote-ro')}>
+        {editing && (
+        <div className="mtop-row2">
           <TimePickerPopover
             time={form.timeStart}
             onChange={(timeStart) => set({ timeStart })}
@@ -581,48 +597,7 @@ export default function NoteView() {
             </span>
           </TimePickerPopover>
 
-          {!isNew && !editing && (
-            <button
-              type="button"
-              disabled={!neighbors.prev}
-              onClick={() => goNote(-1)}
-              className="mnav-btn"
-              title="Nota precedente"
-              aria-label="Nota precedente"
-            >
-              <Icon name="chevron-left" size={18} strokeWidth={2.8} />
-            </button>
-          )}
-
-          <DatePickerPopover
-            dateKey={form.dateKey}
-            onChange={(dateKey) => set({ dateKey })}
-            className="mdate-slot"
-            buttonClassName="mclock-face"
-            textClassName=""
-            ariaLabel={`Cambia data, ora ${dayStr} ${monthStr} ${year}`}
-          >
-            <span className="mclock-screen">
-              <span className="mclock-digits">
-                {dayStr}
-                <span className="mclock-sep">:</span>
-                {monthStr}
-              </span>
-            </span>
-          </DatePickerPopover>
-
-          {!isNew && !editing && (
-            <button
-              type="button"
-              disabled={!neighbors.next}
-              onClick={() => goNote(1)}
-              className="mnav-btn"
-              title="Nota successiva"
-              aria-label="Nota successiva"
-            >
-              <Icon name="chevron-right" size={18} strokeWidth={2.8} />
-            </button>
-          )}
+          {datePicker}
 
           <TimePickerPopover
             time={form.timeEnd}
@@ -636,6 +611,7 @@ export default function NoteView() {
             </span>
           </TimePickerPopover>
         </div>
+        )}
       </MobileTopBar>
 
       <main
@@ -654,7 +630,6 @@ export default function NoteView() {
         )}
 
         {!editing ? (
-          <ScaledPage>
               <NoteBook
                 form={form}
                 set={set}
@@ -671,9 +646,8 @@ export default function NoteView() {
                 immichUrl={immichUrl}
                 immichApiKey={immichApiKey}
                 readOnly
-                fixedWidth={PAGE_W}
+                compact
               />
-          </ScaledPage>
         ) : (
         <>
         <div className="mnote-mood-frame">
