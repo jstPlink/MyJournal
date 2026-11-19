@@ -230,7 +230,7 @@ export default function NoteBook({
     }
     // altezza utile del testo in un foglio: righe intere, come `cap` del diario
     const textH = Math.max(ROW * 4, Math.floor((h - BAND - 34 - 1 - ROW - 10 - 14) / ROW) * ROW)
-    return { w, h, textH, textW: w - 92, stride: h + PAGE_GAP }
+    return { w, h, textH, textW: compact ? w - 60 : w - 92, stride: h + PAGE_GAP }
   }, [avail, compact])
 
   // quanti fogli servono: il testo non deve finire nella zona vuota
@@ -286,7 +286,7 @@ export default function NoteBook({
           >
             <span className="dg-margin" aria-hidden="true" />
             <div className="dg-band">
-              <span className="dg-month">{compact && i === 0 ? `${weekdayLong(form.dateKey)} ${monthLabel}` : monthLabel}</span>
+              <span className="dg-month">{monthLabel}</span>
               {i === 0 && p && (
                 <span className="dg-day">
                   <b>{p.d}</b>
@@ -302,20 +302,8 @@ export default function NoteBook({
         <div
           className="nb-flow"
           ref={flow}
-          style={{ left: 58, top: TEXT_TOP, width: geo.textW, '--nb-fs': `${font.rem}rem`, '--nb-ff': font.css }}
+          style={{ left: compact ? 40 : 58, top: TEXT_TOP, width: geo.textW, '--nb-fs': `${font.rem}rem`, '--nb-ff': font.css }}
         >
-          {/* colonna foto/luogo/canzone: il testo le scorre attorno */}
-          <PreviewAside
-            imageUrls={imageUrls}
-            place={place}
-            songs={form.songs}
-            seed={seed}
-            maxH={geo.textH - 70}
-            onViewImage={onViewImage}
-            onRemoveImage={onRemoveImage}
-            onRemoveSong={onRemoveSong}
-            onRemovePlace={onRemovePlace}
-          />
           {/* zone vuote fra un foglio e l'altro: uno spaziatore (altezza del testo) e
               un blocco pieno per ogni passaggio di foglio */}
           {Array.from({ length: pages }, (_, i) => (
@@ -344,6 +332,18 @@ export default function NoteBook({
             </span>
           </div>
 
+          {/* colonna foto/luogo/canzone: il testo le scorre attorno */}
+          <PreviewAside
+            imageUrls={imageUrls}
+            place={place}
+            songs={form.songs}
+            seed={seed}
+            maxH={geo.textH - 70}
+            onViewImage={onViewImage}
+            onRemoveImage={onRemoveImage}
+            onRemoveSong={onRemoveSong}
+            onRemovePlace={onRemovePlace}
+          />
           <div ref={editorBox} className="nb-editor-box">
             <RichText
               ref={editorRef}

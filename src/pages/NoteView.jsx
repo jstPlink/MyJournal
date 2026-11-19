@@ -1,6 +1,6 @@
 import { playSound } from '../lib/sounds'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useGoBack } from '../hooks/useBack'
+import { useGoBack, useBackClose } from '../hooks/useBack'
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getConnection } from '../lib/cache'
 import PhoneShell from '../components/PhoneShell'
@@ -253,6 +253,24 @@ export default function NoteView() {
   const neighbors = useNoteNeighbors(id, !isNew)
   const [slide, setSlide] = useState('')
   const swipeRef = useRef(null)
+  // «indietro» (anche quello del telefono) dalla modifica di una nota esistente torna alla nota, non al giorno
+  useBackClose(editing && !isNew, () => exitEdit())
+
+  // esce dalla modifica tornando alla nota in lettura (scarta quanto non salvato, dopo conferma)
+  function exitEdit() {
+    if (dirty && !window.confirm('Scartare le modifiche a questa nota?')) return
+    if (record) {
+      const f = formFromRecord(record)
+      setForm(f)
+      setBaseline(snapshot(f))
+      setExistingImages(record.images || [])
+      setPeopleIds(record.people || [])
+      setTagIds(record.tags || [])
+    }
+    setNewFiles([])
+    setRemovedImages([])
+    setEditing(false)
+  }
 
   // nota precedente (-1) o successiva (1), con una piccola scivolata del foglio
   function goNote(dir) {
@@ -518,7 +536,8 @@ export default function NoteView() {
             type="button"
             onClick={() => {
               haptic()
-              goBack()
+              if (editing && !isNew) exitEdit()
+              else goBack()
             }}
             className="mchev"
             title="Indietro"

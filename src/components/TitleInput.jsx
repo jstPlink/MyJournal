@@ -25,6 +25,19 @@ export default function TitleInput({ value, onChange, placeholder, className = '
       el.style.height = el.scrollHeight + 'px'
     }
     document.fonts?.ready.then(fit)
+    // anche quando cambia la larghezza del campo (foglio che si adatta, rotazione):
+    // altrimenti l'altezza resta quella di prima e il titolo viene tagliato
+    const el = ref.current
+    if (!el || typeof ResizeObserver === 'undefined') return
+    let w = el.clientWidth
+    const ro = new ResizeObserver(() => {
+      if (el.clientWidth !== w) {
+        w = el.clientWidth
+        fit()
+      }
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
   }, [])
 
   return (

@@ -12548,7 +12548,9 @@ li:last-child > .tk-row {
 }
 /* disco con targhetta: l'area occupata segue lo spostamento visivo (54px), cosi il testo non ci passa sotto */
 .nb-aside {
-  margin: 0 0 66px 14px;
+  transform: none;
+  shape-outside: none;
+  margin: 8px 0 14px 14px;
 }
 
 /* lettura sul telefono: niente barra mood né orari (restano solo data e frecce) */
@@ -12648,20 +12650,13 @@ li:last-child > .tk-row {
 
 /* telefono, lettura: giorno della settimana accanto al mese, titolo a tutta larghezza,
    disco piu in basso cosi il titolo (anche su due righe) non viene spinto sotto */
-.nb-compact .dg-day span {
-  display: none;
-}
 .nb-compact .dg-month {
-  font-size: 1.15rem;
+  font-size: 1rem;
+  padding-right: 14px;
 }
 .nb-compact .nb-title-in,
 .nb-compact .nb-title-in.uppercase {
   width: 100%;
-}
-.nb-compact .nb-aside {
-  shape-outside: inset(100px 0 0 0);
-  transform: translateY(100px);
-  margin-bottom: 112px;
 }
 .mnote-datenav {
   gap: 6px;
@@ -12672,4 +12667,28 @@ li:last-child > .tk-row {
 .mnote-datenav .mnav-btn {
   width: 38px;
   height: 38px;
+}
+
+/* foglio in lettura sul telefono: disegni di sfondo piu chiari, margine rosso vicino al bordo
+   come nel foglio di modifica */
+.nb-compact .dg-page::before {
+  opacity: 0.11;
+}
+.nb-compact .dg-page.l .dg-margin {
+  left: 26px;
+}
+.nb-compact .dg-page.l .dg-pn {
+  left: 40px;
+}
+.nb-compact .nb-tcard {
+  width: calc(100% - 70px);
+}
+.nb-compact .dg-band {
+  padding-left: 40px;
+}
+/* telefono: il bollino del mood sta al centro verticale del titolo, anche quando va a capo su piu righe */
+.nb-compact .nb-titlerow .dg-nmood {
+  top: calc(50% - 13.5px);
+  margin-top: 0;
+  translate: 0 -50%;
 }

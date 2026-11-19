@@ -9,6 +9,22 @@
 
 export const CHANGELOG = [
   {
+    version: '0.93.4',
+    date: '2026-11-19 14:00',
+    changes: [
+      "Vista nota sul telefono: il bollino del mood è al centro verticale del titolo, anche quando il titolo è lungo e va a capo.",
+    ],
+  },
+  {
+    version: '0.93.3',
+    date: '2026-11-19 12:00',
+    changes: [
+      "Foglio della nota (web e telefono): foto, luogo e canzone ora partono sotto il titolo, così il titolo su più righe non viene più spinto giù lasciando un buco e gli allineamenti restano a posto.",
+      "Vista nota sul telefono: disegni di sfondo molto più chiari; la linea rossa del margine è vicina al bordo come nel foglio di modifica; il giorno della settimana sta accanto al numero; il titolo si vede per intero e va a capo (prima poteva essere tagliato).",
+      "«Indietro» dalla modifica di una nota esistente torna alla nota in lettura, non più al giorno (chiede conferma se ci sono modifiche non salvate); vale anche per il tasto indietro di Android.",
+    ],
+  },
+  {
     version: '0.93.2',
     date: '2026-11-17 19:00',
     changes: [
